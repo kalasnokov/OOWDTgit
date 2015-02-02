@@ -37,6 +37,17 @@ public class Sender extends JFrame {
 	boolean c = false;
 	public Vector<Player> players = new Vector<Player>();
 	boolean found;
+	boolean pressing = false;
+	boolean left;
+	boolean right;
+	boolean jumping = false;
+	Tester tester;
+	String name;
+	int health;
+	int x = 0;
+	int y = 0;
+	int xacc = 0;
+	int yacc = 0;
 
 	public Sender() throws IOException {
 
@@ -207,12 +218,32 @@ public class Sender extends JFrame {
 
 		Random rand = new Random();
 		int n = rand.nextInt(1000);
+		String ns = Integer.toString(n);
+		so(ns);
 		try {
 			s("§:" + n + ":");
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
 		namepane.setText(Integer.toString(n));
+
+		new Thread(new Runnable() {
+			public void run() {
+				while (true) {
+					try {
+						Thread.sleep(100);// game speed
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					for (Player Player : players) {
+						Player.update();
+					}
+					update();
+				}
+			}
+		}).start();
+
 		while (true) {
 			byte[] buf = new byte[1024];
 			DatagramPacket dgp = new DatagramPacket(buf, buf.length);
@@ -229,11 +260,12 @@ public class Sender extends JFrame {
 				}
 			}
 
-			if (!found&&!Integer.toString(n).equals(Spart[1])) {
+			if (!found && !ns.equals(Spart[1])) {
 				if (FL.equals("§")) {
 					String name;
 					name = Spart[1];
-					players.add(new Player(name));
+					players.add(new Player(name, Integer.parseInt(Spart[2]),
+							Integer.parseInt(Spart[3])));
 					so("New client with name " + name + " created");
 				} else {
 					// join fail error message, probably due to wrong message
@@ -244,8 +276,76 @@ public class Sender extends JFrame {
 				// move commands from client marked with $
 			} else {
 				if (FL.equals("$")) {
-					if (Spart[1].equals("")) {
-
+					boolean pressing = false;
+					if (!Spart[2].equals("^")) {
+						if (Spart[3].equals("P")) {
+							pressing = true;
+						}
+					}
+					if (Spart[2].equals("<")) {
+						if (pressing) {
+							if (Spart[1].equals(ns)) {
+								wl(pressing);
+							} else {
+								for (Player Player : players) {
+									if (Player.getName().equals(Spart[1])) {
+										Player.wl(pressing);
+									}
+								}
+							}
+						} else {
+							if (Spart[1].equals(ns)) {
+								wl(pressing);
+								x = Integer.parseInt(Spart[4]);
+								y = Integer.parseInt(Spart[5]);
+							} else {
+								for (Player Player : players) {
+									if (Player.getName().equals(Spart[1])) {
+										Player.wl(pressing);
+										Player.setX(Integer.parseInt(Spart[4]));
+										Player.setY(Integer.parseInt(Spart[5]));
+									}
+								}
+							}
+						}
+					}
+					if (Spart[2].equals(">")) {
+						if (pressing) {
+							if (Spart[1].equals(ns)) {
+								wr(pressing);
+							} else {
+								for (Player Player : players) {
+									if (Player.getName().equals(Spart[1])) {
+										Player.wr(pressing);
+									}
+								}
+							}
+						} else {
+							if (Spart[1].equals(ns)) {
+								wr(pressing);
+								x = Integer.parseInt(Spart[4]);
+								y = Integer.parseInt(Spart[5]);
+							} else {
+								for (Player Player : players) {
+									if (Player.getName().equals(Spart[1])) {
+										Player.wr(pressing);
+										Player.setX(Integer.parseInt(Spart[4]));
+										Player.setY(Integer.parseInt(Spart[5]));
+									}
+								}
+							}
+						}
+					}
+					if (Spart[2].equals("^")) {
+						if (Spart[1].equals(ns)) {
+							j();
+						} else {
+							for (Player Player : players) {
+								if (Player.getName().equals(Spart[1])) {
+									Player.j();
+								}
+							}
+						}
 					}
 				} else {
 					so("received invalid command package:");
@@ -375,12 +475,50 @@ public class Sender extends JFrame {
 		}
 	}
 
+	public void update() {
+		if (pressing && left) {
+			xacc -= 2;
+		}
+		if (pressing && right) {
+			xacc += 2;
+		}
+		if (!pressing) {
+			xacc = 0;
+		}
+
+		if (xacc < 0) {
+			xacc++;
+		}
+		if (xacc > 0) {
+			xacc--;
+		}
+		if (xacc > 10) {
+			xacc = 10;
+		}
+		if (xacc < -10) {
+			xacc = -10;
+		}
+		yacc--;
+		x += xacc;
+		y -= yacc;
+		if (y > 750) {
+			y = 750;
+			jumping = false;
+
+		}
+		jump(jumping);
+		ml(left);
+		mr(right);
+		setx(x);
+		sety(y);
+	}
+
 	public void setx(int x) {
 		xpos.setText(Integer.toString(x));
 	}
 
 	public void sety(int y) {
-		xpos.setText(Integer.toString(y));
+		ypos.setText(Integer.toString(y));
 	}
 
 	public void jump(boolean b) {
@@ -400,13 +538,31 @@ public class Sender extends JFrame {
 	}
 
 	public void s(String msg) throws IOException {
-		String ip = "localhost";
+		String ip = "25.5.72.222";
 		byte[] buf = new byte[1024];
 		InetAddress hostAddress = InetAddress.getByName(ip);
 		buf = msg.getBytes();
 		DatagramPacket out = new DatagramPacket(buf, buf.length, hostAddress,
 				25565);
 		s.send(out);
+	}
+
+	public void wl(boolean p) {
+		pressing = p;
+		left = p;
+	}
+
+	public void wr(boolean p) {
+		pressing = p;
+		right = p;
+	}
+
+	public void j() {
+		if (!jumping) {
+			yacc = 20;
+			jumping = true;
+			jump(jumping);
+		}
 	}
 
 	public static void main(String[] args) throws IOException {

@@ -3,8 +3,8 @@ import java.net.InetAddress;
 public class Player {
 	String name;
 	int health;
-	int x=0;
-	int y=0;
+	int x = 0;
+	int y = 0;
 	int xacc = 0;
 	int yacc = 0;
 	InetAddress address;
@@ -24,7 +24,14 @@ public class Player {
 	}
 
 	public Player(String name2) {
-		this.name=name2;
+		this.name = name2;
+		tester = new Tester(name);
+	}
+
+	public Player(String name2, int x, int y) {
+		this.name = name2;
+		this.x = x;
+		this.y = y;
 		tester = new Tester(name);
 	}
 
@@ -57,7 +64,7 @@ public class Player {
 		if (y > 750) {
 			y = 750;
 			jumping = false;
-			
+
 		}
 		tester.jump(jumping);
 		tester.ml(left);

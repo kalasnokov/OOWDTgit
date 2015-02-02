@@ -168,8 +168,9 @@ public class Server extends JFrame {
 					ap("New client connected from " + dgp.getAddress() + " "
 							+ dgp.getPort() + " with name " + name);
 					for (Player Player : players) {
-						msg="§:"+Player.getName()+":";
-						send(dgp.getAddress(),dgp.getPort());
+						msg = "§:" + Player.getName() + ":" + Player.getX()
+								+ ":" + Player.getY() + ":";
+						send(dgp.getAddress(), dgp.getPort());
 					}
 				} else {
 					// join fail error message, probably due to wrong message
@@ -213,7 +214,7 @@ public class Server extends JFrame {
 							}
 						}
 					}
-					//ap(String.valueOf(pressing));
+					// ap(String.valueOf(pressing));
 
 				} else {
 					// error due to wrong move etc
