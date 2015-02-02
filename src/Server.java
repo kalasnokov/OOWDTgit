@@ -6,7 +6,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.Vector;
 
 import javax.swing.GroupLayout;
@@ -31,11 +30,9 @@ public class Server extends JFrame {
 	private static final JTextPane Serverinf = new JTextPane();
 	private boolean found;
 	public Vector<Player> players = new Vector<Player>();
-	@SuppressWarnings("unused")
 	private String msg;
 	DatagramSocket sk;
 
-	@SuppressWarnings("resource")
 	public Server() throws IOException {
 
 		// stuff
@@ -117,7 +114,7 @@ public class Server extends JFrame {
 			public void run() {
 				while (true) {
 					try {
-						Thread.sleep(100);//game speed
+						Thread.sleep(100);// game speed
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -132,7 +129,7 @@ public class Server extends JFrame {
 		new Thread(new Runnable() {
 			public void run() {
 				while (true) {
-//send x/y update package to clients
+					// send x/y update package to clients
 				}
 			}
 		}).start();
@@ -170,6 +167,10 @@ public class Server extends JFrame {
 							.getPort()));
 					ap("New client connected from " + dgp.getAddress() + " "
 							+ dgp.getPort() + " with name " + name);
+					for (Player Player : players) {
+						msg="§:"+Player.getName()+":";
+						send(dgp.getAddress(),dgp.getPort());
+					}
 				} else {
 					// join fail error message, probably due to wrong message
 					ap("Client at " + dgp.getAddress() + " " + dgp.getPort()
@@ -183,11 +184,10 @@ public class Server extends JFrame {
 					if (Spart[2].equals("P")) {
 						pressing = true;
 					}
-					if (Spart[1].equals("<")) {
-						for (Player Player : players) {
-							if (Player.getAddress().equals(dgp.getAddress())
-									&& Player.getAddress().equals(
-											dgp.getAddress())) {
+					for (Player Player : players) {
+						if (Player.getAddress().equals(dgp.getAddress())
+								&& Player.getPort() == dgp.getPort()) {
+							if (Spart[1].equals("<")) {
 								if (!pressing) {
 									msg = "$:" + Player.getName() + ":<:R:"
 											+ Player.getX() + ":"
@@ -197,13 +197,7 @@ public class Server extends JFrame {
 								}
 								Player.wl(pressing);
 							}
-						}
-					}
-					if (Spart[1].equals(">")) {
-						for (Player Player : players) {
-							if (Player.getAddress().equals(dgp.getAddress())
-									&& Player.getAddress().equals(
-											dgp.getAddress())) {
+							if (Spart[1].equals(">")) {
 								if (!pressing) {
 									msg = "$:" + Player.getName() + ":>:R:"
 											+ Player.getX() + ":"
@@ -213,30 +207,25 @@ public class Server extends JFrame {
 								}
 								Player.wr(pressing);
 							}
-						}
-					}
-					if (Spart[1].equals("^")) {
-						for (Player Player : players) {
-							if (Player.getAddress().equals(dgp.getAddress())
-									&& Player.getAddress().equals(
-											dgp.getAddress())) {
+							if (Spart[1].equals("^")) {
 								Player.j();
 								msg = "$:" + Player.getName() + ":^:";
 							}
 						}
 					}
-					ap(String.valueOf(pressing));
-					
+					//ap(String.valueOf(pressing));
+
 				} else {
 					// error due to wrong move etc
 					ap("Client at " + dgp.getAddress() + " " + dgp.getPort()
 							+ " sent invalid command package:");
 					ap(rcvd);
 				}
+
 			}
 			for (Player Player : players) {
-				//send info about action to all clients using string msg
-				send(Player.getAddress(),Player.getPort());
+				// send info about action to all clients using string msg
+				send(Player.getAddress(), Player.getPort());
 			}
 		}
 	}
@@ -255,11 +244,11 @@ public class Server extends JFrame {
 		// console print shortcut, just call s(string);
 		System.out.println(s);
 	}
-	public void send(InetAddress address, int port) throws IOException{
+
+	public void send(InetAddress address, int port) throws IOException {
 		byte[] buf = new byte[1024];
 		buf = msg.getBytes();
-		DatagramPacket out = new DatagramPacket(buf, buf.length, address,
-				port);
+		DatagramPacket out = new DatagramPacket(buf, buf.length, address, port);
 		sk.send(out);
 	}
 }

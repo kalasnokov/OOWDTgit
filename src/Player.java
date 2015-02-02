@@ -23,6 +23,11 @@ public class Player {
 
 	}
 
+	public Player(String name2) {
+		this.name=name2;
+		tester = new Tester(name);
+	}
+
 	public void update() {
 		if (pressing && left) {
 			xacc -= 2;

@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.Random;
+import java.util.Vector;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -32,11 +34,12 @@ public class Sender extends JFrame {
 	String msg;
 	public String rcvd;
 	private DatagramSocket s = new DatagramSocket();
-	boolean c=false;
-	
+	boolean c = false;
+	public Vector<Player> players = new Vector<Player>();
+	boolean found;
 
 	public Sender() throws IOException {
-		
+
 		super("Sender");
 		setAlwaysOnTop(true);
 		try {
@@ -196,108 +199,131 @@ public class Sender extends JFrame {
 														.addComponent(Moving))
 										.addContainerGap(46, Short.MAX_VALUE)));
 		getContentPane().setLayout(groupLayout);
-		KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-        manager.addKeyEventDispatcher(new MyDispatcher());
+		KeyboardFocusManager manager = KeyboardFocusManager
+				.getCurrentKeyboardFocusManager();
+		manager.addKeyEventDispatcher(new MyDispatcher());
 		pack();
 		setVisible(true);
+
+		Random rand = new Random();
+		int n = rand.nextInt(1000);
 		try {
-			s("§:Tester:");
+			s("§:" + n + ":");
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		while(true){
+		namepane.setText(Integer.toString(n));
+		while (true) {
 			byte[] buf = new byte[1024];
-			DatagramPacket dp = new DatagramPacket(buf, buf.length);
-			s.receive(dp);
-			rcvd = new String(dp.getData());
+			DatagramPacket dgp = new DatagramPacket(buf, buf.length);
+			s.receive(dgp);
+			rcvd = new String(dgp.getData());
 			rcvd = rcvd.trim();
 			String[] Spart = rcvd.split(":");
 			String FL = Spart[0];
-			System.out.println(rcvd);
-			System.out.println("received something...");
-			if(FL.equals("$")){
-				if(Spart[1].equals("")){
-					
+			so(rcvd);
+
+			for (Player Player : players) {
+				if (Player.getName().equals(Spart[1])) {
+					found = true;
 				}
-			}else{
-				System.out.println("Received illegal package");
+			}
+
+			if (!found&&!Integer.toString(n).equals(Spart[1])) {
+				if (FL.equals("§")) {
+					String name;
+					name = Spart[1];
+					players.add(new Player(name));
+					so("New client with name " + name + " created");
+				} else {
+					// join fail error message, probably due to wrong message
+					so("received invalid connection package");
+					so(rcvd);
+				}
+
+				// move commands from client marked with $
+			} else {
+				if (FL.equals("$")) {
+					if (Spart[1].equals("")) {
+
+					}
+				} else {
+					so("received invalid command package:");
+					so(rcvd);
+				}
 			}
 		}
 	}
-	
-	
-    private class MyDispatcher implements KeyEventDispatcher {
-        @Override
-        public boolean dispatchKeyEvent(KeyEvent e) {
-        	int key = e.getKeyCode();
-            if (e.getID() == KeyEvent.KEY_PRESSED) {
-            	
-    			if (key == KeyEvent.VK_W) {
-    				msg="$:^:";
-    				try {
-    					s(msg);
-    				} catch (IOException e1) {
-    					// TODO Auto-generated catch block
-    					e1.printStackTrace();
-    				}
-    			}
-    			if (key == KeyEvent.VK_A&&!c) {
-    				msg="$:<:P:";
-    				try {
-    					s(msg);
-    				} catch (IOException e1) {
-    					// TODO Auto-generated catch block
-    					e1.printStackTrace();
-    				}
-    			}
-    			if (key == KeyEvent.VK_D&&!c) {
-    				msg="$:>:P:";
-    				try {
-    					s(msg);
-    				} catch (IOException e1) {
-    					// TODO Auto-generated catch block
-    					e1.printStackTrace();
-    				}
-    			}
-            	
-                c=true;
-            }
-            if (e.getID() == KeyEvent.KEY_RELEASED) {
-            	
-    			if (key == KeyEvent.VK_A) {
-    				msg="$:<:R:";
-    				try {
-    					s(msg);
-    				} catch (IOException e1) {
-    					// TODO Auto-generated catch block
-    					e1.printStackTrace();
-    				}
-    			}
-    			if (key == KeyEvent.VK_D) {
-    				msg="$:>:R:";
-    				try {
-    					s(msg);
-    				} catch (IOException e1) {
-    					// TODO Auto-generated catch block
-    					e1.printStackTrace();
-    				}
-    			}
-            	
-                c=false;
-            }
-            return false;
-        }
-    }
-	
-	
-	
+
+	private class MyDispatcher implements KeyEventDispatcher {
+		@Override
+		public boolean dispatchKeyEvent(KeyEvent e) {
+			int key = e.getKeyCode();
+			if (e.getID() == KeyEvent.KEY_PRESSED) {
+
+				if (key == KeyEvent.VK_W) {
+					msg = "$:^:";
+					try {
+						s(msg);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				if (key == KeyEvent.VK_A && !c) {
+					msg = "$:<:P:";
+					try {
+						s(msg);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				if (key == KeyEvent.VK_D && !c) {
+					msg = "$:>:P:";
+					try {
+						s(msg);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+
+				c = true;
+			}
+			if (e.getID() == KeyEvent.KEY_RELEASED) {
+
+				if (key == KeyEvent.VK_A) {
+					msg = "$:<:R:";
+					try {
+						s(msg);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				if (key == KeyEvent.VK_D) {
+					msg = "$:>:R:";
+					try {
+						s(msg);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+
+				c = false;
+			}
+			return false;
+		}
+	}
+
 	class keydealer extends KeyAdapter {
 		public void keyPressed(KeyEvent e) {
 			int key = e.getKeyCode();
 			System.out.println(e);
 			if (key == KeyEvent.VK_W) {
-				msg="$:^:";
+				msg = "$:^:";
 				try {
 					s(msg);
 				} catch (IOException e1) {
@@ -306,7 +332,7 @@ public class Sender extends JFrame {
 				}
 			}
 			if (key == KeyEvent.VK_A) {
-				msg="$:<:P:";
+				msg = "$:<:P:";
 				try {
 					s(msg);
 				} catch (IOException e1) {
@@ -315,7 +341,7 @@ public class Sender extends JFrame {
 				}
 			}
 			if (key == KeyEvent.VK_D) {
-				msg="$:>:P:";
+				msg = "$:>:P:";
 				try {
 					s(msg);
 				} catch (IOException e1) {
@@ -324,11 +350,12 @@ public class Sender extends JFrame {
 				}
 			}
 		}
-		public void keyReleased(KeyEvent e){
+
+		public void keyReleased(KeyEvent e) {
 			int key = e.getKeyCode();
 			System.out.println(e);
 			if (key == KeyEvent.VK_A) {
-				msg="$:<:R:";
+				msg = "$:<:R:";
 				try {
 					s(msg);
 				} catch (IOException e1) {
@@ -337,7 +364,7 @@ public class Sender extends JFrame {
 				}
 			}
 			if (key == KeyEvent.VK_D) {
-				msg="$:>:R:";
+				msg = "$:>:R:";
 				try {
 					s(msg);
 				} catch (IOException e1) {
@@ -359,14 +386,21 @@ public class Sender extends JFrame {
 	public void jump(boolean b) {
 		Jumping.setSelected(b);
 	}
+
 	public void ml(boolean b) {
 		Left.setSelected(b);
 	}
+
 	public void mr(boolean b) {
 		Right.setSelected(b);
 	}
+
+	public void so(String o) {
+		System.out.println(o);
+	}
+
 	public void s(String msg) throws IOException {
-		String ip="localhost";
+		String ip = "localhost";
 		byte[] buf = new byte[1024];
 		InetAddress hostAddress = InetAddress.getByName(ip);
 		buf = msg.getBytes();
@@ -374,6 +408,7 @@ public class Sender extends JFrame {
 				25565);
 		s.send(out);
 	}
+
 	public static void main(String[] args) throws IOException {
 		new Sender();
 	}
