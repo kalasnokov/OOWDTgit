@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.Vector;
 
 import javax.swing.GroupLayout;
@@ -31,6 +33,7 @@ public class Server extends JFrame {
 	public Vector<Player> players = new Vector<Player>();
 	@SuppressWarnings("unused")
 	private String msg;
+	DatagramSocket sk;
 
 	@SuppressWarnings("resource")
 	public Server() throws IOException {
@@ -106,7 +109,6 @@ public class Server extends JFrame {
 
 		// datagram socket and port location
 		int port = 25565;
-		DatagramSocket sk;
 		sk = new DatagramSocket(port);
 
 		Serverinf.setText(ip + ":" + port);
@@ -234,6 +236,7 @@ public class Server extends JFrame {
 			}
 			for (Player Player : players) {
 				//send info about action to all clients using string msg
+				send(Player.getAddress(),Player.getPort());
 			}
 		}
 	}
@@ -251,5 +254,12 @@ public class Server extends JFrame {
 	public void s(String s) {
 		// console print shortcut, just call s(string);
 		System.out.println(s);
+	}
+	public void send(InetAddress address, int port) throws IOException{
+		byte[] buf = new byte[1024];
+		buf = msg.getBytes();
+		DatagramPacket out = new DatagramPacket(buf, buf.length, address,
+				port);
+		sk.send(out);
 	}
 }

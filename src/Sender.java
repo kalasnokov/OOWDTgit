@@ -215,6 +215,7 @@ public class Sender extends JFrame {
 			String[] Spart = rcvd.split(":");
 			String FL = Spart[0];
 			System.out.println(rcvd);
+			System.out.println("received something...");
 			if(FL.equals("$")){
 				if(Spart[1].equals("")){
 					
