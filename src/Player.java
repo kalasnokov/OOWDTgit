@@ -121,7 +121,7 @@ public class Player {
 
 	public void j() {
 		if (!jumping) {
-			yacc -= 20;
+			yacc = 20;
 			jumping = true;
 			tester.jump(jumping);
 		}

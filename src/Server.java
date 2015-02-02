@@ -25,9 +25,11 @@ public class Server extends JFrame {
 	 */
 	private static final long serialVersionUID = -1960888810093318280L;
 	private static final JTextArea Log = new JTextArea();
+	@SuppressWarnings("unused")
 	private static final JTextPane Serverinf = new JTextPane();
 	private boolean found;
 	public Vector<Player> players = new Vector<Player>();
+	@SuppressWarnings("unused")
 	private String msg;
 
 	@SuppressWarnings("resource")
@@ -51,6 +53,7 @@ public class Server extends JFrame {
 				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 		JTextPane Serverinf = new JTextPane();
+		Serverinf.setEditable(false);
 		Serverinf.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(
@@ -112,13 +115,12 @@ public class Server extends JFrame {
 			public void run() {
 				while (true) {
 					try {
-						Thread.sleep(100);
+						Thread.sleep(100);//game speed
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					for (Player Player : players) {
-
 						Player.update();
 					}
 				}
@@ -128,7 +130,7 @@ public class Server extends JFrame {
 		new Thread(new Runnable() {
 			public void run() {
 				while (true) {
-
+//send x/y update package to clients
 				}
 			}
 		}).start();
@@ -222,6 +224,7 @@ public class Server extends JFrame {
 						}
 					}
 					ap(String.valueOf(pressing));
+					
 				} else {
 					// error due to wrong move etc
 					ap("Client at " + dgp.getAddress() + " " + dgp.getPort()
@@ -230,7 +233,7 @@ public class Server extends JFrame {
 				}
 			}
 			for (Player Player : players) {
-				
+				//send info about action to all clients using string msg
 			}
 		}
 	}

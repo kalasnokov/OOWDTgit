@@ -2,8 +2,6 @@ import javax.swing.JFrame;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
 
-import java.awt.BorderLayout;
-
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -13,6 +11,10 @@ import javax.swing.JTextField;
 import java.awt.Font;
 
 public class Tester extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8021299367843811283L;
 	private JTextField txtX;
 	private JTextField txtY;
 	private JTextPane xpos;
