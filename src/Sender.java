@@ -365,7 +365,7 @@ public class Sender extends JFrame {
 		Right.setSelected(b);
 	}
 	public void s(String msg) throws IOException {
-		String ip="25.5.72.222";
+		String ip="localhost";
 		byte[] buf = new byte[1024];
 		InetAddress hostAddress = InetAddress.getByName(ip);
 		buf = msg.getBytes();
