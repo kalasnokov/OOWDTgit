@@ -27,17 +27,17 @@ public class Sender {
 	int yacc = 0;
 	public Sprite sprite;
 
-	public Sender() {
+	public Sender(Game game) {
 		sprite = new Sprite("res/char1/char.png");
 		try {
-			init();
+			init(game);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public void init() throws IOException {
+	public void init(Game game) throws IOException {
 
 		s = new DatagramSocket();
 		Random rand = new Random();
@@ -95,7 +95,7 @@ public class Sender {
 							// add new player to player list
 							players.add(new Player(name, Integer
 									.parseInt(Spart[2]), Integer
-									.parseInt(Spart[3])));
+									.parseInt(Spart[3]),game));
 							so("New client with name " + name + " created");
 						} else {
 							// join fail error message, probably due to wrong

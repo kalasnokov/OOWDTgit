@@ -36,12 +36,13 @@ public class Player implements Serializable{
 		tester = new Tester(name);
 	}
 
-	public Player(String name2, int x, int y) {
+	public Player(String name2, int x, int y, Game game) {
 		//senders constructor for other
 		this.name = name2;
 		this.x = x;
 		this.y = y;
 		tester = new Tester(name);
+		sprite = new Sprite("res/char1/char.png");
 	}
 
 	public void update() {

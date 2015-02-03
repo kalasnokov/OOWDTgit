@@ -32,7 +32,7 @@ public class Game extends Head {
 	public void init() {
 		UPDATES_PER_SECOND = 60;
 		gameState = State.MENU;
-		s = new Sender();
+		s = new Sender(this);
 		keys = new Keys();
 		arena = new Arena(height, width); // change later
 	}
