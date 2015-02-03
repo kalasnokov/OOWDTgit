@@ -1,3 +1,4 @@
+package main;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -286,7 +287,7 @@ public class Sender {
 
 	public void s(String msg) throws IOException {
 		// send function
-		String ip = "localhost";
+		String ip = "25.5.72.222";
 		byte[] buf = new byte[1024];
 		InetAddress hostAddress = InetAddress.getByName(ip);
 		buf = msg.getBytes();
