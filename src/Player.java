@@ -19,6 +19,7 @@ public class Player implements Serializable{
 	boolean right;
 	boolean jumping = false;
 	Tester tester;
+	private Sprite sprite;
 
 	public Player(String name, InetAddress address, int port) {
 		//serverside constructor
@@ -69,8 +70,8 @@ public class Player implements Serializable{
 		yacc--;
 		x += xacc;
 		y -= yacc;
-		if (y > 750) {
-			y = 750;
+		if (y > 500) {
+			y = 500;
 			jumping = false;
 
 		}
@@ -149,5 +150,12 @@ public class Player implements Serializable{
 			jumping = true;
 			tester.jump(jumping);
 		}
+	}
+	public void setsprite(){
+		sprite = new Sprite("res/char1/char.png");
+	}
+
+	public void render(double dt, Game game) {
+		sprite.render(x, y);
 	}
 }

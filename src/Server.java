@@ -113,13 +113,14 @@ public class Server extends JFrame {
 			public void run() {
 				while (true) {
 					try {
-						Thread.sleep(100);// game speed
+						Thread.sleep(20);// game speed
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					for (Player Player : players) {
 						Player.update();
+						//possible location of a setx/sety function to decrease misalignments
 					}
 				}
 			}
