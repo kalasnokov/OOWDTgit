@@ -167,17 +167,22 @@ public class Server extends JFrame {
 							.getPort()));
 					ap("New client connected from " + dgp.getAddress() + " "
 							+ dgp.getPort() + " with name " + name);
-					for (Player Player : players) {
+					
+					for (Player P : players) {
+						InetAddress ad=P.getAddress();
+						int p=P.getPort();
+						for (Player Player : players) {
 						msg = "§:" + Player.getName() + ":" + Player.getX()
 								+ ":" + Player.getY() + ":";
-						send(dgp.getAddress(), dgp.getPort());
+						send(ad, p);
+						}
 					}
+					
 				} else {
 					// join fail error message, probably due to wrong message
 					ap("Client at " + dgp.getAddress() + " " + dgp.getPort()
 							+ " sent invalid connection package");
 				}
-
 				// move commands from client marked with $
 			} else {
 				if (FL.equals("$")) {

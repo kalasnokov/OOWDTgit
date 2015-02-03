@@ -253,17 +253,20 @@ public class Sender extends JFrame {
 			String[] Spart = rcvd.split(":");
 			String FL = Spart[0];
 			so(rcvd);
-
+			String name;
+			name = Spart[1];
+			found=false;
 			for (Player Player : players) {
-				if (Player.getName().equals(Spart[1])) {
+				if (Player.getName().equals(name)) {
 					found = true;
 				}
 			}
-
-			if (!found && !ns.equals(Spart[1])) {
+			so(name);
+			so(ns);
+			so(String.valueOf(found));
+			if (!found && !ns.equals(name)) {
 				if (FL.equals("§")) {
-					String name;
-					name = Spart[1];
+
 					players.add(new Player(name, Integer.parseInt(Spart[2]),
 							Integer.parseInt(Spart[3])));
 					so("New client with name " + name + " created");
@@ -538,7 +541,7 @@ public class Sender extends JFrame {
 	}
 
 	public void s(String msg) throws IOException {
-		String ip = "25.5.72.222";
+		String ip = "localhost";
 		byte[] buf = new byte[1024];
 		InetAddress hostAddress = InetAddress.getByName(ip);
 		buf = msg.getBytes();

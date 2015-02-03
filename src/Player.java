@@ -1,6 +1,11 @@
+import java.io.Serializable;
 import java.net.InetAddress;
 
-public class Player {
+public class Player implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6508883591128752232L;
 	String name;
 	int health;
 	int x = 0;
