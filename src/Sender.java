@@ -255,15 +255,12 @@ public class Sender extends JFrame {
 			so(rcvd);
 			String name;
 			name = Spart[1];
-			found=false;
+			found = false;
 			for (Player Player : players) {
 				if (Player.getName().equals(name)) {
 					found = true;
 				}
 			}
-			so(name);
-			so(ns);
-			so(String.valueOf(found));
 			if (!found && !ns.equals(name)) {
 				if (FL.equals("§")) {
 
@@ -414,7 +411,6 @@ public class Sender extends JFrame {
 						e1.printStackTrace();
 					}
 				}
-
 				c = false;
 			}
 			return false;
@@ -430,7 +426,6 @@ public class Sender extends JFrame {
 				try {
 					s(msg);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -439,7 +434,6 @@ public class Sender extends JFrame {
 				try {
 					s(msg);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -448,7 +442,6 @@ public class Sender extends JFrame {
 				try {
 					s(msg);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
