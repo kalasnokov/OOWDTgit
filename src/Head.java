@@ -14,8 +14,6 @@ public abstract class Head implements Runnable {
 
 	protected int width;
 	protected int height;
-	protected double zoom = 1;
-	public double S = 1000;
 
 	public int getWidth() {
 		return width;
@@ -23,26 +21,6 @@ public abstract class Head implements Runnable {
 
 	public void setWidth(int width) {
 		this.width = width;
-	}
-
-	public void outZoom() {
-		if (S > 400) {
-			zoom = 0.9;
-			S = S * zoom;
-			GL11.glTranslated(width / 2, height / 2, 0);
-			GL11.glScaled(zoom, zoom, 1);
-			GL11.glTranslated(-width / 2, -height / 2, 0);
-		}
-	}
-
-	public void inZoom() {
-		if (S < 1500) {
-			zoom = 1.1;
-			S = S * zoom;
-			GL11.glTranslated(width / 2, height / 2, 0);
-			GL11.glScaled(zoom, zoom, 1);
-			GL11.glTranslated(-width / 2, -height / 2, 0);
-		}
 	}
 
 	public int getHeight() {

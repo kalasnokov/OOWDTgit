@@ -1,7 +1,6 @@
 
 import javax.xml.soap.Text;
 
-import org.lwjgl.input.Mouse;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Keyboard;
 
@@ -17,10 +16,7 @@ public class Game extends Head {
 	public Arena arena;
 	public int xoffset = 0;
 	public int yoffset = 0;
-	public int xoffsetacc = 0;
-	public int yoffsetacc = 0;
-	boolean rl = false;
-	boolean rr = false;
+
 
 	public enum State {
 		MENU, PLAYING, STARTING;
@@ -44,63 +40,6 @@ public class Game extends Head {
 			if (gameState != State.MENU)
 				paused = !paused;
 		}
-		if (keys.keyDown(Keyboard.KEY_LEFT)) {
-			if (xoffsetacc < 15) {
-				xoffsetacc++;
-			}
-		} else {
-			if (xoffsetacc > 0) {
-				xoffsetacc--;
-			}
-		}
-		if (keys.keyDown(Keyboard.KEY_RIGHT)) {
-			if (xoffsetacc > -15) {
-				xoffsetacc--;
-			}
-		} else {
-			if (xoffsetacc < 0) {
-				xoffsetacc++;
-			}
-		}
-		if (keys.keyDown(Keyboard.KEY_UP)) {
-			if (yoffsetacc < 15) {
-				yoffsetacc++;
-			}
-		} else {
-			if (yoffsetacc > 0) {
-				yoffsetacc--;
-			}
-		}
-		if (keys.keyDown(Keyboard.KEY_DOWN)) {
-			if (yoffsetacc > -15) {
-				yoffsetacc--;
-			}
-		} else {
-			if (yoffsetacc < 0) {
-				yoffsetacc++;
-			}
-		}
-
-		if (keys.keyDown(Keyboard.KEY_D)) {
-
-		}
-		if (keys.keyDown(Keyboard.KEY_A)) {
-
-		}
-		if (keys.keyDown(Keyboard.KEY_SPACE)) {
-
-		} else {
-
-		}
-
-		int dWheel = Mouse.getDWheel();
-		if (dWheel < 0) {
-			super.outZoom();
-		} else if (dWheel > 0) {
-			super.inZoom();
-
-		}
-		dWheel = 0;
 		keys.setKeys();
 
 	}
@@ -110,15 +49,12 @@ public class Game extends Head {
 
 	public void update(double dt) {
 		Arena.update();
-		xoffset += xoffsetacc;
-		yoffset += yoffsetacc;
 		handleInputs(dt);
 		if (gameState == State.STARTING) {
 			gameState = State.PLAYING;
 			oldState = State.MENU;
 		}
 		buttonClicked = false;
-
 	}
 
 	public int render(double interpolation) {
