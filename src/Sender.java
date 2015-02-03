@@ -233,7 +233,7 @@ public class Sender extends JFrame {
 					try {
 						Thread.sleep(100);// game speed
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
+ 
 						e.printStackTrace();
 					}
 					for (Player Player : players) {
@@ -258,12 +258,13 @@ public class Sender extends JFrame {
 			found = false;
 			for (Player Player : players) {
 				if (Player.getName().equals(name)) {
+					//player search
 					found = true;
 				}
 			}
 			if (!found && !ns.equals(name)) {
 				if (FL.equals("§")) {
-
+					//add new player to player list
 					players.add(new Player(name, Integer.parseInt(Spart[2]),
 							Integer.parseInt(Spart[3])));
 					so("New client with name " + name + " created");
@@ -276,6 +277,7 @@ public class Sender extends JFrame {
 				// move commands from client marked with $
 			} else {
 				if (FL.equals("$")) {
+					//command datagram
 					boolean pressing = false;
 					if (!Spart[2].equals("^")) {
 						if (Spart[3].equals("P")) {
@@ -360,13 +362,12 @@ public class Sender extends JFrame {
 		public boolean dispatchKeyEvent(KeyEvent e) {
 			int key = e.getKeyCode();
 			if (e.getID() == KeyEvent.KEY_PRESSED) {
-
+				//send key pressed message to server
 				if (key == KeyEvent.VK_W) {
 					msg = "$:^:";
 					try {
 						s(msg);
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -375,7 +376,6 @@ public class Sender extends JFrame {
 					try {
 						s(msg);
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -384,21 +384,18 @@ public class Sender extends JFrame {
 					try {
 						s(msg);
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
-
 				c = true;
 			}
 			if (e.getID() == KeyEvent.KEY_RELEASED) {
-
+				//send key release message to server
 				if (key == KeyEvent.VK_A) {
 					msg = "$:<:R:";
 					try {
 						s(msg);
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -407,7 +404,6 @@ public class Sender extends JFrame {
 					try {
 						s(msg);
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -417,61 +413,8 @@ public class Sender extends JFrame {
 		}
 	}
 
-	class keydealer extends KeyAdapter {
-		public void keyPressed(KeyEvent e) {
-			int key = e.getKeyCode();
-			System.out.println(e);
-			if (key == KeyEvent.VK_W) {
-				msg = "$:^:";
-				try {
-					s(msg);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			}
-			if (key == KeyEvent.VK_A) {
-				msg = "$:<:P:";
-				try {
-					s(msg);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			}
-			if (key == KeyEvent.VK_D) {
-				msg = "$:>:P:";
-				try {
-					s(msg);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			}
-		}
-
-		public void keyReleased(KeyEvent e) {
-			int key = e.getKeyCode();
-			System.out.println(e);
-			if (key == KeyEvent.VK_A) {
-				msg = "$:<:R:";
-				try {
-					s(msg);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-			if (key == KeyEvent.VK_D) {
-				msg = "$:>:R:";
-				try {
-					s(msg);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		}
-	}
-
 	public void update() {
+		//movement updater
 		if (pressing && left) {
 			xacc -= 2;
 		}
@@ -502,6 +445,7 @@ public class Sender extends JFrame {
 			jumping = false;
 
 		}
+		//window updater
 		jump(jumping);
 		ml(left);
 		mr(right);
@@ -534,6 +478,7 @@ public class Sender extends JFrame {
 	}
 
 	public void s(String msg) throws IOException {
+		//send function
 		String ip = "localhost";
 		byte[] buf = new byte[1024];
 		InetAddress hostAddress = InetAddress.getByName(ip);
@@ -544,16 +489,19 @@ public class Sender extends JFrame {
 	}
 
 	public void wl(boolean p) {
+		//walk left
 		pressing = p;
 		left = p;
 	}
 
 	public void wr(boolean p) {
+		//walk right
 		pressing = p;
 		right = p;
 	}
 
 	public void j() {
+		//jump
 		if (!jumping) {
 			yacc = 20;
 			jumping = true;

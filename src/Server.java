@@ -102,7 +102,6 @@ public class Server extends JFrame {
 				whatismyip.openStream()));
 
 		String ip = in.readLine();
-		ap("your ip is: " + ip);
 
 		// datagram socket and port location
 		int port = 25565;
@@ -122,14 +121,6 @@ public class Server extends JFrame {
 					for (Player Player : players) {
 						Player.update();
 					}
-				}
-			}
-		}).start();
-
-		new Thread(new Runnable() {
-			public void run() {
-				while (true) {
-					// send x/y update package to clients
 				}
 			}
 		}).start();
@@ -161,23 +152,28 @@ public class Server extends JFrame {
 				// rcvd="§:testsson";
 
 				if (FL.equals("§")) {
+					// if a datagram starts with § it will be identified as a
+					// connection request, and the server will attempt to creata
+					// a new client instance
 					String name;
 					name = Spart[1];
 					players.add(new Player(name, dgp.getAddress(), dgp
 							.getPort()));
 					ap("New client connected from " + dgp.getAddress() + " "
 							+ dgp.getPort() + " with name " + name);
-					
+
 					for (Player P : players) {
-						InetAddress ad=P.getAddress();
-						int p=P.getPort();
+						// send new client info to all existing clients as well
+						// as providing new client with info about all the other
+						InetAddress ad = P.getAddress();
+						int p = P.getPort();
 						for (Player Player : players) {
-						msg = "§:" + Player.getName() + ":" + Player.getX()
-								+ ":" + Player.getY() + ":";
-						send(ad, p);
+							msg = "§:" + Player.getName() + ":" + Player.getX()
+									+ ":" + Player.getY() + ":";
+							send(ad, p);
 						}
 					}
-					
+
 				} else {
 					// join fail error message, probably due to wrong message
 					ap("Client at " + dgp.getAddress() + " " + dgp.getPort()
@@ -195,25 +191,30 @@ public class Server extends JFrame {
 								&& Player.getPort() == dgp.getPort()) {
 							if (Spart[1].equals("<")) {
 								if (!pressing) {
+									// moving left
 									msg = "$:" + Player.getName() + ":<:R:"
 											+ Player.getX() + ":"
 											+ Player.getY() + ":";
 								} else {
+									// stopped moving left
 									msg = "$:" + Player.getName() + ":<:P:";
 								}
 								Player.wl(pressing);
 							}
 							if (Spart[1].equals(">")) {
 								if (!pressing) {
+									// moving right
 									msg = "$:" + Player.getName() + ":>:R:"
 											+ Player.getX() + ":"
 											+ Player.getY() + ":";
 								} else {
+									// stopped moving right
 									msg = "$:" + Player.getName() + ":>:P:";
 								}
 								Player.wr(pressing);
 							}
 							if (Spart[1].equals("^")) {
+								// jump
 								Player.j();
 								msg = "$:" + Player.getName() + ":^:";
 							}
@@ -252,6 +253,7 @@ public class Server extends JFrame {
 	}
 
 	public void send(InetAddress address, int port) throws IOException {
+		// sender function
 		byte[] buf = new byte[1024];
 		buf = msg.getBytes();
 		DatagramPacket out = new DatagramPacket(buf, buf.length, address, port);

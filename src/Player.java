@@ -21,6 +21,7 @@ public class Player implements Serializable{
 	Tester tester;
 
 	public Player(String name, InetAddress address, int port) {
+		//serverside constructor
 		this.name = name;
 		this.address = address;
 		this.port = port;
@@ -29,11 +30,13 @@ public class Player implements Serializable{
 	}
 
 	public Player(String name2) {
+		//senders own constructor
 		this.name = name2;
 		tester = new Tester(name);
 	}
 
 	public Player(String name2, int x, int y) {
+		//senders constructor for other
 		this.name = name2;
 		this.x = x;
 		this.y = y;
@@ -71,6 +74,7 @@ public class Player implements Serializable{
 			jumping = false;
 
 		}
+		//update tester
 		tester.jump(jumping);
 		tester.ml(left);
 		tester.mr(right);
@@ -127,16 +131,19 @@ public class Player implements Serializable{
 	}
 
 	public void wl(boolean p) {
+		//walk left
 		pressing = p;
 		left = p;
 	}
 
 	public void wr(boolean p) {
+		//walk right
 		pressing = p;
 		right = p;
 	}
 
 	public void j() {
+		//jump
 		if (!jumping) {
 			yacc = 20;
 			jumping = true;
