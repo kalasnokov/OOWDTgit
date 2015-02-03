@@ -18,31 +18,32 @@ public class Player implements Serializable{
 	boolean left;
 	boolean right;
 	boolean jumping = false;
-	Tester tester;
+	////tester //tester;
 	private Sprite sprite;
+	boolean f=true;
+	int w=0;
 
 	public Player(String name, InetAddress address, int port) {
 		//serverside constructor
 		this.name = name;
 		this.address = address;
 		this.port = port;
-		tester = new Tester(name);
+		//tester = new //tester(name);
 
 	}
 
 	public Player(String name2) {
 		//senders own constructor
 		this.name = name2;
-		tester = new Tester(name);
+		//tester = new //tester(name);
 	}
 
-	public Player(String name2, int x, int y, Game game) {
+	public Player(String name2, int x, int y) {
 		//senders constructor for other
 		this.name = name2;
 		this.x = x;
 		this.y = y;
-		tester = new Tester(name);
-		sprite = new Sprite("res/char1/char.png");
+		//tester = new //tester(name);
 	}
 
 	public void update() {
@@ -76,12 +77,12 @@ public class Player implements Serializable{
 			jumping = false;
 
 		}
-		//update tester
-		tester.jump(jumping);
-		tester.ml(left);
-		tester.mr(right);
-		tester.setx(x);
-		tester.sety(y);
+		//update //tester
+		//tester.jump(jumping);
+		//tester.ml(left);
+		//tester.mr(right);
+		//tester.setx(x);
+		//tester.sety(y);
 	}
 
 	public String getName() {
@@ -149,14 +150,15 @@ public class Player implements Serializable{
 		if (!jumping) {
 			yacc = 20;
 			jumping = true;
-			tester.jump(jumping);
+			//tester.jump(jumping);
 		}
-	}
-	public void setsprite(){
-		sprite = new Sprite("res/char1/char.png");
 	}
 
 	public void render(double dt, Game game) {
-		sprite.render(x, y);
+				sprite = new Sprite("res/char1/char.png");
+				f=false;
+
+			sprite.render(x, y);
+
 	}
 }

@@ -1,4 +1,3 @@
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 import javax.xml.soap.Text;
@@ -103,6 +102,7 @@ public class Game extends Head {
 			oldState = State.MENU;
 		}
 		buttonClicked = false;
+		s.view(this);
 	}
 
 	public int render(double interpolation) {

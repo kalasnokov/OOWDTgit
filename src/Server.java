@@ -37,7 +37,6 @@ public class Server extends JFrame {
 
 		// stuff
 		super("OOWDT Server");
-		setAlwaysOnTop(true);
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception error) {
@@ -120,7 +119,34 @@ public class Server extends JFrame {
 					}
 					for (Player Player : players) {
 						Player.update();
-						//possible location of a setx/sety function to decrease misalignments
+						// possible location of a setx/sety function to decrease
+						// misalignments
+					}
+				}
+			}
+		}).start();
+		new Thread(new Runnable() {
+			public void run() {
+				while (true) {
+					try {
+						Thread.sleep(100);// update speed
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					for (Player P : players) {
+						InetAddress a = P.getAddress();
+						int p = P.getPort();
+						for (Player Player : players) {
+							msg = "@:" + Player.getName() + ":" + Player.getX()
+									+ ":" + Player.getY() + ":";
+							try {
+								send(a, p);
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
 					}
 				}
 			}

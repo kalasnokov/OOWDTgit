@@ -1,5 +1,3 @@
-import java.awt.KeyEventDispatcher;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -26,6 +24,7 @@ public class Sender {
 	int xacc = 0;
 	int yacc = 0;
 	public Sprite sprite;
+	int w=0;
 
 	public Sender(Game game) {
 		sprite = new Sprite("res/char1/char.png");
@@ -43,7 +42,7 @@ public class Sender {
 		Random rand = new Random();
 		int n = rand.nextInt(1000);
 		String ns = Integer.toString(n);
-		so(ns);
+		// so(ns);
 		try {
 			s("§:" + n + ":");
 		} catch (IOException e1) {
@@ -61,7 +60,7 @@ public class Sender {
 					for (Player Player : players) {
 						Player.update();
 					}
-					update();
+					update(game);
 				}
 			}
 		}).start();
@@ -80,7 +79,7 @@ public class Sender {
 					rcvd = rcvd.trim();
 					String[] Spart = rcvd.split(":");
 					String FL = Spart[0];
-					so(rcvd);
+					// so(rcvd);
 					String name;
 					name = Spart[1];
 					found = false;
@@ -95,13 +94,13 @@ public class Sender {
 							// add new player to player list
 							players.add(new Player(name, Integer
 									.parseInt(Spart[2]), Integer
-									.parseInt(Spart[3]),game));
-							so("New client with name " + name + " created");
+									.parseInt(Spart[3])));
+							// so("New client with name " + name + " created");
 						} else {
 							// join fail error message, probably due to wrong
 							// message
-							so("received invalid connection package");
-							so(rcvd);
+							// so("received invalid connection package");
+							// so(rcvd);
 						}
 
 						// move commands from client marked with $
@@ -188,8 +187,21 @@ public class Sender {
 								}
 							}
 						} else {
-							so("received invalid command package:");
-							so(rcvd);
+							// so("received invalid command package:");
+							// so(rcvd);
+						}
+					}
+					if (FL.equals("@")) {
+						if (Spart[1].equals(ns)) {
+							x = Integer.parseInt(Spart[2]);
+							y = Integer.parseInt(Spart[3]);
+						} else {
+							for (Player Player : players) {
+								if (Player.getName().equals(Spart[1])) {
+									Player.setX(Integer.parseInt(Spart[2]));
+									Player.setY(Integer.parseInt(Spart[3]));
+								}
+							}
 						}
 					}
 				}
@@ -197,7 +209,7 @@ public class Sender {
 		}).start();
 	}
 
-	public void update() {
+	public void update(Game game) {
 		// movement updater
 		if (pressing && left) {
 			xacc -= 2;
@@ -230,9 +242,24 @@ public class Sender {
 
 		}
 	}
+	public void view(Game game){
+		w++;
+		if(w>60){
+			
+		}
+		if (pressing && left) {
+			sprite=new Sprite("res/char1/w1l.png");
+		}
+		if (pressing && right) {
+			sprite=new Sprite("res/char1/w1.png");
+		}
+		if (!pressing) {
+			sprite=new Sprite("res/char1/char.png");
+		}
+	}
 
 	public void render(double dt, Game game) {
-		for(Player Player : players){
+		for (Player Player : players) {
 			Player.render(dt, game);
 		}
 		sprite.render(x, y);
