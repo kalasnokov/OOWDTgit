@@ -24,7 +24,8 @@ public class Sender {
 	int xacc = 0;
 	int yacc = 0;
 	public Sprite sprite;
-	int w=0;
+	int w = 0;
+	boolean two = false;
 
 	public Sender(Game game) {
 		sprite = new Sprite("res/char1/char.png");
@@ -242,19 +243,33 @@ public class Sender {
 
 		}
 	}
-	public void view(Game game){
+
+	public void view(Game game) {
 		w++;
-		if(w>60){
-			
+		if (w > 10) {
+			w = 0;
+			if (two) {
+				two = false;
+			} else {
+				two = true;
+			}
 		}
 		if (pressing && left) {
-			sprite=new Sprite("res/char1/w1l.png");
+			if (two) {
+				sprite = new Sprite("res/char1/w1l.png");
+			} else {
+				sprite = new Sprite("res/char1/w2l.png");
+			}
 		}
 		if (pressing && right) {
-			sprite=new Sprite("res/char1/w1.png");
+			if (two) {
+				sprite = new Sprite("res/char1/w1.png");
+			} else {
+				sprite = new Sprite("res/char1/w2.png");
+			}
 		}
 		if (!pressing) {
-			sprite=new Sprite("res/char1/char.png");
+			sprite = new Sprite("res/char1/char.png");
 		}
 	}
 
