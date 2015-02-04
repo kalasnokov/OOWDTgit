@@ -1,4 +1,5 @@
 package main;
+
 import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -130,7 +131,7 @@ public class Server extends JFrame {
 			public void run() {
 				while (true) {
 					try {
-						Thread.sleep(100);// update speed
+						Thread.sleep(500);// update speed
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -175,88 +176,111 @@ public class Server extends JFrame {
 			}
 			String[] Spart = rcvd.split(":");
 			String FL = Spart[0];
-			if (!found) {
-				// new client added and new player created
-				// rcvd="§:testsson";
-
-				if (FL.equals("§")) {
-					// if a datagram starts with § it will be identified as a
-					// connection request, and the server will attempt to creata
-					// a new client instance
-					String name;
-					name = Spart[1];
-					players.add(new Player(name, dgp.getAddress(), dgp
-							.getPort()));
-					ap("New client connected from " + dgp.getAddress() + " "
-							+ dgp.getPort() + " with name " + name);
-
-					for (Player P : players) {
-						// send new client info to all existing clients as well
-						// as providing new client with info about all the other
-						InetAddress ad = P.getAddress();
-						int p = P.getPort();
-						for (Player Player : players) {
-							msg = "§:" + Player.getName() + ":" + Player.getX()
-									+ ":" + Player.getY() + ":";
-							send(ad, p);
-						}
+			if (FL.equals("#")) {
+				for (int x = players.size() - 1; x >= 0; x--) {
+					if (players.elementAt(x).getAddress()
+							.equals(dgp.getAddress())
+							&& players.elementAt(x).getPort() == dgp.getPort()) {
+						ap("Player " + players.elementAt(x).getName()
+								+ " was removed: client shutdown");
+						msg = "#:" + players.elementAt(x).getName() + ":";
+						send(players.elementAt(x).getAddress(), players
+								.elementAt(x).getPort());
+						players.remove(players.elementAt(x));
 					}
-
-				} else {
-					// join fail error message, probably due to wrong message
-					ap("Client at " + dgp.getAddress() + " " + dgp.getPort()
-							+ " sent invalid connection package");
 				}
-				// move commands from client marked with $
 			} else {
-				if (FL.equals("$")) {
-					boolean pressing = false;
-					if (Spart[2].equals("P")) {
-						pressing = true;
-					}
-					for (Player Player : players) {
-						if (Player.getAddress().equals(dgp.getAddress())
-								&& Player.getPort() == dgp.getPort()) {
-							if (Spart[1].equals("<")) {
-								if (!pressing) {
-									// moving left
-									msg = "$:" + Player.getName() + ":<:R:"
-											+ Player.getX() + ":"
-											+ Player.getY() + ":";
-								} else {
-									// stopped moving left
-									msg = "$:" + Player.getName() + ":<:P:";
-								}
-								Player.wl(pressing);
-							}
-							if (Spart[1].equals(">")) {
-								if (!pressing) {
-									// moving right
-									msg = "$:" + Player.getName() + ":>:R:"
-											+ Player.getX() + ":"
-											+ Player.getY() + ":";
-								} else {
-									// stopped moving right
-									msg = "$:" + Player.getName() + ":>:P:";
-								}
-								Player.wr(pressing);
-							}
-							if (Spart[1].equals("^")) {
-								// jump
-								Player.j();
-								msg = "$:" + Player.getName() + ":^:";
+				if (!found) {
+					// new client added and new player created
+					// rcvd="§:testsson";
+
+					if (FL.equals("§")) {
+						// if a datagram starts with § it will be identified as
+						// a
+						// connection request, and the server will attempt to
+						// creata
+						// a new client instance
+						String name;
+						name = Spart[1];
+						players.add(new Player(name, dgp.getAddress(), dgp
+								.getPort()));
+						ap("New client connected from " + dgp.getAddress()
+								+ " " + dgp.getPort() + " with name " + name);
+
+						for (Player P : players) {
+							// send new client info to all existing clients as
+							// well
+							// as providing new client with info about all the
+							// other
+							InetAddress ad = P.getAddress();
+							int p = P.getPort();
+							for (Player Player : players) {
+								msg = "§:" + Player.getName() + ":"
+										+ Player.getX() + ":" + Player.getY()
+										+ ":";
+								send(ad, p);
 							}
 						}
+
+					} else {
+						// join fail error message, probably due to wrong
+						// message
+						ap("Client at " + dgp.getAddress() + " "
+								+ dgp.getPort()
+								+ " sent invalid connection package");
 					}
-					// ap(String.valueOf(pressing));
-
+					// move commands from client marked with $
 				} else {
-					// error due to wrong move etc
-					ap("Client at " + dgp.getAddress() + " " + dgp.getPort()
-							+ " sent invalid command package:");
-					ap(rcvd);
-				}
+					if (FL.equals("$")) {
+						boolean pressing = false;
+						if (Spart[2].equals("P")) {
+							pressing = true;
+						}
+						for (Player Player : players) {
+							if (Player.getAddress().equals(dgp.getAddress())
+									&& Player.getPort() == dgp.getPort()) {
+								if (Spart[1].equals("<")) {
+									if (!pressing) {
+										// moving left
+										msg = "$:" + Player.getName() + ":<:R:"
+												+ Player.getX() + ":"
+												+ Player.getY() + ":";
+									} else {
+										// stopped moving left
+										msg = "$:" + Player.getName() + ":<:P:";
+									}
+									Player.wl(pressing);
+								}
+								if (Spart[1].equals(">")) {
+									if (!pressing) {
+										// moving right
+										msg = "$:" + Player.getName() + ":>:R:"
+												+ Player.getX() + ":"
+												+ Player.getY() + ":";
+									} else {
+										// stopped moving right
+										msg = "$:" + Player.getName() + ":>:P:";
+									}
+									Player.wr(pressing);
+								}
+								if (Spart[1].equals("^")) {
+									// jump
+									Player.j();
+									msg = "$:" + Player.getName() + ":^:";
+								}
+							}
+						}
+						// ap(String.valueOf(pressing));
 
+					} else {
+						// error due to wrong move etc
+						ap("Client at " + dgp.getAddress() + " "
+								+ dgp.getPort()
+								+ " sent invalid command package:");
+						ap(rcvd);
+					}
+
+				}
 			}
 			for (Player Player : players) {
 				// send info about action to all clients using string msg

@@ -1,6 +1,9 @@
 package main;
+
 import static org.lwjgl.opengl.GL11.GL_VERSION;
 import static org.lwjgl.opengl.GL11.glGetString;
+
+import java.io.IOException;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -36,7 +39,7 @@ public abstract class Head implements Runnable {
 	protected double UPDATES_PER_SECOND = 60.0;
 	protected String version = "";
 
-	protected boolean running = false;
+	boolean running = false;
 	private Thread thread;
 
 	public void start() {
@@ -136,8 +139,9 @@ public abstract class Head implements Runnable {
 		double updateDelta = getUpdateDelta();
 		double renderDelta = getRenderDelta();
 		while (running) {
-			if (Display.isCloseRequested())
+			if (Display.isCloseRequested()) {
 				running = false;
+			}
 
 			long now = System.nanoTime();
 			delta += (now - lastTime) / ns;
@@ -172,9 +176,21 @@ public abstract class Head implements Runnable {
 			}
 
 		}
+		try {
+			kill();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		quit();
 		AL.destroy();
 		Display.destroy();
+
+	}
+
+	public void kill() throws IOException {
+		System.out.println("attempting to kill");
+		Game.killthreads();
 	}
 
 	protected void quit() {

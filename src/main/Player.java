@@ -23,6 +23,7 @@ public class Player implements Serializable{
 	private Sprite sprite;
 	boolean f=true;
 	int w=0;
+	boolean two=false;
 
 	public Player(String name, InetAddress address, int port) {
 		//serverside constructor
@@ -84,6 +85,35 @@ public class Player implements Serializable{
 		//tester.mr(right);
 		//tester.setx(x);
 		//tester.sety(y);
+	}
+	
+	public void view(Game game) {
+		w++;
+		if (w > 10) {
+			w = 0;
+			if (two) {
+				two = false;
+			} else {
+				two = true;
+			}
+		}
+		if (pressing && left) {
+			if (two) {
+				sprite = new Sprite("res/char1/w1l.png");
+			} else {
+				sprite = new Sprite("res/char1/w2l.png");
+			}
+		}
+		if (pressing && right) {
+			if (two) {
+				sprite = new Sprite("res/char1/w1.png");
+			} else {
+				sprite = new Sprite("res/char1/w2.png");
+			}
+		}
+		if (!pressing) {
+			sprite = new Sprite("res/char1/char.png");
+		}
 	}
 
 	public String getName() {

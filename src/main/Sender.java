@@ -1,4 +1,5 @@
 package main;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -27,6 +28,7 @@ public class Sender {
 	public Sprite sprite;
 	int w = 0;
 	boolean two = false;
+	boolean running = true;
 
 	public Sender(Game game) {
 		sprite = new Sprite("res/char1/char.png");
@@ -52,7 +54,7 @@ public class Sender {
 		}
 		new Thread(new Runnable() {
 			public void run() {
-				while (true) {
+				while (running) {
 					try {
 						Thread.sleep(20);
 					} catch (InterruptedException e) {
@@ -68,7 +70,7 @@ public class Sender {
 		}).start();
 		new Thread(new Runnable() {
 			public void run() {
-				while (true) {
+				while (running) {
 					byte[] buf = new byte[1024];
 					DatagramPacket dgp = new DatagramPacket(buf, buf.length);
 					try {
@@ -91,7 +93,15 @@ public class Sender {
 							found = true;
 						}
 					}
+					if (FL.equals("#")) {
+						for (int x = players.size() - 1; x >= 0; x--) {
+							if (players.elementAt(x).getName().equals(Spart[1])) {
+								players.remove(players.elementAt(x));
+							}
+						}
+					}
 					if (!found && !ns.equals(name)) {
+
 						if (FL.equals("§")) {
 							// add new player to player list
 							players.add(new Player(name, Integer
@@ -275,8 +285,8 @@ public class Sender {
 	}
 
 	public void render(double dt, Game game) {
-		for (Player Player : players) {
-			Player.render(dt, game);
+		for (int x = players.size() - 1; x >= 0; x--) {
+			players.elementAt(x).render(dt, game);
 		}
 		sprite.render(x, y);
 	}
@@ -287,7 +297,7 @@ public class Sender {
 
 	public void s(String msg) throws IOException {
 		// send function
-		String ip = "25.5.72.222";
+		String ip = "25.66.254.155";
 		byte[] buf = new byte[1024];
 		InetAddress hostAddress = InetAddress.getByName(ip);
 		buf = msg.getBytes();
@@ -314,5 +324,10 @@ public class Sender {
 			yacc = 20;
 			jumping = true;
 		}
+	}
+
+	public void stop() throws IOException {
+		running = false;
+		s("#:");
 	}
 }

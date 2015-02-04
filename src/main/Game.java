@@ -18,7 +18,7 @@ public class Game extends Head {
 	public Arena arena;
 	public int xoffset = 0;
 	public int yoffset = 0;
-	public Sender s;
+	public static Sender s;
 	public boolean cr = false;
 	public boolean cl = false;
 
@@ -121,5 +121,9 @@ public class Game extends Head {
 
 	public static void main(String[] args) {
 		new Game().start();
+	}
+
+	public static void killthreads() throws IOException {
+		s.stop();
 	}
 }
