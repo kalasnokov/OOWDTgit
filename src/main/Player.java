@@ -24,6 +24,7 @@ public class Player implements Serializable{
 	boolean f=true;
 	int w=0;
 	boolean two=false;
+	boolean facing=false;
 
 	public Player(String name, InetAddress address, int port) {
 		//serverside constructor
@@ -89,7 +90,7 @@ public class Player implements Serializable{
 	
 	public void view(Game game) {
 		w++;
-		if (w > 10) {
+		if (w > 6) {
 			w = 0;
 			if (two) {
 				two = false;
@@ -112,7 +113,11 @@ public class Player implements Serializable{
 			}
 		}
 		if (!pressing) {
+			if(facing){
 			sprite = new Sprite("res/char1/char.png");
+			}else{
+				sprite = new Sprite("res/char1/charl.png");	
+			}
 		}
 	}
 
@@ -168,12 +173,14 @@ public class Player implements Serializable{
 		//walk left
 		pressing = p;
 		left = p;
+		facing=false;
 	}
 
 	public void wr(boolean p) {
 		//walk right
 		pressing = p;
 		right = p;
+		facing=true;
 	}
 
 	public void j() {

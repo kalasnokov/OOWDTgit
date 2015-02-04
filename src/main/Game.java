@@ -1,6 +1,8 @@
 package main;
+
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
 import javax.xml.soap.Text;
 
 import org.lwjgl.input.Cursor;
@@ -32,7 +34,8 @@ public class Game extends Head {
 	public void init() {
 		UPDATES_PER_SECOND = 60;
 		gameState = State.MENU;
-		s = new Sender(this);
+		String ip = JOptionPane.showInputDialog("Enter IP to connect to");
+		s = new Sender(this, ip);
 		keys = new Keys();
 		arena = new Arena(height, width); // change later
 	}
