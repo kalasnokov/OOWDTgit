@@ -80,7 +80,7 @@ public class Sender {
 					byte[] buf = new byte[1024];
 					DatagramPacket dgp = new DatagramPacket(buf, buf.length);
 					try {
-						s.setSoTimeout(1000);
+						s.setSoTimeout(10000);
 						s.receive(dgp);
 						r = true;
 					} catch (IOException e) {
@@ -134,14 +134,14 @@ public class Sender {
 
 	public void positionUpdater(String FL, String[] Spart, String ns) {
 		if (FL.equals("@")) {
+			int siX = Integer.parseInt(Spart[2]);
+			int siY = Integer.parseInt(Spart[3]);
 			if (Spart[1].equals(ns)) {
-				x = Integer.parseInt(Spart[2]);
-				y = Integer.parseInt(Spart[3]);
+				setXY(thisplayer, siX, siY);
 			} else {
 				for (Player Player : players) {
 					if (Player.getName().equals(Spart[1])) {
-						Player.setX(Integer.parseInt(Spart[2]));
-						Player.setY(Integer.parseInt(Spart[3]));
+						setXY(Player, siX, siY);
 					}
 				}
 			}
@@ -242,8 +242,8 @@ public class Sender {
 	}
 
 	public void view(Game game) {
-		for (Player Player : players) {
-			Player.view(game);
+		for (int x = players.size() - 1; x >= 0; x--) {
+			players.elementAt(x).view(game);
 		}
 		thisplayer.view(game);
 	}

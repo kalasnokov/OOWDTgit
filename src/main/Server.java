@@ -24,13 +24,13 @@ import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+@SuppressWarnings("unused")
 public class Server extends JFrame {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1960888810093318280L;
 	private static final JTextArea Log = new JTextArea();
-	@SuppressWarnings("unused")
 	private static final JTextPane Serverinf = new JTextPane();
 	private boolean found;
 	public Vector<Player> players = new Vector<Player>();
