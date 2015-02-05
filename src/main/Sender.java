@@ -94,7 +94,6 @@ public class Sender {
 						String[] Spart = rcvd.split(":");
 						String FL = Spart[0];
 						// so(rcvd);
-						String name;
 						name = Spart[1];
 						found = false;
 						for (Player Player : players) {
@@ -111,21 +110,10 @@ public class Sender {
 								players.add(new Player(name, Integer
 										.parseInt(Spart[2]), Integer
 										.parseInt(Spart[3])));
-								// so("New client with name " + name +
-								// " created");
-							} else {
-								// join fail error message, probably due to
-								// wrong
-								// message
-								// so("received invalid connection package");
-								// so(rcvd);
 							}
-
-							// move commands from client marked with $
 						}
 						move(FL, Spart, ns);
 						positionUpdater(FL, Spart, ns);
-
 					}
 				}
 			}
@@ -150,11 +138,7 @@ public class Sender {
 
 	public void remover(String FL, String[] Spart) {
 		if (FL.equals("#")) {
-			for (int x = players.size() - 1; x >= 0; x--) {
-				if (players.elementAt(x).getName().equals(Spart[1])) {
-					players.remove(players.elementAt(x));
-				}
-			}
+			players.remove(SafegetPlayer(name));
 		}
 	}
 
@@ -170,67 +154,29 @@ public class Sender {
 				} else {
 					siX = Integer.parseInt(Spart[4]);
 					siY = Integer.parseInt(Spart[5]);
-				}
-			}
-			if (Spart[2].equals("<")) {
-				if (pressing) {
-					if (Spart[1].equals(ns)) {
-						thisplayer.wl(pressing);
-					} else {
-						for (Player Player : players) {
-							if (Player.getName().equals(Spart[1])) {
-								Player.wl(pressing);
-							}
-						}
-					}
-				} else {
-					if (Spart[1].equals(ns)) {
-						thisplayer.wl(pressing);
-						setXY(thisplayer, siX, siY);
-					} else {
-						for (Player Player : players) {
-							if (Player.getName().equals(Spart[1])) {
-								Player.wl(pressing);
-								setXY(Player, siX, siY);
-							}
-						}
+					setXY(thisplayer, siX, siY);
+					if (!Spart[1].equals(ns)) {
+						setXY(getPlayer(name), siX, siY);
 					}
 				}
 			}
-			if (Spart[2].equals(">")) {
-				if (pressing) {
-					if (Spart[1].equals(ns)) {
-						thisplayer.wr(pressing);
-					} else {
-						for (Player Player : players) {
-							if (Player.getName().equals(Spart[1])) {
-								Player.wr(pressing);
-							}
-						}
-					}
-				} else {
-					if (Spart[1].equals(ns)) {
-						thisplayer.wr(pressing);
-						setXY(thisplayer, siX, siY);
-					} else {
-						for (Player Player : players) {
-							if (Player.getName().equals(Spart[1])) {
-								Player.wr(pressing);
-								setXY(Player, siX, siY);
-							}
-						}
-					}
+			if (Spart[1].equals(ns)) {
+				if (Spart[2].equals("<")) {
+					thisplayer.wl(pressing);
 				}
-			}
-			if (Spart[2].equals("^")) {
-				if (Spart[1].equals(ns)) {
+				if (Spart[2].equals(">")) {
+					thisplayer.wr(pressing);
+				}
+				if (Spart[2].equals("^")) {
 					thisplayer.j();
-				} else {
-					for (Player Player : players) {
-						if (Player.getName().equals(Spart[1])) {
-							Player.j();
-						}
-					}
+				}
+			} else {
+				// not this player
+				if (Spart[2].equals("<")) {
+					getPlayer(name).wl(pressing);
+				}
+				if (Spart[2].equals(">")) {
+					getPlayer(name).wr(pressing);
 				}
 			}
 		}
@@ -239,6 +185,26 @@ public class Sender {
 	public void setXY(Player p, int x, int y) {
 		p.setX(x);
 		p.setY(y);
+	}
+
+	public Player getPlayer(String name) {
+		Object o = null;
+		for (Player Player : players) {
+			if (Player.getName().equals(name)) {
+				o = Player;
+			}
+		}
+		return (Player) o;
+	}
+
+	public Player SafegetPlayer(String name) {
+		Object o = null;
+		for (int x = players.size() - 1; x >= 0; x--) {
+			if (players.elementAt(x).getName().equals(name)) {
+				o = players.elementAt(x);
+			}
+		}
+		return (Player) o;
 	}
 
 	public void view(Game game) {

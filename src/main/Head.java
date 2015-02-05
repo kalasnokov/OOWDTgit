@@ -189,7 +189,6 @@ public abstract class Head implements Runnable {
 	}
 
 	public void kill() throws IOException {
-		System.out.println("attempting to kill");
 		Game.killthreads();
 	}
 

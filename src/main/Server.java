@@ -28,7 +28,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 
 @SuppressWarnings("unused")
-public class Server extends JFrame {
+public class Server extends JFrame implements Serializable {
 	/**
 	 * 
 	 */
@@ -133,7 +133,6 @@ public class Server extends JFrame {
 		sk = new DatagramSocket(port);
 
 		// Serverinf.setText(ip + ":" + port);
-
 		new Thread(new Runnable() {
 			public void run() {
 				while (true) {
@@ -155,9 +154,8 @@ public class Server extends JFrame {
 			public void run() {
 				while (true) {
 					try {
-						Thread.sleep(500);// update speed
+						Thread.sleep(1000);// update speed
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					for (Player P : players) {
@@ -169,7 +167,6 @@ public class Server extends JFrame {
 							try {
 								send(a, p);
 							} catch (IOException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
@@ -213,104 +210,96 @@ public class Server extends JFrame {
 						players.remove(players.elementAt(x));
 					}
 				}
-			} else {
-				if (!found) {
-					// new client added and new player created
-					// rcvd="§:testsson";
+			}
+			if (!found) {
+				// new client added and new player created
+				// rcvd="§:testsson";
 
-					if (FL.equals("§")) {
-						// if a datagram starts with § it will be identified as
-						// a
-						// connection request, and the server will attempt to
-						// creata
-						// a new client instance
-						String name;
-						name = Spart[1];
-						players.add(new Player(name, dgp.getAddress(), dgp
-								.getPort()));
-						ap("New client connected from " + dgp.getAddress()
-								+ " " + dgp.getPort() + " with name " + name);
+				if (FL.equals("§")) {
+					// if a datagram starts with § it will be identified as
+					// a
+					// connection request, and the server will attempt to
+					// creata
+					// a new client instance
+					String name;
+					name = Spart[1];
+					players.add(new Player(name, dgp.getAddress(), dgp
+							.getPort()));
+					ap("New client connected from " + dgp.getAddress() + " "
+							+ dgp.getPort() + " with name " + name);
 
-						for (Player P : players) {
-							// send new client info to all existing clients as
-							// well
-							// as providing new client with info about all the
-							// other
-							InetAddress ad = P.getAddress();
-							int p = P.getPort();
-							for (Player Player : players) {
-								msg = "§:" + Player.getName() + ":"
-										+ Player.getX() + ":" + Player.getY()
-										+ ":";
-								send(ad, p);
-							}
-						}
-
-					} else {
-						// join fail error message, probably due to wrong
-						// message
-						ap("Client at " + dgp.getAddress() + " "
-								+ dgp.getPort()
-								+ " sent invalid connection package");
-					}
-					// move commands from client marked with $
-				} else {
-					if (FL.equals("$")) {
-						boolean pressing = false;
-						if (Spart[2].equals("P")) {
-							pressing = true;
-						}
+					for (Player P : players) {
+						// send new client info to all existing clients as
+						// well
+						// as providing new client with info about all the
+						// other
+						InetAddress ad = P.getAddress();
+						int p = P.getPort();
 						for (Player Player : players) {
-							if (Player.getAddress().equals(dgp.getAddress())
-									&& Player.getPort() == dgp.getPort()) {
-								if (Spart[1].equals("<")) {
-									if (!pressing) {
-										// moving left
-										msg = "$:" + Player.getName() + ":<:R:"
-												+ Player.getX() + ":"
-												+ Player.getY() + ":";
-									} else {
-										// stopped moving left
-										msg = "$:" + Player.getName() + ":<:P:";
-									}
-									Player.wl(pressing);
-								}
-								if (Spart[1].equals(">")) {
-									if (!pressing) {
-										// moving right
-										msg = "$:" + Player.getName() + ":>:R:"
-												+ Player.getX() + ":"
-												+ Player.getY() + ":";
-									} else {
-										// stopped moving right
-										msg = "$:" + Player.getName() + ":>:P:";
-									}
-									Player.wr(pressing);
-								}
-								if (Spart[1].equals("^")) {
-									// jump
-									Player.j();
-									msg = "$:" + Player.getName() + ":^:";
-								}
-							}
+							msg = "§:" + Player.getName() + ":" + Player.getX()
+									+ ":" + Player.getY() + ":";
+							send(ad, p);
 						}
-						// ap(String.valueOf(pressing));
-
-					} else {
-						// error due to wrong move etc
-						ap("Client at " + dgp.getAddress() + " "
-								+ dgp.getPort()
-								+ " sent invalid command package:");
-						ap(rcvd);
 					}
 
 				}
 			}
+			if (FL.equals("$")) {
+				boolean pressing = false;
+				if (Spart[2].equals("P")) {
+					pressing = true;
+				}
+				for (Player Player : players) {
+					if (Player.getAddress().equals(dgp.getAddress())
+							&& Player.getPort() == dgp.getPort()) {
+						if (Spart[1].equals("<")) {
+							if (!pressing) {
+								// moving left
+								msg = "$:" + Player.getName() + ":<:R:"
+										+ Player.getX() + ":" + Player.getY()
+										+ ":";
+							} else {
+								// stopped moving left
+								msg = "$:" + Player.getName() + ":<:P:";
+							}
+							Player.wl(pressing);
+						}
+						if (Spart[1].equals(">")) {
+							if (!pressing) {
+								// moving right
+								msg = "$:" + Player.getName() + ":>:R:"
+										+ Player.getX() + ":" + Player.getY()
+										+ ":";
+							} else {
+								// stopped moving right
+								msg = "$:" + Player.getName() + ":>:P:";
+							}
+							Player.wr(pressing);
+						}
+						if (Spart[1].equals("^")) {
+							// jump
+							Player.j();
+							msg = "$:" + Player.getName() + ":^:";
+						}
+					}
+				}
+			}
+
 			for (Player Player : players) {
 				// send info about action to all clients using string msg
 				send(Player.getAddress(), Player.getPort());
 			}
 		}
+	}
+	
+	public Player getPlayer(String name) {
+		Object o = null;
+		for (Player Player : players) {
+			if (Player.getName().equals(name)) {
+				o = Player;
+			}
+		}
+		return (Player) o;
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -336,41 +325,31 @@ public class Server extends JFrame {
 		sk.send(out);
 	}
 
-	public void ExperimentalSend(InetAddress address, Player player) throws IOException {
-		Socket s = new Socket("localhost",25565);
+	public void ExperimentalSend(InetAddress address, Player player)
+			throws IOException {
+		Socket s = new Socket("localhost", 25565);
 		OutputStream os = s.getOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(os);
-		Positions to = new Positions(0,0,player.getName());
+		Positions to = new Positions(10, 7, player.getName());
 		oos.writeObject(to);
 		oos.close();
 		os.close();
 		s.close();
 	}
-	public void ExperimentalReceive() throws IOException, ClassNotFoundException{
+
+	public void ExperimentalReceive() throws IOException,
+			ClassNotFoundException {
 		ServerSocket ss = new ServerSocket(25565);
 		Socket s = ss.accept();
 		InputStream is = s.getInputStream();
 		ObjectInputStream ois = new ObjectInputStream(is);
-		Positions to = (Positions)ois.readObject();
-		if (to!=null){System.out.println(to.x);}
-		System.out.println((String)ois.readObject());
+		Object o = ois.readObject();
+		Positions to = (Positions) o;
+		if (to != null) {
+			System.out.println(to.x + " " + to.y);
+		}
 		is.close();
 		s.close();
 		ss.close();
-	}
-
-	class Positions implements Serializable {
-		int x;
-		int y;
-		String name;
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -3954191132785947693L;
-
-		public Positions(int x, int y, String name) {
-			this.x = x;
-			this.y = y;
-		}
 	}
 }
