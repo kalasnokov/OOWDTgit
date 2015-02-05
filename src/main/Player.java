@@ -193,6 +193,12 @@ public class Player implements Serializable {
 			// tester.jump(jumping);
 		}
 	}
+	public boolean getRight(){
+		return right;
+	}
+	public boolean getLeft(){
+		return left;
+	}
 
 	public void so(String o) {
 		System.out.println(o);

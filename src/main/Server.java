@@ -21,6 +21,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Server extends JFrame {
 	/**
@@ -53,38 +55,37 @@ public class Server extends JFrame {
 		scrollPane
 				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-		JTextPane Serverinf = new JTextPane();
-		Serverinf.setEditable(false);
-		Serverinf.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		JTextPane input = new JTextPane();
+		input.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				int key = e.getKeyCode();
+				// when pressing the "enter" key.
+				if (key == KeyEvent.VK_ENTER) {
+				}
+			}
+		});
+		input.setEditable(false);
+		input.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
-		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(
-				Alignment.LEADING).addGroup(
-				groupLayout
-						.createSequentialGroup()
-						.addContainerGap()
-						.addGroup(
-								groupLayout
-										.createParallelGroup(Alignment.LEADING)
-										.addComponent(scrollPane,
-												Alignment.TRAILING,
-												GroupLayout.DEFAULT_SIZE, 259,
-												Short.MAX_VALUE)
-										.addComponent(Serverinf,
-												Alignment.TRAILING,
-												GroupLayout.DEFAULT_SIZE, 259,
-												Short.MAX_VALUE))
-						.addContainerGap()));
-		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(
-				Alignment.TRAILING).addGroup(
-				Alignment.LEADING,
-				groupLayout
-						.createSequentialGroup()
-						.addContainerGap()
-						.addComponent(Serverinf, GroupLayout.PREFERRED_SIZE,
-								28, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE,
-								382, Short.MAX_VALUE).addContainerGap()));
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
+						.addComponent(input, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE))
+					.addContainerGap())
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(input, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap())
+		);
 		Log.setEditable(false);
 
 		Log.setLineWrap(true);
