@@ -23,6 +23,7 @@ public class Game extends Head {
 	public static Sender s;
 	public boolean cr = false;
 	public boolean cl = false;
+	private Sprite ground;
 
 	public enum State {
 		MENU, PLAYING, STARTING;
@@ -36,6 +37,7 @@ public class Game extends Head {
 		gameState = State.MENU;
 		String ip = JOptionPane.showInputDialog("Enter IP to connect to");
 		s = new Sender(this, ip);
+		ground= new Sprite("res/ground.png");
 		keys = new Keys();
 		arena = new Arena(height, width); // change later
 	}
@@ -119,9 +121,10 @@ public class Game extends Head {
 				interp = 0;
 		}
 		s.render(interpolation, this);
+		ground.render(0, 540);
 		return 0;
 	}
-	
+
 	public void so(String o) {
 		System.out.println(o);
 	}
