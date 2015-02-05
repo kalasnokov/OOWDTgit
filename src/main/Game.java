@@ -21,8 +21,7 @@ public class Game extends Head {
 	public int xoffset = 0;
 	public int yoffset = 0;
 	public static Sender s;
-	public boolean cr = false;
-	public boolean cl = false;
+	public boolean c = false;
 	private Sprite ground;
 
 	public enum State {
@@ -51,23 +50,23 @@ public class Game extends Head {
 				paused = !paused;
 		}
 		String msg;
-		if (keys.keyPressed(Keyboard.KEY_A) && !cl) {
+		if (keys.keyPressed(Keyboard.KEY_A) && !c) {
 			msg = "$:<:P:";
 			try {
 				s.s(msg);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			cl = true;
+			c = true;
 		}
-		if (keys.keyPressed(Keyboard.KEY_D) && !cr) {
+		if (keys.keyPressed(Keyboard.KEY_D) && !c) {
 			msg = "$:>:P:";
 			try {
 				s.s(msg);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			cr = true;
+			c = true;
 		}
 		if (keys.keyPressed(Keyboard.KEY_W)) {
 			msg = "$:^:";
@@ -84,7 +83,7 @@ public class Game extends Head {
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			cl = false;
+			c = false;
 		}
 		if (keys.keyReleased(Keyboard.KEY_D)) {
 			msg = "$:>:R:";
@@ -93,7 +92,7 @@ public class Game extends Head {
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			cr = false;
+			c = false;
 		}
 		keys.setKeys();
 	}

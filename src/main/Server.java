@@ -1,13 +1,17 @@
 package main;
 
 import java.awt.Component;
-import java.io.BufferedReader;
+import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.URL;
+import java.net.Socket;
 import java.util.Vector;
 
 import javax.swing.GroupLayout;
@@ -19,10 +23,6 @@ import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
-
-import java.awt.Font;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 @SuppressWarnings("unused")
 public class Server extends JFrame {
@@ -68,24 +68,42 @@ public class Server extends JFrame {
 		input.setEditable(false);
 		input.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
-						.addComponent(input, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE))
-					.addContainerGap())
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(input, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap())
-		);
+		groupLayout
+				.setHorizontalGroup(groupLayout
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								Alignment.TRAILING,
+								groupLayout
+										.createSequentialGroup()
+										.addContainerGap()
+										.addGroup(
+												groupLayout
+														.createParallelGroup(
+																Alignment.TRAILING)
+														.addComponent(
+																scrollPane,
+																Alignment.LEADING,
+																GroupLayout.DEFAULT_SIZE,
+																259,
+																Short.MAX_VALUE)
+														.addComponent(
+																input,
+																Alignment.LEADING,
+																GroupLayout.DEFAULT_SIZE,
+																259,
+																Short.MAX_VALUE))
+										.addContainerGap()));
+		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(
+				Alignment.LEADING).addGroup(
+				Alignment.TRAILING,
+				groupLayout
+						.createSequentialGroup()
+						.addContainerGap()
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE,
+								411, Short.MAX_VALUE)
+						.addPreferredGap(ComponentPlacement.UNRELATED)
+						.addComponent(input, GroupLayout.PREFERRED_SIZE, 28,
+								GroupLayout.PREFERRED_SIZE).addContainerGap()));
 		Log.setEditable(false);
 
 		Log.setLineWrap(true);
@@ -99,17 +117,19 @@ public class Server extends JFrame {
 		// non-ui code begins here
 
 		// checks servers ip
-		/*URL whatismyip = new URL("http://checkip.amazonaws.com");
-		BufferedReader in = new BufferedReader(new InputStreamReader(
-				whatismyip.openStream()));
-
-		String ip = in.readLine();*/
+		/*
+		 * URL whatismyip = new URL("http://checkip.amazonaws.com");
+		 * BufferedReader in = new BufferedReader(new InputStreamReader(
+		 * whatismyip.openStream()));
+		 * 
+		 * String ip = in.readLine();
+		 */
 
 		// datagram socket and port location
 		int port = 25565;
 		sk = new DatagramSocket(port);
 
-		//Serverinf.setText(ip + ":" + port);
+		// Serverinf.setText(ip + ":" + port);
 
 		new Thread(new Runnable() {
 			public void run() {
@@ -311,5 +331,31 @@ public class Server extends JFrame {
 		buf = msg.getBytes();
 		DatagramPacket out = new DatagramPacket(buf, buf.length, address, port);
 		sk.send(out);
+	}
+
+	public void ExperimentalSend(InetAddress address, int port, Player player) throws IOException {
+		Socket s = new Socket("localhost",2002);
+		OutputStream os = s.getOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(os);
+		Positions to = new Positions(0,0,player.getName());
+		oos.writeObject(to);
+		oos.close();
+		os.close();
+		s.close();
+	}
+
+	class Positions implements Serializable {
+		int x;
+		int y;
+		String name;
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -3954191132785947693L;
+
+		public Positions(int x, int y, String name) {
+			this.x = x;
+			this.y = y;
+		}
 	}
 }
