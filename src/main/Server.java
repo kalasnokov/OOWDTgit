@@ -5,12 +5,15 @@ import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
 
@@ -333,8 +336,8 @@ public class Server extends JFrame {
 		sk.send(out);
 	}
 
-	public void ExperimentalSend(InetAddress address, int port, Player player) throws IOException {
-		Socket s = new Socket("localhost",2002);
+	public void ExperimentalSend(InetAddress address, Player player) throws IOException {
+		Socket s = new Socket("localhost",25565);
 		OutputStream os = s.getOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(os);
 		Positions to = new Positions(0,0,player.getName());
@@ -342,6 +345,18 @@ public class Server extends JFrame {
 		oos.close();
 		os.close();
 		s.close();
+	}
+	public void ExperimentalReceive() throws IOException, ClassNotFoundException{
+		ServerSocket ss = new ServerSocket(25565);
+		Socket s = ss.accept();
+		InputStream is = s.getInputStream();
+		ObjectInputStream ois = new ObjectInputStream(is);
+		Positions to = (Positions)ois.readObject();
+		if (to!=null){System.out.println(to.x);}
+		System.out.println((String)ois.readObject());
+		is.close();
+		s.close();
+		ss.close();
 	}
 
 	class Positions implements Serializable {
