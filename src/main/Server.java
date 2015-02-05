@@ -98,17 +98,17 @@ public class Server extends JFrame {
 		// non-ui code begins here
 
 		// checks servers ip
-		URL whatismyip = new URL("http://checkip.amazonaws.com");
+		/*URL whatismyip = new URL("http://checkip.amazonaws.com");
 		BufferedReader in = new BufferedReader(new InputStreamReader(
 				whatismyip.openStream()));
 
-		String ip = in.readLine();
+		String ip = in.readLine();*/
 
 		// datagram socket and port location
 		int port = 25565;
 		sk = new DatagramSocket(port);
 
-		Serverinf.setText(ip + ":" + port);
+		//Serverinf.setText(ip + ":" + port);
 
 		new Thread(new Runnable() {
 			public void run() {

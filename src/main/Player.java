@@ -1,8 +1,9 @@
 package main;
+
 import java.io.Serializable;
 import java.net.InetAddress;
 
-public class Player implements Serializable{
+public class Player implements Serializable {
 	/**
 	 * 
 	 */
@@ -19,34 +20,35 @@ public class Player implements Serializable{
 	boolean left;
 	boolean right;
 	boolean jumping = false;
-	////tester //tester;
+	// //tester //tester;
 	private Sprite sprite;
-	boolean f=true;
-	int w=0;
-	boolean two=false;
-	boolean facing=false;
+	boolean f = true;
+	int w = 0;
+	boolean two = false;
+	boolean facing = false;
+	
 
 	public Player(String name, InetAddress address, int port) {
-		//serverside constructor
+		// serverside constructor
 		this.name = name;
 		this.address = address;
 		this.port = port;
-		//tester = new //tester(name);
+		// tester = new //tester(name);
 
 	}
 
 	public Player(String name2) {
-		//senders own constructor
+		// senders own constructor
 		this.name = name2;
-		//tester = new //tester(name);
+		// tester = new //tester(name);
 	}
 
 	public Player(String name2, int x, int y) {
-		//senders constructor for other
+		// senders constructor for other
 		this.name = name2;
 		this.x = x;
 		this.y = y;
-		//tester = new //tester(name);
+		// tester = new //tester(name);
 	}
 
 	public void update() {
@@ -80,14 +82,14 @@ public class Player implements Serializable{
 			jumping = false;
 
 		}
-		//update //tester
-		//tester.jump(jumping);
-		//tester.ml(left);
-		//tester.mr(right);
-		//tester.setx(x);
-		//tester.sety(y);
+		// update //tester
+		// tester.jump(jumping);
+		// tester.ml(left);
+		// tester.mr(right);
+		// tester.setx(x);
+		// tester.sety(y);
 	}
-	
+
 	public void view(Game game) {
 		w++;
 		if (w > 6) {
@@ -113,10 +115,10 @@ public class Player implements Serializable{
 			}
 		}
 		if (!pressing) {
-			if(facing){
-			sprite = new Sprite("res/char1/char.png");
-			}else{
-				sprite = new Sprite("res/char1/charl.png");	
+			if (facing) {
+				sprite = new Sprite("res/char1/char.png");
+			} else {
+				sprite = new Sprite("res/char1/charl.png");
 			}
 		}
 	}
@@ -170,33 +172,37 @@ public class Player implements Serializable{
 	}
 
 	public void wl(boolean p) {
-		//walk left
+		// walk left
 		pressing = p;
 		left = p;
-		facing=false;
+		facing = false;
 	}
 
 	public void wr(boolean p) {
-		//walk right
+		// walk right
 		pressing = p;
 		right = p;
-		facing=true;
+		facing = true;
 	}
 
 	public void j() {
-		//jump
+		// jump
 		if (!jumping) {
 			yacc = 20;
 			jumping = true;
-			//tester.jump(jumping);
+			// tester.jump(jumping);
 		}
 	}
 
+	public void so(String o) {
+		System.out.println(o);
+	}
+
 	public void render(double dt, Game game) {
-				sprite = new Sprite("res/char1/char.png");
-				f=false;
-
-			sprite.render(x, y);
-
+		if(f){
+		sprite = new Sprite("res/char1/char.png");
+		f = false;
+		}
+		sprite.render(x, y);
 	}
 }

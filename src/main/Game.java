@@ -49,7 +49,7 @@ public class Game extends Head {
 				paused = !paused;
 		}
 		String msg;
-		if (keys.keyPressed(Keyboard.KEY_A) && !cl) {
+		if (keys.keyPressed(Keyboard.KEY_A) && !cr) {
 			msg = "$:<:P:";
 			try {
 				s.s(msg);
@@ -58,7 +58,7 @@ public class Game extends Head {
 			}
 			cl = true;
 		}
-		if (keys.keyPressed(Keyboard.KEY_D) && !cr) {
+		if (keys.keyPressed(Keyboard.KEY_D) && !cl) {
 			msg = "$:>:P:";
 			try {
 				s.s(msg);

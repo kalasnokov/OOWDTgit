@@ -31,6 +31,8 @@ public class Sender {
 	boolean running = true;
 	boolean facing = false;
 	String ip;
+	boolean r = true;
+	Player thisplayer;
 
 	public Sender(Game game, String ip) {
 		sprite = new Sprite("res/char1/char.png");
@@ -49,6 +51,7 @@ public class Sender {
 		Random rand = new Random();
 		int n = rand.nextInt(1000);
 		String ns = Integer.toString(n);
+		thisplayer = new Player(ns);
 		// so(ns);
 		try {
 			s("§:" + n + ":");
@@ -67,7 +70,7 @@ public class Sender {
 					for (Player Player : players) {
 						Player.update();
 					}
-					update(game);
+					thisplayer.update();
 				}
 			}
 		}).start();
@@ -77,46 +80,53 @@ public class Sender {
 					byte[] buf = new byte[1024];
 					DatagramPacket dgp = new DatagramPacket(buf, buf.length);
 					try {
+						s.setSoTimeout(1000);
 						s.receive(dgp);
+						r = true;
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+						r = false;
 					}
-					rcvd = new String(dgp.getData());
-					rcvd = rcvd.trim();
-					String[] Spart = rcvd.split(":");
-					String FL = Spart[0];
-					// so(rcvd);
-					String name;
-					name = Spart[1];
-					found = false;
-					for (Player Player : players) {
-						if (Player.getName().equals(name)) {
-							// player search
-							found = true;
+					if (r) {
+						rcvd = new String(dgp.getData());
+						rcvd = rcvd.trim();
+						String[] Spart = rcvd.split(":");
+						String FL = Spart[0];
+						// so(rcvd);
+						String name;
+						name = Spart[1];
+						found = false;
+						for (Player Player : players) {
+							if (Player.getName().equals(name)) {
+								// player search
+								found = true;
+							}
 						}
-					}
-					remover(FL, Spart);
-					if (!found && !ns.equals(name)) {
+						remover(FL, Spart);
+						if (!found && !ns.equals(name)) {
 
-						if (FL.equals("§")) {
-							// add new player to player list
-							players.add(new Player(name, Integer
-									.parseInt(Spart[2]), Integer
-									.parseInt(Spart[3])));
-							// so("New client with name " + name + " created");
-						} else {
-							// join fail error message, probably due to wrong
-							// message
-							// so("received invalid connection package");
-							// so(rcvd);
+							if (FL.equals("§")) {
+								// add new player to player list
+								players.add(new Player(name, Integer
+										.parseInt(Spart[2]), Integer
+										.parseInt(Spart[3])));
+								// so("New client with name " + name +
+								// " created");
+							} else {
+								// join fail error message, probably due to
+								// wrong
+								// message
+								// so("received invalid connection package");
+								// so(rcvd);
+							}
+
+							// move commands from client marked with $
 						}
+						move(FL, Spart, ns);
+						positionUpdater(FL, Spart, ns);
 
-						// move commands from client marked with $
 					}
-					move(FL, Spart, ns);
-					positionUpdater(FL, Spart, ns);
-
 				}
 			}
 		}).start();
@@ -150,17 +160,22 @@ public class Sender {
 
 	public void move(String FL, String[] Spart, String ns) {
 		if (FL.equals("$")) {
+			int siX = 0;
+			int siY = 0;
 			// command datagram
 			boolean pressing = false;
 			if (!Spart[2].equals("^")) {
 				if (Spart[3].equals("P")) {
 					pressing = true;
+				} else {
+					siX = Integer.parseInt(Spart[4]);
+					siY = Integer.parseInt(Spart[5]);
 				}
 			}
 			if (Spart[2].equals("<")) {
 				if (pressing) {
 					if (Spart[1].equals(ns)) {
-						wl(pressing);
+						thisplayer.wl(pressing);
 					} else {
 						for (Player Player : players) {
 							if (Player.getName().equals(Spart[1])) {
@@ -170,15 +185,13 @@ public class Sender {
 					}
 				} else {
 					if (Spart[1].equals(ns)) {
-						wl(pressing);
-						x = Integer.parseInt(Spart[4]);
-						y = Integer.parseInt(Spart[5]);
+						thisplayer.wl(pressing);
+						setXY(thisplayer, siX, siY);
 					} else {
 						for (Player Player : players) {
 							if (Player.getName().equals(Spart[1])) {
 								Player.wl(pressing);
-								Player.setX(Integer.parseInt(Spart[4]));
-								Player.setY(Integer.parseInt(Spart[5]));
+								setXY(Player, siX, siY);
 							}
 						}
 					}
@@ -187,7 +200,7 @@ public class Sender {
 			if (Spart[2].equals(">")) {
 				if (pressing) {
 					if (Spart[1].equals(ns)) {
-						wr(pressing);
+						thisplayer.wr(pressing);
 					} else {
 						for (Player Player : players) {
 							if (Player.getName().equals(Spart[1])) {
@@ -197,15 +210,13 @@ public class Sender {
 					}
 				} else {
 					if (Spart[1].equals(ns)) {
-						wr(pressing);
-						x = Integer.parseInt(Spart[4]);
-						y = Integer.parseInt(Spart[5]);
+						thisplayer.wr(pressing);
+						setXY(thisplayer, siX, siY);
 					} else {
 						for (Player Player : players) {
 							if (Player.getName().equals(Spart[1])) {
 								Player.wr(pressing);
-								Player.setX(Integer.parseInt(Spart[4]));
-								Player.setY(Integer.parseInt(Spart[5]));
+								setXY(Player, siX, siY);
 							}
 						}
 					}
@@ -213,7 +224,7 @@ public class Sender {
 			}
 			if (Spart[2].equals("^")) {
 				if (Spart[1].equals(ns)) {
-					j();
+					thisplayer.j();
 				} else {
 					for (Player Player : players) {
 						if (Player.getName().equals(Spart[1])) {
@@ -225,78 +236,23 @@ public class Sender {
 		}
 	}
 
-	public void update(Game game) {
-		// movement updater
-		if (pressing && left) {
-			xacc -= 2;
-		}
-		if (pressing && right) {
-			xacc += 2;
-		}
-		if (!pressing) {
-			xacc = 0;
-		}
-
-		if (xacc < 0) {
-			xacc++;
-		}
-		if (xacc > 0) {
-			xacc--;
-		}
-		if (xacc > 10) {
-			xacc = 10;
-		}
-		if (xacc < -10) {
-			xacc = -10;
-		}
-		yacc--;
-		x += xacc;
-		y -= yacc;
-		if (y > 500) {
-			y = 500;
-			jumping = false;
-
-		}
+	public void setXY(Player p, int x, int y) {
+		p.setX(x);
+		p.setY(y);
 	}
 
 	public void view(Game game) {
-		w++;
-		if (w > 6) {
-			w = 0;
-			if (two) {
-				two = false;
-			} else {
-				two = true;
-			}
+		for (Player Player : players) {
+			Player.view(game);
 		}
-		if (pressing && left) {
-			if (two) {
-				sprite = new Sprite("res/char1/w1l.png");
-			} else {
-				sprite = new Sprite("res/char1/w2l.png");
-			}
-		}
-		if (pressing && right) {
-			if (two) {
-				sprite = new Sprite("res/char1/w1.png");
-			} else {
-				sprite = new Sprite("res/char1/w2.png");
-			}
-		}
-		if (!pressing) {
-			if (facing) {
-				sprite = new Sprite("res/char1/char.png");
-			} else {
-				sprite = new Sprite("res/char1/charl.png");
-			}
-		}
+		thisplayer.view(game);
 	}
 
 	public void render(double dt, Game game) {
 		for (int x = players.size() - 1; x >= 0; x--) {
 			players.elementAt(x).render(dt, game);
 		}
-		sprite.render(x, y);
+		thisplayer.render(dt, game);
 	}
 
 	public void so(String o) {
@@ -305,35 +261,12 @@ public class Sender {
 
 	public void s(String msg) throws IOException {
 		// send function
-		String ip = "25.66.254.155";
 		byte[] buf = new byte[1024];
 		InetAddress hostAddress = InetAddress.getByName(ip);
 		buf = msg.getBytes();
 		DatagramPacket out = new DatagramPacket(buf, buf.length, hostAddress,
 				25565);
 		s.send(out);
-	}
-
-	public void wl(boolean p) {
-		// walk left
-		pressing = p;
-		left = p;
-		facing = false;
-	}
-
-	public void wr(boolean p) {
-		// walk right
-		pressing = p;
-		right = p;
-		facing = true;
-	}
-
-	public void j() {
-		// jump
-		if (!jumping) {
-			yacc = 20;
-			jumping = true;
-		}
 	}
 
 	public void stop() throws IOException {
