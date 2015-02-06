@@ -23,7 +23,7 @@ public class Game extends Head {
 	public static Sender s;
 	public boolean c = false;
 	private Sprite ground;
-
+	private Sprite back;
 	public enum State {
 		MENU, PLAYING, STARTING;
 	}
@@ -37,6 +37,7 @@ public class Game extends Head {
 		String ip = JOptionPane.showInputDialog("Enter IP to connect to");
 		s = new Sender(this, ip);
 		ground= new Sprite("res/ground.png");
+		back= new Sprite("res/back.png");
 		keys = new Keys();
 		arena = new Arena(height, width); // change later
 	}
@@ -68,7 +69,7 @@ public class Game extends Head {
 			}
 			c = true;
 		}
-		if (keys.keyPressed(Keyboard.KEY_W)) {
+		if (keys.keyPressed(Keyboard.KEY_SPACE)) {
 			msg = "$:^:";
 			try {
 				s.s(msg);
@@ -119,6 +120,7 @@ public class Game extends Head {
 			if (gameState != State.PLAYING)
 				interp = 0;
 		}
+		back.render(0, 0);
 		s.render(interpolation, this);
 		ground.render(0, 540);
 		return 0;

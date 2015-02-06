@@ -84,8 +84,6 @@ public class Sender {
 						s.receive(dgp);
 						r = true;
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
 						r = false;
 					}
 					if (r) {
