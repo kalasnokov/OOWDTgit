@@ -28,6 +28,7 @@ import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
+import javax.swing.JTextField;
 
 @SuppressWarnings("unused")
 public class Server extends JFrame implements Serializable {
@@ -41,6 +42,7 @@ public class Server extends JFrame implements Serializable {
 	public Vector<Player> players = new Vector<Player>();
 	private String msg;
 	DatagramSocket sk;
+	private JTextField input;
 
 	public Server() throws IOException {
 
@@ -60,24 +62,22 @@ public class Server extends JFrame implements Serializable {
 		scrollPane
 				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-		JTextPane input = new JTextPane();
+		input = new JTextField();
 		input.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				int key = e.getKeyCode();
-				// when pressing the "enter" key.
 				if (key == KeyEvent.VK_ENTER) {
+					
 				}
 			}
 		});
-		input.setEditable(false);
-		input.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		input.setColumns(10);
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout
 				.setHorizontalGroup(groupLayout
-						.createParallelGroup(Alignment.LEADING)
+						.createParallelGroup(Alignment.TRAILING)
 						.addGroup(
-								Alignment.TRAILING,
 								groupLayout
 										.createSequentialGroup()
 										.addContainerGap()
@@ -86,21 +86,20 @@ public class Server extends JFrame implements Serializable {
 														.createParallelGroup(
 																Alignment.TRAILING)
 														.addComponent(
-																scrollPane,
+																input,
 																Alignment.LEADING,
 																GroupLayout.DEFAULT_SIZE,
 																259,
 																Short.MAX_VALUE)
 														.addComponent(
-																input,
+																scrollPane,
 																Alignment.LEADING,
 																GroupLayout.DEFAULT_SIZE,
 																259,
 																Short.MAX_VALUE))
 										.addContainerGap()));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(
-				Alignment.LEADING).addGroup(
-				Alignment.TRAILING,
+				Alignment.TRAILING).addGroup(
 				groupLayout
 						.createSequentialGroup()
 						.addContainerGap()

@@ -152,9 +152,10 @@ public class Sender {
 				} else {
 					siX = Integer.parseInt(Spart[4]);
 					siY = Integer.parseInt(Spart[5]);
-					setXY(thisplayer, siX, siY);
 					if (!Spart[1].equals(ns)) {
 						setXY(getPlayer(name), siX, siY);
+					} else {
+						setXY(thisplayer, siX, siY);
 					}
 				}
 			}
