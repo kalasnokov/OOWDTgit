@@ -77,7 +77,7 @@ public class Sender {
 		new Thread(new Runnable() {
 			public void run() {
 				while (running) {
-					byte[] buf = new byte[1024];
+					byte[] buf = new byte[32];
 					DatagramPacket dgp = new DatagramPacket(buf, buf.length);
 					try {
 						s.setSoTimeout(10000);
@@ -171,12 +171,14 @@ public class Sender {
 					thisplayer.j();
 				}
 			} else {
-				// not this player
 				if (Spart[2].equals("<")) {
 					getPlayer(name).wl(pressing);
 				}
 				if (Spart[2].equals(">")) {
 					getPlayer(name).wr(pressing);
+				}
+				if (Spart[2].equals("^")) {
+					getPlayer(name).j();
 				}
 			}
 		}

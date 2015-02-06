@@ -50,6 +50,24 @@ public class Temp implements Serializable {
 		oos.close();
 		os.close();
 		s.close();
+		try {
+			Thread.sleep(1);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+				ServerSocket ss = new ServerSocket(25565);
+		Socket so= ss.accept();
+		InputStream is = so.getInputStream();
+		ObjectInputStream ois = new ObjectInputStream(is);
+		Object o = ois.readObject();
+		Positions to = (Positions) o;
+		if (to != null) {
+			System.out.println(to.x + " " + to.y +" "+to.name);
+		}
+		is.close();
+		so.close();
+		ss.close();
 	}
 
 	public void ExperimentalReceive() throws IOException,
@@ -61,10 +79,26 @@ public class Temp implements Serializable {
 		Object o = ois.readObject();
 		Positions to = (Positions) o;
 		if (to != null) {
-			System.out.println(to.x + " " + to.y);
+			System.out.println(to.x + " " + to.y +" "+to.name);
 		}
 		is.close();
 		s.close();
-		ss.close();;
+		ss.close();
+		
+		try {
+			Thread.sleep(2);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Socket so = new Socket("localhost", 25565);
+		OutputStream os = so.getOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(os);
+		Positions tos = new Positions(10, 7, "Gaben");
+		oos.writeObject(tos);
+		oos.close();
+		os.close();
+		so.close();
 	}
 }

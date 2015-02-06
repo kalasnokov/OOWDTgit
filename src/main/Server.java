@@ -4,9 +4,11 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
@@ -178,15 +180,21 @@ public class Server extends JFrame implements Serializable {
 		while (true) {
 			msg = "";
 			// receiver
-			byte[] buf = new byte[1024];
+			byte[] buf = new byte[32];
 			DatagramPacket dgp = new DatagramPacket(buf, buf.length);
 			sk.receive(dgp);
 			String rcvd = new String(dgp.getData());
 			rcvd.trim();
 			// rcvd="§:testsson";
 			found = false;
+			/*
+			 * Object o = null; ByteArrayOutputStream bos = new
+			 * ByteArrayOutputStream(); ObjectOutput out = null; out = new
+			 * ObjectOutputStream(bos); out.writeObject(o); byte[] yourBytes =
+			 * bos.toByteArray();
+			 */
 
-			// look if the pacage is a join request
+			// look if the package is a join request
 			for (Player Player : players) {
 				if (Player.getAddress().toString()
 						.equals(dgp.getAddress().toString())) {
@@ -291,7 +299,7 @@ public class Server extends JFrame implements Serializable {
 			}
 		}
 	}
-	
+
 	public Player getPlayer(String name) {
 		Object o = null;
 		for (Player Player : players) {
@@ -319,7 +327,7 @@ public class Server extends JFrame implements Serializable {
 
 	public void send(InetAddress address, int port) throws IOException {
 		// sender function
-		byte[] buf = new byte[1024];
+		byte[] buf = new byte[32];
 		buf = msg.getBytes();
 		DatagramPacket out = new DatagramPacket(buf, buf.length, address, port);
 		sk.send(out);

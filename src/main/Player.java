@@ -27,6 +27,8 @@ public class Player implements Serializable {
 	boolean two = false;
 	boolean facing = false;
 	int cha=1;
+	boolean fc=true;
+	boolean cs=false;
 
 	public Player(String name, InetAddress address, int port) {
 		// serverside constructor
@@ -94,25 +96,30 @@ public class Player implements Serializable {
 		w++;
 		if (w > 6) {
 			w = 0;
+			cs=true;
 			if (two) {
 				two = false;
 			} else {
 				two = true;
 			}
 		}
-		if (pressing && left && !jumping) {
+		if (pressing && left && !jumping && cs) {
 			if (two) {
 				sprite = new Sprite("res/char"+cha+"/w1l.png");
 			} else {
 				sprite = new Sprite("res/char"+cha+"/w2l.png");
 			}
+			fc=true;
+			cs=false;
 		}
-		if (pressing && right && !jumping) {
+		if (pressing && right && !jumping && cs) {
 			if (two) {
 				sprite = new Sprite("res/char"+cha+"/w1.png");
 			} else {
 				sprite = new Sprite("res/char"+cha+"/w2.png");
 			}
+			fc=true;
+			cs=false;
 		}
 		if (jumping) {
 			if (yacc < 20 && yacc > 15) {
@@ -136,13 +143,15 @@ public class Player implements Serializable {
 					sprite = new Sprite("res/char"+cha+"/j3l.png");
 				}
 			}
+			fc=true;
 		}
-		if (!pressing && !jumping) {
+		if (!pressing && !jumping && fc) {
 			if (facing) {
 				sprite = new Sprite("res/char"+cha+"/char.png");
 			} else {
 				sprite = new Sprite("res/char"+cha+"/charl.png");
 			}
+			fc=false;
 		}
 	}
 
@@ -235,5 +244,9 @@ public class Player implements Serializable {
 			f = false;
 		}
 		sprite.render(x, y);
+	}
+
+	public boolean getJumping() {
+		return jumping;
 	}
 }
