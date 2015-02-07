@@ -357,10 +357,12 @@ public class Server extends JFrame implements Serializable {
 
 	public void send(InetAddress address, int port) throws IOException {
 		// sender function
+		DatagramSocket so = new DatagramSocket();
 		byte[] buf = new byte[32];
 		buf = msg.getBytes();
 		DatagramPacket out = new DatagramPacket(buf, buf.length, address, port);
-		sk.send(out);
+		so.send(out);
+		so.close();
 	}
 
 	public void ExperimentalSend(InetAddress address, Player player)

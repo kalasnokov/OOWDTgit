@@ -32,6 +32,7 @@ public class Sender {
 	boolean facing = false;
 	String ip;
 	boolean r = true;
+	int port = 25565;
 	Player thisplayer;
 
 	public Sender(Game game, String ip) {
@@ -55,6 +56,11 @@ public class Sender {
 		// so(ns);
 		try {
 			s("§:" + n + ":");
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			s("§:snigel:");
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -86,6 +92,7 @@ public class Sender {
 					} catch (IOException e) {
 						r = false;
 					}
+					
 					if (r) {
 						rcvd = new String(dgp.getData());
 						rcvd = rcvd.trim();
@@ -233,11 +240,12 @@ public class Sender {
 
 	public void s(String msg) throws IOException {
 		// send function
-		byte[] buf = new byte[1024];
+		byte[] buf = new byte[32];
 		InetAddress hostAddress = InetAddress.getByName(ip);
+		so(ip + " " + port);
 		buf = msg.getBytes();
 		DatagramPacket out = new DatagramPacket(buf, buf.length, hostAddress,
-				25565);
+				port);
 		s.send(out);
 	}
 

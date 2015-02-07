@@ -24,6 +24,7 @@ public class Game extends Head {
 	public boolean c = false;
 	private Sprite ground;
 	private Sprite back;
+
 	public enum State {
 		MENU, PLAYING, STARTING;
 	}
@@ -36,8 +37,8 @@ public class Game extends Head {
 		gameState = State.MENU;
 		String ip = JOptionPane.showInputDialog("Enter IP to connect to");
 		s = new Sender(this, ip);
-		ground= new Sprite("res/ground.png");
-		back= new Sprite("res/back.png");
+		ground = new Sprite("res/ground.png");
+		back = new Sprite("res/back.png");
 		keys = new Keys();
 		arena = new Arena(height, width); // change later
 	}
