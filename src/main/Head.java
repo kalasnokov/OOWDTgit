@@ -35,7 +35,7 @@ public abstract class Head implements Runnable {
 		this.height = height;
 	}
 
-	protected String title = "Thrust Vector - LWJGL";
+	protected String title = "OOWDT";
 	protected double UPDATES_PER_SECOND = 60.0;
 	protected String version = "";
 
@@ -64,7 +64,7 @@ public abstract class Head implements Runnable {
 			System.exit(0);
 		}
 		version = glGetString(GL_VERSION);
-		Display.setTitle("OpenGL " + version + " | " + title + " | " + 0
+		Display.setTitle(title + " | " + 0
 				+ " ups, " + 0 + " fps");
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 
@@ -163,11 +163,11 @@ public abstract class Head implements Runnable {
 				timer += 1000;
 
 				if (objects > 0) {
-					Display.setTitle("OpenGL " + version + " | " + title
+					Display.setTitle(title
 							+ " | " + updates + " TICKS, " + frames + " FPS | "
 							+ objects + " Rendered");
 				} else {
-					Display.setTitle("OpenGL " + version + " | " + title
+					Display.setTitle(title
 							+ " | " + updates + " TICKS, " + frames + " FPS");
 				}
 

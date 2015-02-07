@@ -68,7 +68,22 @@ public class Server extends JFrame implements Serializable {
 			public void keyPressed(KeyEvent e) {
 				int key = e.getKeyCode();
 				if (key == KeyEvent.VK_ENTER) {
-					
+					String Sinput = input.getText().toLowerCase();
+					String fl = Sinput.substring(0, 1);
+					if (fl.equals("/")) {
+						if (Sinput.contains("/remove ")) {
+							Sinput = Sinput.replace("/remove ", "");
+							input.setText("");
+							try {
+								removePlayer(Sinput);
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
+					} else {
+						// serverspeak, error
+					}
 				}
 			}
 		});
@@ -220,13 +235,11 @@ public class Server extends JFrame implements Serializable {
 			}
 			if (!found) {
 				// new client added and new player created
-				// rcvd="§:testsson";
-
 				if (FL.equals("§")) {
 					// if a datagram starts with § it will be identified as
 					// a
 					// connection request, and the server will attempt to
-					// creata
+					// create
 					// a new client instance
 					String name;
 					name = Spart[1];
@@ -251,50 +264,48 @@ public class Server extends JFrame implements Serializable {
 
 				}
 			}
-			if (FL.equals("$")) {
-				boolean pressing = false;
-				if (Spart[2].equals("P")) {
-					pressing = true;
-				}
-				for (Player Player : players) {
-					if (Player.getAddress().equals(dgp.getAddress())
-							&& Player.getPort() == dgp.getPort()) {
-						if (Spart[1].equals("<")) {
-							if (!pressing) {
-								// moving left
-								msg = "$:" + Player.getName() + ":<:R:"
-										+ Player.getX() + ":" + Player.getY()
-										+ ":";
-							} else {
-								// stopped moving left
-								msg = "$:" + Player.getName() + ":<:P:";
-							}
-							Player.wl(pressing);
+			move(FL, Spart, dgp);
+			sendtoall();
+		}
+	}
+
+	public void move(String FL, String[] Spart, DatagramPacket dgp) {
+		if (FL.equals("$")) {
+			boolean pressing = false;
+			if (Spart[2].equals("P")) {
+				pressing = true;
+			}
+			for (Player Player : players) {
+				if (Player.getAddress().equals(dgp.getAddress())
+						&& Player.getPort() == dgp.getPort()) {
+					if (Spart[1].equals("<")) {
+						if (!pressing) {
+							// moving left
+							msg = "$:" + Player.getName() + ":<:R:"
+									+ Player.getX() + ":" + Player.getY() + ":";
+						} else {
+							// stopped moving left
+							msg = "$:" + Player.getName() + ":<:P:";
 						}
-						if (Spart[1].equals(">")) {
-							if (!pressing) {
-								// moving right
-								msg = "$:" + Player.getName() + ":>:R:"
-										+ Player.getX() + ":" + Player.getY()
-										+ ":";
-							} else {
-								// stopped moving right
-								msg = "$:" + Player.getName() + ":>:P:";
-							}
-							Player.wr(pressing);
+						Player.wl(pressing);
+					}
+					if (Spart[1].equals(">")) {
+						if (!pressing) {
+							// moving right
+							msg = "$:" + Player.getName() + ":>:R:"
+									+ Player.getX() + ":" + Player.getY() + ":";
+						} else {
+							// stopped moving right
+							msg = "$:" + Player.getName() + ":>:P:";
 						}
-						if (Spart[1].equals("^")) {
-							// jump
-							Player.j();
-							msg = "$:" + Player.getName() + ":^:";
-						}
+						Player.wr(pressing);
+					}
+					if (Spart[1].equals("^")) {
+						// jump
+						Player.j();
+						msg = "$:" + Player.getName() + ":^:";
 					}
 				}
-			}
-
-			for (Player Player : players) {
-				// send info about action to all clients using string msg
-				send(Player.getAddress(), Player.getPort());
 			}
 		}
 	}
@@ -311,6 +322,26 @@ public class Server extends JFrame implements Serializable {
 
 	public static void main(String[] args) throws IOException {
 		new Server();
+	}
+
+	public void removePlayer(String name) throws IOException {
+		for (int x = players.size() - 1; x >= 0; x--) {
+			if (name.equals(players.elementAt(x).getName())) {
+				ap("Player " + players.elementAt(x).getName()
+						+ " was removed: serverside removal");
+				msg = "#:" + players.elementAt(x).getName() + ":";
+				sendtoall();
+				players.remove(players.elementAt(x));
+
+			}
+		}
+	}
+
+	public void sendtoall() throws IOException {
+		for (Player Player : players) {
+			// send info about action to all clients using string msg
+			send(Player.getAddress(), Player.getPort());
+		}
 	}
 
 	public void ap(String s) {

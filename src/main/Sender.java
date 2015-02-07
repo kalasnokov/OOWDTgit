@@ -92,7 +92,11 @@ public class Sender {
 						String[] Spart = rcvd.split(":");
 						String FL = Spart[0];
 						// so(rcvd);
+						try{
 						name = Spart[1];
+						}catch(Exception e){
+							so(rcvd);
+						}
 						found = false;
 						for (Player Player : players) {
 							if (Player.getName().equals(name)) {
@@ -136,6 +140,7 @@ public class Sender {
 
 	public void remover(String FL, String[] Spart) {
 		if (FL.equals("#")) {
+			so("attempting to remove");
 			players.remove(SafegetPlayer(name));
 		}
 	}
