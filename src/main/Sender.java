@@ -50,7 +50,7 @@ public class Sender {
 		s = new DatagramSocket();
 		Random rand = new Random();
 		int n = rand.nextInt(1000);
-		String ns = Integer.toString(n);
+		final String ns = Integer.toString(n);
 		thisplayer = new Player(ns);
 		// so(ns);
 		try {
