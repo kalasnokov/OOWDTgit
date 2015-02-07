@@ -59,11 +59,6 @@ public class Sender {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		try {
-			s("§:snigel:");
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
 		new Thread(new Runnable() {
 			public void run() {
 				while (running) {
