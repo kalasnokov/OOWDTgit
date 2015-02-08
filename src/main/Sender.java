@@ -237,7 +237,7 @@ public class Sender {
 		// send function
 		byte[] buf = new byte[32];
 		InetAddress hostAddress = InetAddress.getByName(ip);
-		//so(ip + " " + port);
+		so(ip + " " + port);
 		buf = msg.getBytes();
 		DatagramPacket out = new DatagramPacket(buf, buf.length, hostAddress,
 				port);
