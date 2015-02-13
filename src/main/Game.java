@@ -2,11 +2,12 @@ package main;
 
 import java.io.IOException;
 
-import javax.swing.JOptionPane;
 import javax.xml.soap.Text;
 
 import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Keyboard;
+
+import UI.Connector;
 
 public class Game extends Head {
 
@@ -24,6 +25,8 @@ public class Game extends Head {
 	public boolean c = false;
 	private Sprite ground;
 	private Sprite back;
+	@SuppressWarnings("unused")
+	private Connector c2;
 
 	public enum State {
 		MENU, PLAYING, STARTING;
@@ -32,15 +35,17 @@ public class Game extends Head {
 	public void preGLInit() {
 	}
 
-	public void init() {
+	public void init() throws InterruptedException {
+
 		UPDATES_PER_SECOND = 60;
 		gameState = State.MENU;
-		String ip = JOptionPane.showInputDialog("Enter IP to connect to");
-		s = new Sender(this, ip);
+		// String ip = JOptionPane.showInputDialog("Enter IP to connect to");
+
 		ground = new Sprite("res/ground.png");
 		back = new Sprite("res/back.png");
 		keys = new Keys();
 		arena = new Arena(height, width); // change later
+		c2 = new Connector(this);
 	}
 
 	public void loadAssets() {
@@ -137,5 +142,10 @@ public class Game extends Head {
 
 	public static void killthreads() throws IOException {
 		s.stop();
+	}
+
+	public void setSendervalues(String ip, String name, int variation, int race)
+			throws InterruptedException {
+		s = new Sender(this, ip, name, variation, race);
 	}
 }

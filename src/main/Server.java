@@ -1,14 +1,13 @@
 package main;
 
 import java.awt.Component;
-import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
@@ -17,6 +16,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URL;
 import java.util.Vector;
 
 import javax.swing.GroupLayout;
@@ -24,11 +24,11 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
-import javax.swing.JTextField;
 
 @SuppressWarnings("unused")
 public class Server extends JFrame implements Serializable {
@@ -41,7 +41,7 @@ public class Server extends JFrame implements Serializable {
 	private boolean found;
 	public Vector<Player> players = new Vector<Player>();
 	private String msg;
-	DatagramSocket sk;
+	DatagramSocket s;
 	private JTextField input;
 
 	public Server() throws IOException {
@@ -74,12 +74,18 @@ public class Server extends JFrame implements Serializable {
 						if (Sinput.contains("/remove ")) {
 							Sinput = Sinput.replace("/remove ", "");
 							input.setText("");
+							ap("Removed player "+Sinput);
 							try {
 								removePlayer(Sinput);
 							} catch (IOException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
+						}
+						if (Sinput.contains("/flush")) {
+								players.removeAllElements();;
+								input.setText("");
+								ap("Flushed server");
 						}
 					} else {
 						// serverspeak, error
@@ -136,17 +142,17 @@ public class Server extends JFrame implements Serializable {
 		// non-ui code begins here
 
 		// checks servers ip
-		/*
-		 * URL whatismyip = new URL("http://checkip.amazonaws.com");
-		 * BufferedReader in = new BufferedReader(new InputStreamReader(
-		 * whatismyip.openStream()));
-		 * 
-		 * String ip = in.readLine();
-		 */
+
+		URL whatismyip = new URL("http://checkip.amazonaws.com");
+		BufferedReader in = new BufferedReader(new InputStreamReader(
+				whatismyip.openStream()));
+
+		String ip = in.readLine();
+		s(ip);
 
 		// datagram socket and port location
 		int port = 25565;
-		sk = new DatagramSocket(port);
+		s = new DatagramSocket(port);
 
 		// Serverinf.setText(ip + ":" + port);
 		new Thread(new Runnable() {
@@ -196,7 +202,7 @@ public class Server extends JFrame implements Serializable {
 			// receiver
 			byte[] buf = new byte[32];
 			DatagramPacket dgp = new DatagramPacket(buf, buf.length);
-			sk.receive(dgp);
+			s.receive(dgp);
 			String rcvd = new String(dgp.getData());
 			rcvd.trim();
 			// rcvd="§:testsson";
@@ -244,9 +250,10 @@ public class Server extends JFrame implements Serializable {
 					String name;
 					name = Spart[1];
 					players.add(new Player(name, dgp.getAddress(), dgp
-							.getPort()));
+							.getPort(), Integer.parseInt(Spart[2]), Integer
+							.parseInt(Spart[3])));
 					ap("New client connected from " + dgp.getAddress() + " "
-							+ dgp.getPort() + " with name " + name);
+							+ dgp.getPort() + " with name " + name + " and race "+Spart[2]);
 
 					for (Player P : players) {
 						// send new client info to all existing clients as
@@ -257,7 +264,9 @@ public class Server extends JFrame implements Serializable {
 						int p = P.getPort();
 						for (Player Player : players) {
 							msg = "§:" + Player.getName() + ":" + Player.getX()
-									+ ":" + Player.getY() + ":";
+									+ ":" + Player.getY() + ":"
+									+ Player.getCha() + ":"
+									+ Player.getVariation() + ":";
 							send(ad, p);
 						}
 					}
@@ -357,12 +366,10 @@ public class Server extends JFrame implements Serializable {
 
 	public void send(InetAddress address, int port) throws IOException {
 		// sender function
-		DatagramSocket so = new DatagramSocket();
 		byte[] buf = new byte[32];
 		buf = msg.getBytes();
 		DatagramPacket out = new DatagramPacket(buf, buf.length, address, port);
-		so.send(out);
-		so.close();
+		s.send(out);
 	}
 
 	public void ExperimentalSend(InetAddress address, Player player)

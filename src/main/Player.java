@@ -26,30 +26,38 @@ public class Player implements Serializable {
 	int w = 0;
 	boolean two = false;
 	boolean facing = false;
-	int cha=1;
+	int cha;
+	int var;
 	boolean fc=true;
 	boolean cs=false;
 
-	public Player(String name, InetAddress address, int port) {
+	public Player(String name, InetAddress address, int port, int race, int variation) {
 		// serverside constructor
 		this.name = name;
 		this.address = address;
 		this.port = port;
+		this.cha = race;
+		this.var = variation;
 		// tester = new tester(name);
 
 	}
 
-	public Player(String name2) {
-		// senders own constructor
-		this.name = name2;
-		// tester = new tester(name);
-	}
-
-	public Player(String name2, int x, int y) {
+	public Player(String name, int x, int y, int race, int variation) {
 		// senders constructor for other
-		this.name = name2;
+		this.name = name;
 		this.x = x;
 		this.y = y;
+		this.cha = race;
+		this.var = variation;
+		// tester = new tester(name);
+	}
+	
+	public Player(String name, int race, int variation) {
+		System.out.println(race);
+		// senders constructor for self
+		this.name = name;
+		this.cha = race;
+		this.var = variation;
 		// tester = new tester(name);
 	}
 
@@ -105,18 +113,18 @@ public class Player implements Serializable {
 		}
 		if (pressing && left && !jumping && cs) {
 			if (two) {
-				sprite = new Sprite("res/char"+cha+"/w1l.png");
+				sprite = new Sprite("res/char"+cha+"/var"+var+"/w1l.png");
 			} else {
-				sprite = new Sprite("res/char"+cha+"/w2l.png");
+				sprite = new Sprite("res/char"+cha+"/var"+var+"/w2l.png");
 			}
 			fc=true;
 			cs=false;
 		}
 		if (pressing && right && !jumping && cs) {
 			if (two) {
-				sprite = new Sprite("res/char"+cha+"/w1.png");
+				sprite = new Sprite("res/char"+cha+"/var"+var+"/w1.png");
 			} else {
-				sprite = new Sprite("res/char"+cha+"/w2.png");
+				sprite = new Sprite("res/char"+cha+"/var"+var+"/w2.png");
 			}
 			fc=true;
 			cs=false;
@@ -124,32 +132,32 @@ public class Player implements Serializable {
 		if (jumping) {
 			if (yacc < 20 && yacc > 15) {
 				if (facing) {
-					sprite = new Sprite("res/char"+cha+"/j1.png");
+					sprite = new Sprite("res/char"+cha+"/var"+var+"/j1.png");
 				} else {
-					sprite = new Sprite("res/char"+cha+"/j1l.png");
+					sprite = new Sprite("res/char"+cha+"/var"+var+"/j1l.png");
 				}
 			}
 			if (yacc == 5) {
 				if (facing) {
-					sprite = new Sprite("res/char"+cha+"/j2.png");
+					sprite = new Sprite("res/char"+cha+"/var"+var+"/j2.png");
 				} else {
-					sprite = new Sprite("res/char"+cha+"/j2l.png");
+					sprite = new Sprite("res/char"+cha+"/var"+var+"/j2l.png");
 				}
 			}
 			if (yacc == -5) {
 				if (facing) {
-					sprite = new Sprite("res/char"+cha+"/j3.png");
+					sprite = new Sprite("res/char"+cha+"/var"+var+"/j3.png");
 				} else {
-					sprite = new Sprite("res/char"+cha+"/j3l.png");
+					sprite = new Sprite("res/char"+cha+"/var"+var+"/j3l.png");
 				}
 			}
 			fc=true;
 		}
 		if (!pressing && !jumping && fc) {
 			if (facing) {
-				sprite = new Sprite("res/char"+cha+"/char.png");
+				sprite = new Sprite("res/char"+cha+"/var"+var+"/char.png");
 			} else {
-				sprite = new Sprite("res/char"+cha+"/charl.png");
+				sprite = new Sprite("res/char"+cha+"/var"+var+"/charl.png");
 			}
 			fc=false;
 		}
@@ -240,7 +248,7 @@ public class Player implements Serializable {
 
 	public void render(double dt, Game game) {
 		if (f) {
-			sprite = new Sprite("res/char"+cha+"/char.png");
+			sprite = new Sprite("res/char"+cha+"/var"+var+"/char.png");
 			f = false;
 		}
 		sprite.render(x, y);
@@ -248,5 +256,21 @@ public class Player implements Serializable {
 
 	public boolean getJumping() {
 		return jumping;
+	}
+
+	public int getCha() {
+		return cha;
+	}
+
+	public void setCha(int cha) {
+		this.cha = cha;
+	}
+
+	public int getVariation() {
+		return var;
+	}
+
+	public void setVariation(int variation) {
+		this.var = variation;
 	}
 }

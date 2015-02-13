@@ -81,7 +81,7 @@ public abstract class Head implements Runnable {
 
 	}
 
-	protected void init() {
+	protected void init() throws InterruptedException {
 	}
 
 	protected void loadAssets() {
@@ -117,7 +117,12 @@ public abstract class Head implements Runnable {
 			height = 720;
 		}
 		glinit(width, height);
-		init();
+		try {
+			init();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		loadAssets();
 		Cursor emptyCursor;
 		try {

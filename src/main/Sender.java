@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.Random;
 import java.util.Vector;
 
 public class Sender {
@@ -20,6 +19,7 @@ public class Sender {
 	boolean jumping = false;
 	Tester tester;
 	String name;
+	String myName;
 	int health;
 	int x = 0;
 	int y = 0;
@@ -28,37 +28,41 @@ public class Sender {
 	public Sprite sprite;
 	int w = 0;
 	boolean two = false;
-	boolean running = true;
+	boolean running = true;;
 	boolean facing = false;
 	String ip;
 	boolean r = true;
 	int port = 25565;
+	int race;
+	int variation;
 	Player thisplayer;
 
-	public Sender(Game game, String ip) {
-		sprite = new Sprite("res/char1/char.png");
+	public Sender(Game game, String ip, String name, int var, int race)
+			throws InterruptedException {
+
 		this.ip = ip;
+		this.myName = name;
+		this.variation = var;
+		this.race = race;
+		sprite = new Sprite("res/char1/var1/char.png");
 		try {
 			init(game);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public void init(Game game) throws IOException {
+	public void init(Game game) throws IOException, InterruptedException {
 
 		s = new DatagramSocket();
-		Random rand = new Random();
-		int n = rand.nextInt(1000);
-		final String ns = Integer.toString(n);
-		thisplayer = new Player(ns);
-		// so(ns);
+		System.out.println(race);
+		thisplayer = new Player(myName, race, variation);
 		try {
-			s("§:" + n + ":");
+			s("§:" + myName + ":" + race + ":" + variation + ":");
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+
 		new Thread(new Runnable() {
 			public void run() {
 				while (running) {
@@ -87,16 +91,16 @@ public class Sender {
 					} catch (IOException e) {
 						r = false;
 					}
-					
+
 					if (r) {
 						rcvd = new String(dgp.getData());
 						rcvd = rcvd.trim();
 						String[] Spart = rcvd.split(":");
 						String FL = Spart[0];
 						// so(rcvd);
-						try{
-						name = Spart[1];
-						}catch(Exception e){
+						try {
+							name = Spart[1];
+						} catch (Exception e) {
 							so(rcvd);
 						}
 						found = false;
@@ -107,17 +111,19 @@ public class Sender {
 							}
 						}
 						remover(FL, Spart);
-						if (!found && !ns.equals(name)) {
+						if (!found && !myName.equals(name)) {
 
 							if (FL.equals("§")) {
 								// add new player to player list
 								players.add(new Player(name, Integer
 										.parseInt(Spart[2]), Integer
-										.parseInt(Spart[3])));
+										.parseInt(Spart[3]), Integer
+										.parseInt(Spart[4]), Integer
+										.parseInt(Spart[5])));
 							}
 						}
-						move(FL, Spart, ns);
-						positionUpdater(FL, Spart, ns);
+						move(FL, Spart, myName);
+						positionUpdater(FL, Spart, myName);
 					}
 				}
 			}
@@ -237,7 +243,7 @@ public class Sender {
 		// send function
 		byte[] buf = new byte[32];
 		InetAddress hostAddress = InetAddress.getByName(ip);
-		so(ip + " " + port);
+		// so(ip + " " + port);
 		buf = msg.getBytes();
 		DatagramPacket out = new DatagramPacket(buf, buf.length, hostAddress,
 				port);
