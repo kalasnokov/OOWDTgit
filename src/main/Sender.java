@@ -55,7 +55,6 @@ public class Sender {
 	public void init(Game game) throws IOException, InterruptedException {
 
 		s = new DatagramSocket();
-		System.out.println(race);
 		thisplayer = new Player(myName, race, variation);
 		try {
 			s("§:" + myName + ":" + race + ":" + variation + ":");

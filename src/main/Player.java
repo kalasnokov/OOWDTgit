@@ -1,7 +1,11 @@
 package main;
 
+import java.awt.Font;
 import java.io.Serializable;
 import java.net.InetAddress;
+
+import org.newdawn.slick.Color;
+import org.newdawn.slick.TrueTypeFont;
 
 public class Player implements Serializable {
 	/**
@@ -28,10 +32,12 @@ public class Player implements Serializable {
 	boolean facing = false;
 	int cha;
 	int var;
-	boolean fc=true;
-	boolean cs=false;
+	boolean fc = true;
+	boolean cs = false;
+	TrueTypeFont font;
 
-	public Player(String name, InetAddress address, int port, int race, int variation) {
+	public Player(String name, InetAddress address, int port, int race,
+			int variation) {
 		// serverside constructor
 		this.name = name;
 		this.address = address;
@@ -39,7 +45,6 @@ public class Player implements Serializable {
 		this.cha = race;
 		this.var = variation;
 		// tester = new tester(name);
-
 	}
 
 	public Player(String name, int x, int y, int race, int variation) {
@@ -50,15 +55,16 @@ public class Player implements Serializable {
 		this.cha = race;
 		this.var = variation;
 		// tester = new tester(name);
+		setFont("Times New Roman", 18);
 	}
-	
+
 	public Player(String name, int race, int variation) {
-		System.out.println(race);
 		// senders constructor for self
 		this.name = name;
 		this.cha = race;
 		this.var = variation;
 		// tester = new tester(name);
+		setFont("Times New Roman", 18);
 	}
 
 	public void update() {
@@ -86,11 +92,11 @@ public class Player implements Serializable {
 			jumping = false;
 
 		}
-		if(x>1480){
-			x=-200;
+		if (x > 1480) {
+			x = -200;
 		}
-		if(x<-200){
-			x=1480;
+		if (x < -200) {
+			x = 1480;
 		}
 		// update //tester
 		// tester.jump(jumping);
@@ -104,7 +110,7 @@ public class Player implements Serializable {
 		w++;
 		if (w > 6) {
 			w = 0;
-			cs=true;
+			cs = true;
 			if (two) {
 				two = false;
 			} else {
@@ -113,54 +119,116 @@ public class Player implements Serializable {
 		}
 		if (pressing && left && !jumping && cs) {
 			if (two) {
-				sprite = new Sprite("res/char"+cha+"/var"+var+"/w1l.png");
+				sprite = new Sprite("res/char" + cha + "/var" + var
+						+ "/w1l.png");
 			} else {
-				sprite = new Sprite("res/char"+cha+"/var"+var+"/w2l.png");
+				sprite = new Sprite("res/char" + cha + "/var" + var
+						+ "/w2l.png");
 			}
-			fc=true;
-			cs=false;
+			fc = true;
+			cs = false;
 		}
 		if (pressing && right && !jumping && cs) {
 			if (two) {
-				sprite = new Sprite("res/char"+cha+"/var"+var+"/w1.png");
+				sprite = new Sprite("res/char" + cha + "/var" + var + "/w1.png");
 			} else {
-				sprite = new Sprite("res/char"+cha+"/var"+var+"/w2.png");
+				sprite = new Sprite("res/char" + cha + "/var" + var + "/w2.png");
 			}
-			fc=true;
-			cs=false;
+			fc = true;
+			cs = false;
 		}
 		if (jumping) {
 			if (yacc < 20 && yacc > 15) {
 				if (facing) {
-					sprite = new Sprite("res/char"+cha+"/var"+var+"/j1.png");
+					sprite = new Sprite("res/char" + cha + "/var" + var
+							+ "/j1.png");
 				} else {
-					sprite = new Sprite("res/char"+cha+"/var"+var+"/j1l.png");
+					sprite = new Sprite("res/char" + cha + "/var" + var
+							+ "/j1l.png");
 				}
 			}
 			if (yacc == 5) {
 				if (facing) {
-					sprite = new Sprite("res/char"+cha+"/var"+var+"/j2.png");
+					sprite = new Sprite("res/char" + cha + "/var" + var
+							+ "/j2.png");
 				} else {
-					sprite = new Sprite("res/char"+cha+"/var"+var+"/j2l.png");
+					sprite = new Sprite("res/char" + cha + "/var" + var
+							+ "/j2l.png");
 				}
 			}
 			if (yacc == -5) {
 				if (facing) {
-					sprite = new Sprite("res/char"+cha+"/var"+var+"/j3.png");
+					sprite = new Sprite("res/char" + cha + "/var" + var
+							+ "/j3.png");
 				} else {
-					sprite = new Sprite("res/char"+cha+"/var"+var+"/j3l.png");
+					sprite = new Sprite("res/char" + cha + "/var" + var
+							+ "/j3l.png");
 				}
 			}
-			fc=true;
+			fc = true;
 		}
 		if (!pressing && !jumping && fc) {
 			if (facing) {
-				sprite = new Sprite("res/char"+cha+"/var"+var+"/char.png");
+				sprite = new Sprite("res/char" + cha + "/var" + var
+						+ "/char.png");
 			} else {
-				sprite = new Sprite("res/char"+cha+"/var"+var+"/charl.png");
+				sprite = new Sprite("res/char" + cha + "/var" + var
+						+ "/charl.png");
 			}
-			fc=false;
+			fc = false;
 		}
+	}
+
+	public void wl(boolean p) {
+		// walk left
+		pressing = p;
+		left = p;
+		facing = false;
+	}
+
+	public void wr(boolean p) {
+		// walk right
+		pressing = p;
+		right = p;
+		facing = true;
+	}
+
+	public void j() {
+		// jump
+		if (!jumping) {
+			yacc = 20;
+			jumping = true;
+			// tester.jump(jumping);
+		}
+	}
+
+	public void TR(String txt, Game game) {
+		font.drawString(x, y, txt, Color.black);
+	}
+
+	public void setFont(String Sfont, int size) {
+		Font awtFont = new Font(Sfont, Font.CENTER_BASELINE, size);
+		font = new TrueTypeFont(awtFont, false);
+	}
+
+	public void so(String o) {
+		System.out.println(o);
+	}
+
+	public void render(double dt, Game game) {
+		if (f) {
+			sprite = new Sprite("res/char" + cha + "/var" + var + "/char.png");
+			f = false;
+		}
+		sprite.render(x, y);
+	}
+
+	public boolean getRight() {
+		return right;
+	}
+
+	public boolean getLeft() {
+		return left;
 	}
 
 	public String getName() {
@@ -209,49 +277,6 @@ public class Player implements Serializable {
 
 	public void setPort(int port) {
 		this.port = port;
-	}
-
-	public void wl(boolean p) {
-		// walk left
-		pressing = p;
-		left = p;
-		facing = false;
-	}
-
-	public void wr(boolean p) {
-		// walk right
-		pressing = p;
-		right = p;
-		facing = true;
-	}
-
-	public void j() {
-		// jump
-		if (!jumping) {
-			yacc = 20;
-			jumping = true;
-			// tester.jump(jumping);
-		}
-	}
-
-	public boolean getRight() {
-		return right;
-	}
-
-	public boolean getLeft() {
-		return left;
-	}
-
-	public void so(String o) {
-		System.out.println(o);
-	}
-
-	public void render(double dt, Game game) {
-		if (f) {
-			sprite = new Sprite("res/char"+cha+"/var"+var+"/char.png");
-			f = false;
-		}
-		sprite.render(x, y);
 	}
 
 	public boolean getJumping() {

@@ -119,7 +119,6 @@ public class Game extends Head {
 
 	public int render(double interpolation) {
 		super.render(interpolation);
-
 		if (gameState == State.PLAYING) {
 			@SuppressWarnings("unused")
 			double interp = interpolation;
