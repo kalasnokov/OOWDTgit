@@ -82,13 +82,13 @@ public class Server extends JFrame implements Serializable {
 								e1.printStackTrace();
 							}
 						}
-						if (Sinput.contains("/flush")) {
+						if (Sinput.equals("/flush")) {
 								players.removeAllElements();;
 								input.setText("");
 								ap("Flushed server");
 						}
 					} else {
-						// serverspeak, error
+						ap("unknown command");
 					}
 				}
 			}
