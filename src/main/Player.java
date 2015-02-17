@@ -55,7 +55,6 @@ public class Player implements Serializable {
 		this.cha = race;
 		this.var = variation;
 		// tester = new tester(name);
-		setFont("Times New Roman", 18);
 	}
 
 	public Player(String name, int race, int variation) {
@@ -64,7 +63,7 @@ public class Player implements Serializable {
 		this.cha = race;
 		this.var = variation;
 		// tester = new tester(name);
-		setFont("Times New Roman", 18);
+		//setFont("Times New Roman", 18);
 	}
 
 	public void update() {
