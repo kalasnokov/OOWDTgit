@@ -222,7 +222,7 @@ public class Player implements Serializable {
 
 	public void render(double dt, Game game) {
 		if (f) {
-			setFont("Times New Roman", 18);
+			setFont("Verdana", 18);
 			sprite = new Sprite("res/char" + cha + "/var" + var + "/char.png");
 			f = false;
 		}
