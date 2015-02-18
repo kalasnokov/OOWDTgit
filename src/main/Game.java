@@ -6,7 +6,6 @@ import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Keyboard;
 
 import UI.Connector;
-import UI.Chat;
 
 public class Game extends Head {
 
@@ -27,7 +26,6 @@ public class Game extends Head {
 	private Sprite back;
 	@SuppressWarnings("unused")
 	private Connector c2;
-	private static Chat chat;
 
 	public enum State {
 		MENU, PLAYING, STARTING;
@@ -47,7 +45,6 @@ public class Game extends Head {
 		keys = new Keys();
 		// arena = new Arena(height, width); // change later
 		c2 = new Connector(this);
-		chat = new Chat(this);
 	}
 
 	public void loadAssets() {
@@ -62,10 +59,11 @@ public class Game extends Head {
 		if (keys.keyPressed(Keyboard.KEY_RETURN)) {
 			if (t) {
 				t = false;
-				s.thisplayer.setText(chat.getChatText());
+				giveText(s.chat.getChatText(), false);
 			} else {
 				t = true;
-			}chat.toggleVisible();
+				s.chat.toggleVisible();
+			}
 		}
 		String msg;
 		if (keys.keyPressed(Keyboard.KEY_A) && !c && !t) {
@@ -152,7 +150,7 @@ public class Game extends Head {
 
 	public static void killthreads() throws IOException {
 		s.stop();
-		chat.Destroy();
+		s.chat.Destroy();
 	}
 
 	public void setSendervalues(String ip, String name, int variation, int race)
@@ -160,9 +158,11 @@ public class Game extends Head {
 		s = new Sender(this, ip, name, variation, race);
 	}
 
-	public void giveText(String txt) {
-		chat.toggleVisible();
-		s.thisplayer.setText(txt);
-		t=false;
+	public void giveText(String txt, boolean nuthing) throws IOException {
+		if (!nuthing) {
+			s.s("¤:" + s.thisplayer.getName() + ": " + txt);
+		}
+		s.chat.toggleVisible();
+		t = false;
 	}
 }

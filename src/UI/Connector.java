@@ -4,7 +4,6 @@ import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -28,7 +27,7 @@ public class Connector extends JFrame {
 	private final long serialVersionUID = 2643206995134951451L;
 	private JTextField ip;
 	private JTextField name;
-	private String[] races = { "Dog, därför att Alexander tycket int att beastman passade, >:^(", "Human" };
+	private String[] races = { "Dog >:^(", "Human", "Dragonkin" };
 	public DefaultListModel<String> lm = new DefaultListModel<String>();
 	private JList<String> list;
 	private JRadioButton radioButton, radioButton_1, radioButton_2;

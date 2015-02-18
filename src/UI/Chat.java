@@ -2,6 +2,7 @@ package UI;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -16,17 +17,18 @@ import main.Game;
 @SuppressWarnings("serial")
 public class Chat extends JFrame {
 	private JTextField input;
-	private JTextArea log;
-	private boolean visible=false;
+	JTextArea log;
+	private boolean visible = false;
 	private Game game;
+
 	public Chat(Game game) {
-		this.game=game;
+		this.game = game;
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setAlwaysOnTop(true);
 		setLocation(500, 100);
 		JScrollPane scrollPane = new JScrollPane();
 
-		JTextArea log = new JTextArea();
+		log = new JTextArea();
 		log.setEditable(false);
 		scrollPane.setViewportView(log);
 
@@ -67,12 +69,12 @@ public class Chat extends JFrame {
 		getContentPane().setLayout(groupLayout);
 		pack();
 		setVisible(visible);
-		
+
 		input.addKeyListener(new keys());
 	}
 
 	public void ap(String txt) {
-		log.append(txt);
+		log.append(txt + "\n");
 		log.setCaretPosition(log.getDocument().getLength());
 	}
 
@@ -81,28 +83,47 @@ public class Chat extends JFrame {
 		input.setText("");
 		return s;
 	}
-	public void toggleVisible(){
-		if(visible){
+
+	public void toggleVisible() {
+		if (visible) {
 			requestFocus();
 			setVisible(false);
-			visible=false;
-		}else{
+			visible = false;
+		} else {
 			requestFocus();
 			input.requestFocus();
 			setVisible(true);
-			visible=true;
+			visible = true;
 		}
 	}
-	public void Destroy(){
+
+	public void Destroy() {
 		setVisible(false); // you can't see me!
 		dispose(); // Destroy the JFrame object
 	}
+
 	class keys extends KeyAdapter {
 		public void keyPressed(KeyEvent e) {
 			int key = e.getKeyCode();
 			if (key == KeyEvent.VK_ENTER) {
-				game.giveText(input.getText());
-				input.setText("");
+				if (input.getText().length() < 1000) {
+					if (!input.getText().equals("")) {
+						try {
+							game.giveText(input.getText(), false);
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						input.setText("");
+					} else {
+						try {
+							game.giveText(input.getText(), true);
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+				}
 			}
 		}
 	}

@@ -210,7 +210,7 @@ public class Server extends JFrame implements Serializable {
 		while (true) {
 			msg = "";
 			// receiver
-			byte[] buf = new byte[32];
+			byte[] buf = new byte[1024];
 			DatagramPacket dgp = new DatagramPacket(buf, buf.length);
 			s.receive(dgp);
 			String rcvd = new String(dgp.getData());
@@ -248,6 +248,9 @@ public class Server extends JFrame implements Serializable {
 						players.remove(players.elementAt(x));
 					}
 				}
+			}
+			if (FL.equals("¤")) {
+				msg = rcvd;
 			}
 			if (!found) {
 				// new client added and new player created
@@ -377,7 +380,7 @@ public class Server extends JFrame implements Serializable {
 
 	public void send(InetAddress address, int port) throws IOException {
 		// sender function
-		byte[] buf = new byte[32];
+		byte[] buf = new byte[1024];
 		buf = msg.getBytes();
 		DatagramPacket out = new DatagramPacket(buf, buf.length, address, port);
 		s.send(out);

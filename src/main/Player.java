@@ -41,6 +41,7 @@ public class Player implements Serializable {
 	private String text;
 	boolean newText = false;
 	int textrender;
+	int FPS;
 	private int textLenght;
 
 	public Player(String name, InetAddress address, int port, int race,
@@ -103,6 +104,7 @@ public class Player implements Serializable {
 		if (x < -200) {
 			x = 1480;
 		}
+		textrender++;
 		// update //tester
 		// tester.jump(jumping);
 		// tester.ml(left);
@@ -222,7 +224,7 @@ public class Player implements Serializable {
 
 	public void render(double dt, Game game) {
 		if (f) {
-			setFont("Verdana", 18);
+			setFont("Verdana", 15);
 			sprite = new Sprite("res/char" + cha + "/var" + var + "/char.png");
 			f = false;
 		}
@@ -248,11 +250,11 @@ public class Player implements Serializable {
 							Color.black);
 				}
 			} else {
-				font.drawString(x - (textLenght * 2) + 50, y - 30, text,
+				font.drawString(x - (textLenght * 3) + 60, y - 30, text,
 						Color.black);
 			}
-			textrender++;
-			if (textrender > (textLenght * 20) + 240 || textrender > 2000) {
+			if (textrender > (textLenght*5) && textrender >360
+					|| textrender > 1800) {
 				newText = false;
 			}
 		}
@@ -341,5 +343,10 @@ public class Player implements Serializable {
 
 	public void setVariation(int variation) {
 		this.var = variation;
+	}
+
+	public void setFPS(int FPS) {
+		this.FPS = FPS;
+
 	}
 }

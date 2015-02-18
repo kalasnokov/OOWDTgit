@@ -18,6 +18,7 @@ public abstract class Head implements Runnable {
 
 	protected int width;
 	protected int height;
+	int frames;
 
 	public int getWidth() {
 		return width;
@@ -139,7 +140,7 @@ public abstract class Head implements Runnable {
 		final double ms = 1000.0 / UPDATES_PER_SECOND;
 		final double ns = 1000000000.0 / UPDATES_PER_SECOND;
 		double delta = 0;
-		int frames = 0;
+		frames = 0;
 		int updates = 0;
 		double updateDelta = getUpdateDelta();
 		double renderDelta = getRenderDelta();
@@ -184,7 +185,6 @@ public abstract class Head implements Runnable {
 				updates = 0;
 				frames = 0;
 			}
-
 		}
 		try {
 			kill();

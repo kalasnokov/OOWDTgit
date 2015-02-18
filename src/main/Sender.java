@@ -6,6 +6,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Vector;
 
+import UI.Chat;
+
 public class Sender {
 	String msg;
 	public String rcvd;
@@ -36,10 +38,10 @@ public class Sender {
 	int race;
 	int variation;
 	Player thisplayer;
+	Chat chat;
 
 	public Sender(Game game, String ip, String name, int var, int race)
 			throws InterruptedException {
-
 		this.ip = ip;
 		this.myName = name;
 		this.variation = var;
@@ -53,7 +55,7 @@ public class Sender {
 	}
 
 	public void init(Game game) throws IOException, InterruptedException {
-
+		chat = new Chat(game);
 		s = new DatagramSocket();
 		thisplayer = new Player(myName, race, variation);
 		try {
@@ -81,7 +83,7 @@ public class Sender {
 		new Thread(new Runnable() {
 			public void run() {
 				while (running) {
-					byte[] buf = new byte[32];
+					byte[] buf = new byte[1024];
 					DatagramPacket dgp = new DatagramPacket(buf, buf.length);
 					try {
 						s.setSoTimeout(10000);
@@ -90,7 +92,6 @@ public class Sender {
 					} catch (IOException e) {
 						r = false;
 					}
-
 					if (r) {
 						rcvd = new String(dgp.getData());
 						rcvd = rcvd.trim();
@@ -105,8 +106,17 @@ public class Sender {
 						found = false;
 						for (Player Player : players) {
 							if (Player.getName().equals(name)) {
-								// player search
 								found = true;
+							}
+						}
+						if (FL.equals("¤")) {
+							rcvd.replace("¤:", "");
+							appendChat(rcvd);
+							rcvd = rcvd.replace("¤:"+name + ": ", "");
+							if (name.equals(myName)) {
+								thisplayer.setText(rcvd);
+							} else {
+								getPlayer(name).setText(rcvd);
 							}
 						}
 						remover(FL, Spart);
@@ -127,6 +137,11 @@ public class Sender {
 				}
 			}
 		}).start();
+	}
+
+	public void appendChat(String txt) {
+		txt = txt.replace("¤:", "");
+		chat.ap(txt);
 	}
 
 	public void positionUpdater(String FL, String[] Spart, String ns) {
@@ -240,7 +255,7 @@ public class Sender {
 
 	public void s(String msg) throws IOException {
 		// send function
-		byte[] buf = new byte[32];
+		byte[] buf = new byte[1024];
 		InetAddress hostAddress = InetAddress.getByName(ip);
 		// so(ip + " " + port);
 		buf = msg.getBytes();
