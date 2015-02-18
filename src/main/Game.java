@@ -6,6 +6,7 @@ import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Keyboard;
 
 import UI.Connector;
+import UI.Chat;
 
 public class Game extends Head {
 
@@ -26,6 +27,7 @@ public class Game extends Head {
 	private Sprite back;
 	@SuppressWarnings("unused")
 	private Connector c2;
+	private static Chat chat;
 
 	public enum State {
 		MENU, PLAYING, STARTING;
@@ -45,7 +47,7 @@ public class Game extends Head {
 		keys = new Keys();
 		// arena = new Arena(height, width); // change later
 		c2 = new Connector(this);
-		
+		chat = new Chat(this);
 	}
 
 	public void loadAssets() {
@@ -56,13 +58,14 @@ public class Game extends Head {
 			if (gameState != State.MENU)
 				paused = !paused;
 		}
+
 		if (keys.keyPressed(Keyboard.KEY_RETURN)) {
 			if (t) {
 				t = false;
-				s.thisplayer.setText(text);
+				s.thisplayer.setText(chat.getChatText());
 			} else {
 				t = true;
-			}
+			}chat.toggleVisible();
 		}
 		String msg;
 		if (keys.keyPressed(Keyboard.KEY_A) && !c && !t) {
@@ -149,10 +152,17 @@ public class Game extends Head {
 
 	public static void killthreads() throws IOException {
 		s.stop();
+		chat.Destroy();
 	}
 
 	public void setSendervalues(String ip, String name, int variation, int race)
 			throws InterruptedException {
 		s = new Sender(this, ip, name, variation, race);
+	}
+
+	public void giveText(String txt) {
+		chat.toggleVisible();
+		s.thisplayer.setText(txt);
+		t=false;
 	}
 }

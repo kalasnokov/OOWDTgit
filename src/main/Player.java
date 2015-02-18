@@ -229,7 +229,7 @@ public class Player implements Serializable {
 		if (newText) {
 			text.trim();
 			String[] st = text.split(" ");
-			if (text.length() > 5) {
+			if (st.length > 5) {
 				int t = 0;
 				for (int i = 0; i < st.length; i++) {
 					set = "";
@@ -248,10 +248,11 @@ public class Player implements Serializable {
 							Color.black);
 				}
 			} else {
-				font.drawString(x - 30, y - 10, text);
+				font.drawString(x - (textLenght * 2) + 50, y - 30, text,
+						Color.black);
 			}
 			textrender++;
-			if (textrender > textLenght / 2) {
+			if (textrender > (textLenght * 20) + 240 || textrender > 2000) {
 				newText = false;
 			}
 		}
