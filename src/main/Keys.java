@@ -25,11 +25,9 @@ public class Keys {
 	public boolean keyReleased(int keyCode) {
 		return keys[keyCode] && !org.lwjgl.input.Keyboard.isKeyDown(keyCode);
 	}
-	
 	public void setKeys() {
 		for (int i = 0; i < keys.length; i++) {
 			keys[i] = org.lwjgl.input.Keyboard.isKeyDown(i);
 		}
 	}
-	
 }

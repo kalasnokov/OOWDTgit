@@ -153,7 +153,12 @@ public abstract class Head implements Runnable {
 			lastTime = now;
 			while (delta >= 1 && updates < UPDATES_PER_SECOND) {
 				updateDelta = getUpdateDelta();
-				update(updateDelta);
+				try {
+					update(updateDelta);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 				updates++;
 				delta--;
@@ -201,7 +206,7 @@ public abstract class Head implements Runnable {
 
 	}
 
-	protected void update(double dt) {
+	protected void update(double dt) throws IOException {
 	}
 
 	protected int render(double interpolation) {

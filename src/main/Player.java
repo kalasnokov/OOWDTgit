@@ -35,6 +35,13 @@ public class Player implements Serializable {
 	boolean fc = true;
 	boolean cs = false;
 	TrueTypeFont font;
+	int movespeed = 10;
+	int jumpspeed = 20;
+	private String set;
+	private String text;
+	boolean newText = false;
+	int textrender;
+	private int textLenght;
 
 	public Player(String name, InetAddress address, int port, int race,
 			int variation) {
@@ -63,25 +70,24 @@ public class Player implements Serializable {
 		this.cha = race;
 		this.var = variation;
 		// tester = new tester(name);
-		//setFont("Times New Roman", 18);
 	}
 
 	public void update() {
 		if (pressing && left) {
-			xacc -= 2;
+			xacc -= movespeed / 5;
 		}
 		if (pressing && right) {
-			xacc += 2;
+			xacc += movespeed / 5;
 		}
 		if (!pressing) {
 			xacc = 0;
 		}
 
-		if (xacc > 10) {
-			xacc = 10;
+		if (xacc > movespeed) {
+			xacc = movespeed;
 		}
-		if (xacc < -10) {
-			xacc = -10;
+		if (xacc < -movespeed) {
+			xacc = -movespeed;
 		}
 		yacc--;
 		x += xacc;
@@ -137,7 +143,7 @@ public class Player implements Serializable {
 			cs = false;
 		}
 		if (jumping) {
-			if (yacc < 20 && yacc > 15) {
+			if (yacc < jumpspeed && yacc > 3 * (jumpspeed / 4)) {
 				if (facing) {
 					sprite = new Sprite("res/char" + cha + "/var" + var
 							+ "/j1.png");
@@ -146,7 +152,7 @@ public class Player implements Serializable {
 							+ "/j1l.png");
 				}
 			}
-			if (yacc == 5) {
+			if (yacc == (jumpspeed / 4)) {
 				if (facing) {
 					sprite = new Sprite("res/char" + cha + "/var" + var
 							+ "/j2.png");
@@ -155,7 +161,7 @@ public class Player implements Serializable {
 							+ "/j2l.png");
 				}
 			}
-			if (yacc == -5) {
+			if (yacc == -(jumpspeed / 4)) {
 				if (facing) {
 					sprite = new Sprite("res/char" + cha + "/var" + var
 							+ "/j3.png");
@@ -195,7 +201,7 @@ public class Player implements Serializable {
 	public void j() {
 		// jump
 		if (!jumping) {
-			yacc = 20;
+			yacc = jumpspeed;
 			jumping = true;
 			// tester.jump(jumping);
 		}
@@ -216,10 +222,48 @@ public class Player implements Serializable {
 
 	public void render(double dt, Game game) {
 		if (f) {
+			setFont("Times New Roman", 18);
 			sprite = new Sprite("res/char" + cha + "/var" + var + "/char.png");
 			f = false;
 		}
+		if (newText) {
+			text.trim();
+			String[] st = text.split(" ");
+			if (text.length() > 5) {
+				int t = 0;
+				for (int i = 0; i < st.length; i++) {
+					set = "";
+					int u = 0;
+					while (u <= 5) {
+						try {
+							set += st[t + u] + " ";
+						} catch (Exception e) {
+							u = 6;
+						}
+						u++;
+					}
+					t += u;
+					font.drawString(x - 20, y - 30
+							- (((st.length / 5) * 20) - (i * 20)), set,
+							Color.black);
+				}
+			} else {
+				font.drawString(x - 30, y - 10, text);
+			}
+			textrender++;
+			if (textrender > textLenght / 2) {
+				newText = false;
+			}
+		}
+
 		sprite.render(x, y);
+	}
+
+	public void setText(String text) {
+		this.text = text;
+		newText = true;
+		textrender = 0;
+		textLenght = text.length();
 	}
 
 	public boolean getRight() {

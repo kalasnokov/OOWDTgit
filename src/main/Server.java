@@ -71,10 +71,11 @@ public class Server extends JFrame implements Serializable {
 					String Sinput = input.getText().toLowerCase();
 					String fl = Sinput.substring(0, 1);
 					if (fl.equals("/")) {
+						ap(Sinput);
 						if (Sinput.contains("/remove ")) {
 							Sinput = Sinput.replace("/remove ", "");
 							input.setText("");
-							ap("Removed player "+Sinput);
+							ap("Removed player " + Sinput);
 							try {
 								removePlayer(Sinput);
 							} catch (IOException e1) {
@@ -83,10 +84,18 @@ public class Server extends JFrame implements Serializable {
 							}
 						}
 						if (Sinput.equals("/flush")) {
-								players.removeAllElements();;
-								input.setText("");
-								ap("Flushed server");
+							players.removeAllElements();
+							input.setText("");
+							ap("Flushed server");
 						}
+						if (Sinput.equals("/list")) {
+							for (Player Player : players) {
+								ap(Player.getAddress() + ":" + Player.getPort()
+										+ " With name " + Player.getName());
+							}
+							input.setText("");
+						}
+
 					} else {
 						ap("unknown command");
 					}
@@ -143,12 +152,13 @@ public class Server extends JFrame implements Serializable {
 
 		// checks servers ip
 
-		URL whatismyip = new URL("http://checkip.amazonaws.com");
-		BufferedReader in = new BufferedReader(new InputStreamReader(
-				whatismyip.openStream()));
-
-		String ip = in.readLine();
-		s(ip);
+		/*
+		 * URL whatismyip = new URL("http://checkip.amazonaws.com");
+		 * BufferedReader in = new BufferedReader(new InputStreamReader(
+		 * whatismyip.openStream()));
+		 * 
+		 * String ip = in.readLine(); s(ip);
+		 */
 
 		// datagram socket and port location
 		int port = 25565;
@@ -253,7 +263,8 @@ public class Server extends JFrame implements Serializable {
 							.getPort(), Integer.parseInt(Spart[2]), Integer
 							.parseInt(Spart[3])));
 					ap("New client connected from " + dgp.getAddress() + " "
-							+ dgp.getPort() + " with name " + name + " and race "+Spart[2]);
+							+ dgp.getPort() + " with name " + name
+							+ " and race " + Spart[2]);
 
 					for (Player P : players) {
 						// send new client info to all existing clients as

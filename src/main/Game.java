@@ -2,8 +2,6 @@ package main;
 
 import java.io.IOException;
 
-import javax.xml.soap.Text;
-
 import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Keyboard;
 
@@ -13,7 +11,7 @@ public class Game extends Head {
 
 	public Keys keys;
 	public Cursor cursor;
-	public Text text;
+	public String text = "";
 	public boolean paused;
 	public State gameState;
 	public State oldState;
@@ -23,6 +21,7 @@ public class Game extends Head {
 	public int yoffset = 0;
 	public static Sender s;
 	public boolean c = false;
+	public boolean t = false;
 	private Sprite ground;
 	private Sprite back;
 	@SuppressWarnings("unused")
@@ -44,20 +43,29 @@ public class Game extends Head {
 		ground = new Sprite("res/ground.png");
 		back = new Sprite("res/back.png");
 		keys = new Keys();
-		arena = new Arena(height, width); // change later
+		// arena = new Arena(height, width); // change later
 		c2 = new Connector(this);
+		
 	}
 
 	public void loadAssets() {
 	}
 
-	public void handleInputs(double dt) {
+	public void handleInputs(double dt) throws IOException {
 		if (keys.keyPressed(Keyboard.KEY_ESCAPE)) {
 			if (gameState != State.MENU)
 				paused = !paused;
 		}
+		if (keys.keyPressed(Keyboard.KEY_RETURN)) {
+			if (t) {
+				t = false;
+				s.thisplayer.setText(text);
+			} else {
+				t = true;
+			}
+		}
 		String msg;
-		if (keys.keyPressed(Keyboard.KEY_A) && !c) {
+		if (keys.keyPressed(Keyboard.KEY_A) && !c && !t) {
 			msg = "$:<:P:";
 			try {
 				s.s(msg);
@@ -66,7 +74,7 @@ public class Game extends Head {
 			}
 			c = true;
 		}
-		if (keys.keyPressed(Keyboard.KEY_D) && !c) {
+		if (keys.keyPressed(Keyboard.KEY_D) && !c && !t) {
 			msg = "$:>:P:";
 			try {
 				s.s(msg);
@@ -75,7 +83,7 @@ public class Game extends Head {
 			}
 			c = true;
 		}
-		if (keys.keyPressed(Keyboard.KEY_SPACE)) {
+		if (keys.keyPressed(Keyboard.KEY_SPACE) && !t) {
 			msg = "$:^:";
 			try {
 				s.s(msg);
@@ -83,7 +91,7 @@ public class Game extends Head {
 				e1.printStackTrace();
 			}
 		}
-		if (keys.keyReleased(Keyboard.KEY_A)) {
+		if (keys.keyReleased(Keyboard.KEY_A) && !t) {
 			msg = "$:<:R:";
 			try {
 				s.s(msg);
@@ -92,7 +100,7 @@ public class Game extends Head {
 			}
 			c = false;
 		}
-		if (keys.keyReleased(Keyboard.KEY_D)) {
+		if (keys.keyReleased(Keyboard.KEY_D) && !t) {
 			msg = "$:>:R:";
 			try {
 				s.s(msg);
@@ -107,7 +115,7 @@ public class Game extends Head {
 	public void quit() {
 	}
 
-	public void update(double dt) {
+	public void update(double dt) throws IOException {
 		handleInputs(dt);
 		if (gameState == State.STARTING) {
 			gameState = State.PLAYING;

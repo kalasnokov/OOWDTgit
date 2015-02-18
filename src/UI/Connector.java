@@ -28,7 +28,7 @@ public class Connector extends JFrame {
 	private final long serialVersionUID = 2643206995134951451L;
 	private JTextField ip;
 	private JTextField name;
-	private String[] races = { "Beastman", "Human" };
+	private String[] races = { "Dog, därför att Alexander tycket int att beastman passade, >:^(", "Human" };
 	public DefaultListModel<String> lm = new DefaultListModel<String>();
 	private JList<String> list;
 	private JRadioButton radioButton, radioButton_1, radioButton_2;
