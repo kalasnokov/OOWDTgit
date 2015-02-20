@@ -186,7 +186,7 @@ public class Server extends JFrame implements Serializable {
 			public void run() {
 				while (true) {
 					try {
-						Thread.sleep(1000);// update speed
+						Thread.sleep(500);// update speed
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}

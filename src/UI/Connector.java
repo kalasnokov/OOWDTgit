@@ -4,10 +4,16 @@ import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -27,9 +33,11 @@ public class Connector extends JFrame {
 	private final long serialVersionUID = 2643206995134951451L;
 	private JTextField ip;
 	private JTextField name;
-	private String[] races = { "Dog", "Human", "Dragonkin", "Construct" };
+	private String[] races = { "Dog", "Human", "Dragonkin", "Construct", "TMST" };
 	public DefaultListModel<String> lm = new DefaultListModel<String>();
+	public DefaultComboBoxModel<String> cm = new DefaultComboBoxModel<String>();
 	private JList<String> list;
+	private JComboBox<String> comboBox;
 	private JRadioButton radioButton, radioButton_1, radioButton_2;
 	int var;
 	int race;
@@ -50,6 +58,21 @@ public class Connector extends JFrame {
 		name.setColumns(10);
 
 		list = new JList<String>(lm);
+		list.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				cm.removeAllElements();
+				int l = list.getSelectedIndex() + 1;
+				for (int i = 1; true; i++) {
+					File f = new File("res/char" + l + "/var" + i);
+					if (f.exists()) {
+						cm.addElement(Integer.toString(i));
+					} else {
+						break;
+					}
+				}
+			}
+		});
 
 		JTextPane txtpnIp = new JTextPane();
 		txtpnIp.setEditable(false);
@@ -136,6 +159,8 @@ public class Connector extends JFrame {
 				}
 			}
 		});
+
+		comboBox = new JComboBox<String>(cm);
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout
 				.setHorizontalGroup(groupLayout
@@ -145,7 +170,7 @@ public class Connector extends JFrame {
 										.createSequentialGroup()
 										.addContainerGap()
 										.addComponent(ip,
-												GroupLayout.DEFAULT_SIZE, 213,
+												GroupLayout.DEFAULT_SIZE, 272,
 												Short.MAX_VALUE).addGap(11))
 						.addGroup(
 								groupLayout
@@ -155,10 +180,16 @@ public class Connector extends JFrame {
 												GroupLayout.PREFERRED_SIZE,
 												GroupLayout.DEFAULT_SIZE,
 												GroupLayout.PREFERRED_SIZE)
-										.addContainerGap(109, Short.MAX_VALUE))
+										.addContainerGap(168, Short.MAX_VALUE))
 						.addGroup(
-								groupLayout.createSequentialGroup().addGap(89)
-										.addComponent(txtpnName).addGap(98))
+								groupLayout
+										.createSequentialGroup()
+										.addGap(89)
+										.addComponent(txtpnName,
+												GroupLayout.PREFERRED_SIZE,
+												GroupLayout.DEFAULT_SIZE,
+												GroupLayout.PREFERRED_SIZE)
+										.addGap(98))
 						.addGroup(
 								groupLayout
 										.createSequentialGroup()
@@ -174,28 +205,41 @@ public class Connector extends JFrame {
 																		.addComponent(
 																				txtpnVariation,
 																				GroupLayout.DEFAULT_SIZE,
-																				69,
+																				98,
 																				Short.MAX_VALUE)
 																		.addGap(59)
 																		.addComponent(
 																				txtpnRace,
 																				GroupLayout.DEFAULT_SIZE,
-																				47,
+																				77,
 																				Short.MAX_VALUE)
 																		.addGap(39))
 														.addGroup(
 																groupLayout
 																		.createSequentialGroup()
-																		.addComponent(
-																				name,
-																				GroupLayout.DEFAULT_SIZE,
-																				213,
-																				Short.MAX_VALUE)
+																		.addGroup(
+																				groupLayout
+																						.createParallelGroup(
+																								Alignment.TRAILING)
+																						.addComponent(
+																								list,
+																								GroupLayout.PREFERRED_SIZE,
+																								163,
+																								GroupLayout.PREFERRED_SIZE)
+																						.addComponent(
+																								name,
+																								GroupLayout.DEFAULT_SIZE,
+																								272,
+																								Short.MAX_VALUE))
 																		.addGap(11))))
 						.addGroup(
 								groupLayout
 										.createSequentialGroup()
-										.addGap(60)
+										.addGap(14)
+										.addComponent(comboBox,
+												GroupLayout.PREFERRED_SIZE, 38,
+												GroupLayout.PREFERRED_SIZE)
+										.addGap(18)
 										.addGroup(
 												groupLayout
 														.createParallelGroup(
@@ -207,7 +251,7 @@ public class Connector extends JFrame {
 																		.addComponent(
 																				btnDone,
 																				GroupLayout.DEFAULT_SIZE,
-																				84,
+																				143,
 																				Short.MAX_VALUE)
 																		.addGap(70))
 														.addGroup(
@@ -252,15 +296,7 @@ public class Connector extends JFrame {
 																								radioButton_2,
 																								GroupLayout.PREFERRED_SIZE,
 																								32,
-																								GroupLayout.PREFERRED_SIZE))
-																		.addPreferredGap(
-																				ComponentPlacement.UNRELATED)
-																		.addComponent(
-																				list,
-																				GroupLayout.DEFAULT_SIZE,
-																				107,
-																				Short.MAX_VALUE)
-																		.addGap(10)))
+																								GroupLayout.PREFERRED_SIZE))))
 										.addContainerGap()));
 		groupLayout
 				.setVerticalGroup(groupLayout
@@ -311,73 +347,93 @@ public class Connector extends JFrame {
 										.addGroup(
 												groupLayout
 														.createParallelGroup(
-																Alignment.TRAILING)
-														.addComponent(
-																list,
-																GroupLayout.DEFAULT_SIZE,
-																GroupLayout.DEFAULT_SIZE,
-																Short.MAX_VALUE)
+																Alignment.LEADING)
 														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addComponent(
+																				comboBox,
+																				GroupLayout.PREFERRED_SIZE,
+																				GroupLayout.DEFAULT_SIZE,
+																				GroupLayout.PREFERRED_SIZE)
+																		.addContainerGap())
+														.addGroup(
+																Alignment.TRAILING,
 																groupLayout
 																		.createSequentialGroup()
 																		.addGroup(
 																				groupLayout
 																						.createParallelGroup(
-																								Alignment.LEADING)
+																								Alignment.TRAILING)
 																						.addComponent(
-																								txtpnA,
+																								list,
+																								Alignment.LEADING,
 																								GroupLayout.DEFAULT_SIZE,
-																								26,
+																								90,
 																								Short.MAX_VALUE)
-																						.addComponent(
-																								radioButton,
-																								GroupLayout.DEFAULT_SIZE,
-																								26,
-																								Short.MAX_VALUE))
+																						.addGroup(
+																								groupLayout
+																										.createSequentialGroup()
+																										.addGroup(
+																												groupLayout
+																														.createParallelGroup(
+																																Alignment.LEADING)
+																														.addComponent(
+																																txtpnA,
+																																GroupLayout.DEFAULT_SIZE,
+																																26,
+																																Short.MAX_VALUE)
+																														.addComponent(
+																																radioButton,
+																																GroupLayout.DEFAULT_SIZE,
+																																26,
+																																Short.MAX_VALUE))
+																										.addPreferredGap(
+																												ComponentPlacement.RELATED)
+																										.addGroup(
+																												groupLayout
+																														.createParallelGroup(
+																																Alignment.LEADING,
+																																false)
+																														.addGroup(
+																																groupLayout
+																																		.createSequentialGroup()
+																																		.addComponent(
+																																				txtpnB,
+																																				GroupLayout.PREFERRED_SIZE,
+																																				26,
+																																				GroupLayout.PREFERRED_SIZE)
+																																		.addPreferredGap(
+																																				ComponentPlacement.RELATED,
+																																				GroupLayout.DEFAULT_SIZE,
+																																				Short.MAX_VALUE)
+																																		.addComponent(
+																																				txtpnC,
+																																				GroupLayout.PREFERRED_SIZE,
+																																				26,
+																																				GroupLayout.PREFERRED_SIZE))
+																														.addGroup(
+																																groupLayout
+																																		.createSequentialGroup()
+																																		.addComponent(
+																																				radioButton_1,
+																																				GroupLayout.PREFERRED_SIZE,
+																																				26,
+																																				GroupLayout.PREFERRED_SIZE)
+																																		.addPreferredGap(
+																																				ComponentPlacement.RELATED,
+																																				GroupLayout.DEFAULT_SIZE,
+																																				Short.MAX_VALUE)
+																																		.addComponent(
+																																				radioButton_2,
+																																				GroupLayout.PREFERRED_SIZE,
+																																				26,
+																																				GroupLayout.PREFERRED_SIZE)))))
 																		.addPreferredGap(
 																				ComponentPlacement.RELATED)
-																		.addGroup(
-																				groupLayout
-																						.createParallelGroup(
-																								Alignment.LEADING,
-																								false)
-																						.addGroup(
-																								groupLayout
-																										.createSequentialGroup()
-																										.addComponent(
-																												txtpnB,
-																												GroupLayout.PREFERRED_SIZE,
-																												26,
-																												GroupLayout.PREFERRED_SIZE)
-																										.addPreferredGap(
-																												ComponentPlacement.RELATED,
-																												GroupLayout.DEFAULT_SIZE,
-																												Short.MAX_VALUE)
-																										.addComponent(
-																												txtpnC,
-																												GroupLayout.PREFERRED_SIZE,
-																												26,
-																												GroupLayout.PREFERRED_SIZE))
-																						.addGroup(
-																								groupLayout
-																										.createSequentialGroup()
-																										.addComponent(
-																												radioButton_1,
-																												GroupLayout.PREFERRED_SIZE,
-																												26,
-																												GroupLayout.PREFERRED_SIZE)
-																										.addPreferredGap(
-																												ComponentPlacement.RELATED,
-																												GroupLayout.DEFAULT_SIZE,
-																												Short.MAX_VALUE)
-																										.addComponent(
-																												radioButton_2,
-																												GroupLayout.PREFERRED_SIZE,
-																												26,
-																												GroupLayout.PREFERRED_SIZE)))))
-										.addPreferredGap(
-												ComponentPlacement.UNRELATED)
-										.addComponent(btnDone).addGap(3)));
+																		.addComponent(
+																				btnDone)
+																		.addGap(3)))));
 		getContentPane().setLayout(groupLayout);
 		pack();
 		setVisible(true);
@@ -387,9 +443,8 @@ public class Connector extends JFrame {
 		while (!b) {
 			Thread.sleep(1000);
 		}
-		int i=list.getSelectedIndex()+1;
-		game.setSendervalues(ip.getText(), name.getText(), var,
-				i);
+		int i = list.getSelectedIndex() + 1;
+		game.setSendervalues(ip.getText(), name.getText(), var, i);
 		setVisible(false); // you can't see me!
 		dispose(); // Destroy the JFrame object
 	}
