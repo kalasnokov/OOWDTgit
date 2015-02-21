@@ -6,6 +6,7 @@ import java.net.InetAddress;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.gui.TextField;
 
 public class Player implements Serializable {
 	/**
@@ -37,12 +38,12 @@ public class Player implements Serializable {
 	TrueTypeFont font;
 	int movespeed = 10;
 	int jumpspeed = 20;
-	private String set;
 	private String text;
 	boolean newText = false;
 	int textrender;
 	int FPS;
-	private int textLenght;
+	TextField t;
+	private Sprite bubble;
 
 	public Player(String name, InetAddress address, int port, int race,
 			int variation) {
@@ -224,38 +225,37 @@ public class Player implements Serializable {
 
 	public void render(double dt, Game game) {
 		if (f) {
-			setFont("Verdana", 15);
+			setFont("Verdana", 16);
 			sprite = new Sprite("res/char" + cha + "/var" + var + "/char.png");
+			bubble = new Sprite("res/Bubble.png");
 			f = false;
 		}
+
 		if (newText) {
 			text.trim();
 			String[] st = text.split(" ");
-			if (st.length > 5) {
-				int t = 0;
-				for (int i = 0; i < st.length; i++) {
-					set = "";
-					int u = 0;
-					while (u <= 5) {
-						try {
-							set += st[t + u] + " ";
-						} catch (Exception e) {
-							u = 6;
-						}
-						u++;
-					}
-					t += u;
-					font.drawString(x - 20, y - 30
-							- (((st.length / 5) * 20) - (i * 20)), set,
-							Color.black);
+			String[] newtext = new String[1000];
+			int line = 0;
+			int longestString = 0;
+			newtext[0] = "";
+			for (int i = 0; i < st.length; i++) {
+				newtext[line] += st[i] + " ";
+				if (font.getWidth(newtext[line]) > longestString) {
+					longestString = font.getWidth(newtext[line]);
 				}
-			} else {
-				font.drawString(x - (textLenght * 3) + 60, y - 30, text,
-						Color.black);
+				if (font.getWidth(newtext[line]) > 150 && i != st.length - 1) {
+					line++;
+					newtext[line] = "";
+				}
 			}
-			if (textrender > (textLenght*5) && textrender >360
-					|| textrender > 1800) {
-				newText = false;
+			bubble.render(x-5 + (150 - longestString) / 2, (y-30) - (line * 20),
+					longestString+5, ((line + 1) * 20));
+			for (int i = 0; i < line + 1; i++) {
+				font.drawString(x + (150 - font.getWidth(newtext[i])) / 2,
+						(y - 30) - ((line - i) * 20), newtext[i], Color.black);
+			}
+			if(textrender>(line+1)*180 && textrender>180 || textrender>600){
+				newText=false;
 			}
 		}
 
@@ -266,7 +266,7 @@ public class Player implements Serializable {
 		this.text = text;
 		newText = true;
 		textrender = 0;
-		textLenght = text.length();
+		text.length();
 	}
 
 	public boolean getRight() {

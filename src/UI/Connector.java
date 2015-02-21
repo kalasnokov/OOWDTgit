@@ -199,6 +199,7 @@ public class Connector extends JFrame {
 			}
 		}
 		var = 1;
+		race = 1;
 		for (int u = 1; true; u++) {
 			File f = new File("res/char1/var" + u);
 			if (f.exists()) {
@@ -218,10 +219,11 @@ public class Connector extends JFrame {
 		if (c) {
 			game.Host();
 			sip = "";
+			Thread.sleep(5000);
 		} else {
 			sip = IP.getText();
 		}
-		Thread.sleep(5000);
+		var=Integer.parseInt(cm.getSelectedItem().toString());
 		race = list.getSelectedIndex() + 1;
 		game.setSendervalues(sip, Name.getText(), var, race);
 		setVisible(false); // you can't see me!
