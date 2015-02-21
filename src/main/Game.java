@@ -1,5 +1,6 @@
 package main;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.lwjgl.input.Cursor;
@@ -44,7 +45,15 @@ public class Game extends Head {
 		back = new Sprite("res/back.png");
 		keys = new Keys();
 		// arena = new Arena(height, width); // change later
-		c2 = new Connector(this);
+		try {
+			c2 = new Connector(this);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void loadAssets() {
@@ -164,5 +173,6 @@ public class Game extends Head {
 		}
 		s.chat.toggleVisible();
 		t = false;
+		
 	}
 }
