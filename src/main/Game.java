@@ -167,12 +167,27 @@ public class Game extends Head {
 		s = new Sender(this, ip, name, variation, race);
 	}
 
+	public void Host() {
+		new Thread(new Runnable() {
+			public void run() {
+				while (running) {
+					try {
+						new Server();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}).start();
+	}
+
 	public void giveText(String txt, boolean nuthing) throws IOException {
 		if (!nuthing) {
 			s.s("¤:" + s.thisplayer.getName() + ": " + txt);
 		}
 		s.chat.toggleVisible();
 		t = false;
-		
+
 	}
 }

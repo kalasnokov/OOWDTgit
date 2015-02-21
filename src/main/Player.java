@@ -105,7 +105,7 @@ public class Player implements Serializable {
 			x = 1480;
 		}
 		textrender++;
-		// update //tester
+		// update tester
 		// tester.jump(jumping);
 		// tester.ml(left);
 		// tester.mr(right);
