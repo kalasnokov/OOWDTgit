@@ -163,7 +163,6 @@ public class Server extends JFrame implements Serializable {
 		// datagram socket and port location
 		int port = 25565;
 		s = new DatagramSocket(port);
-
 		// Serverinf.setText(ip + ":" + port);
 		new Thread(new Runnable() {
 			public void run() {
@@ -204,7 +203,7 @@ public class Server extends JFrame implements Serializable {
 				}
 			}
 		}).start();
-
+		new Arena(50, 50);
 		while (true) {
 			msg = "";
 			// receiver

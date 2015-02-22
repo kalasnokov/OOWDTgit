@@ -19,7 +19,7 @@ public class Sender {
 	boolean left;
 	boolean right;
 	boolean jumping = false;
-	Tester tester;
+	//Tester tester;
 	String name;
 	String myName;
 	int health;
