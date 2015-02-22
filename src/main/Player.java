@@ -230,7 +230,6 @@ public class Player implements Serializable {
 			bubble = new Sprite("res/Bubble.png");
 			f = false;
 		}
-
 		if (newText) {
 			text.trim();
 			String[] st = text.split(" ");
