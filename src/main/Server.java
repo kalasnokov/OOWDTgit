@@ -176,8 +176,6 @@ public class Server extends JFrame implements Serializable {
 					}
 					for (Player Player : players) {
 						Player.update();
-						// possible location of a setx/sety function to decrease
-						// misalignments
 					}
 				}
 			}
@@ -217,12 +215,6 @@ public class Server extends JFrame implements Serializable {
 			rcvd.trim();
 			// rcvd="§:testsson";
 			found = false;
-			/*
-			 * Object o = null; ByteArrayOutputStream bos = new
-			 * ByteArrayOutputStream(); ObjectOutput out = null; out = new
-			 * ObjectOutputStream(bos); out.writeObject(o); byte[] yourBytes =
-			 * bos.toByteArray();
-			 */
 
 			// look if the package is a join request
 			for (Player Player : players) {
@@ -384,33 +376,5 @@ public class Server extends JFrame implements Serializable {
 		buf = msg.getBytes();
 		DatagramPacket out = new DatagramPacket(buf, buf.length, address, port);
 		s.send(out);
-	}
-
-	public void ExperimentalSend(InetAddress address, Player player)
-			throws IOException {
-		Socket s = new Socket("localhost", 25565);
-		OutputStream os = s.getOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(os);
-		Positions to = new Positions(10, 7, player.getName());
-		oos.writeObject(to);
-		oos.close();
-		os.close();
-		s.close();
-	}
-
-	public void ExperimentalReceive() throws IOException,
-			ClassNotFoundException {
-		ServerSocket ss = new ServerSocket(25565);
-		Socket s = ss.accept();
-		InputStream is = s.getInputStream();
-		ObjectInputStream ois = new ObjectInputStream(is);
-		Object o = ois.readObject();
-		Positions to = (Positions) o;
-		if (to != null) {
-			System.out.println(to.x + " " + to.y);
-		}
-		is.close();
-		s.close();
-		ss.close();
 	}
 }

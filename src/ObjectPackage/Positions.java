@@ -1,4 +1,4 @@
-package main;
+package ObjectPackage;
 
 import java.io.Serializable;
 
