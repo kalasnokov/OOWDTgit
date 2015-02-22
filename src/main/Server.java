@@ -46,7 +46,7 @@ public class Server extends JFrame implements Serializable {
 
 	public Server() throws IOException {
 
-		// stuff
+		// UI and shit starts here
 		super("OOWDT Server");
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -148,45 +148,52 @@ public class Server extends JFrame implements Serializable {
 		pack();
 		setVisible(true);
 
-		// non-ui code begins here
+		// non-UI code begins here
 
-		// checks servers ip
+		try {
+			URL whatismyip = new URL("http://checkip.amazonaws.com");
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					whatismyip.openStream()));
 
-		/*
-		 * URL whatismyip = new URL("http://checkip.amazonaws.com");
-		 * BufferedReader in = new BufferedReader(new InputStreamReader(
-		 * whatismyip.openStream()));
-		 * 
-		 * String ip = in.readLine(); s(ip);
-		 */
+			String ip = in.readLine();
+			ap("Your IP is " + ip);
+		} catch (Exception e) {
+			ap("Failed to retrive IP, are you sure you are connected to the internet?");
+		}
 
 		// datagram socket and port location
-		int port = 25565;
-		s = new DatagramSocket(port);
+		int port = 25565;// port
+		s = new DatagramSocket(port);// socket
 		// Serverinf.setText(ip + ":" + port);
 		new Thread(new Runnable() {
 			public void run() {
 				while (true) {
 					try {
-						Thread.sleep(20);// game speed
+						Thread.sleep(20);// game update speed, about 60 times
+											// per second, but not really
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					// loops all server-stored players and updates them
 					for (Player Player : players) {
-						Player.update();
+						Player.update();// updater
 					}
 				}
 			}
 		}).start();
+
 		new Thread(new Runnable() {
 			public void run() {
 				while (true) {
 					try {
-						Thread.sleep(500);// update speed
+						Thread.sleep(500);// Player update speed, sending player
+											// location to all clients two times
+											// every second
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
+					// the actual send function is here,. it loops all players
+					// and sends relevant information about all other clients.
 					for (Player P : players) {
 						InetAddress a = P.getAddress();
 						int p = P.getPort();
@@ -203,7 +210,11 @@ public class Server extends JFrame implements Serializable {
 				}
 			}
 		}).start();
-		new Arena(50, 50);
+
+		// this is the map
+		new Arena(100, 100);
+		// actual server-stuff starts here, inside the while() loop
+
 		while (true) {
 			msg = "";
 			// receiver
@@ -212,7 +223,6 @@ public class Server extends JFrame implements Serializable {
 			s.receive(dgp);
 			String rcvd = new String(dgp.getData());
 			rcvd.trim();
-			// rcvd="§:testsson";
 			found = false;
 
 			// look if the package is a join request
@@ -224,19 +234,35 @@ public class Server extends JFrame implements Serializable {
 					}
 				}
 			}
-			String[] Spart = rcvd.split(":");
-			String FL = Spart[0];
-			if (FL.equals("#")) {
+
+			String[] Spart = rcvd.split(":");// splitter, divides the package,
+												// IE splitting @:hello to @ and
+												// hello
+			String FL = Spart[0];// FL stands for First Letter, used to identify
+									// package type
+
+			if (FL.equals("#")) {// remove package recieved...
 				for (int x = players.size() - 1; x >= 0; x--) {
+
 					if (players.elementAt(x).getAddress()
 							.equals(dgp.getAddress())
 							&& players.elementAt(x).getPort() == dgp.getPort()) {
+
 						ap("Player " + players.elementAt(x).getName()
-								+ " was removed: client shutdown");
-						msg = "#:" + players.elementAt(x).getName() + ":";
+								+ " was removed: client shutdown");// append
+																	// server
+																	// log with
+																	// relevant
+																	// information
+
+						msg = "#:" + players.elementAt(x).getName() + ":";// remove
+																			// order
+
 						send(players.elementAt(x).getAddress(), players
-								.elementAt(x).getPort());
-						players.remove(players.elementAt(x));
+								.elementAt(x).getPort());// send remove order to
+															// all clients
+
+						players.remove(players.elementAt(x));// remove player
 					}
 				}
 			}

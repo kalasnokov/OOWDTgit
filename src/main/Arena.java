@@ -28,26 +28,34 @@ public class Arena implements Serializable {
 	}
 
 	public Arena(int WW, int WH) {
+		/*
+		 * float[][] pit = new float[WW][WH]; for(int x=0;x<WW;x++){ for(int
+		 * y=0;y<WH;y++){ pit[x][y] = (float) ((Math.sqrt(Math.pow((WW/2)-x,
+		 * 2)+Math.pow((WH/2)-y, 2)))/10); } }
+		 */
 
 		this.WW = WW;
 		this.WH = WH;
 
 		float[][] simplexnoise = new float[WW][WH];
-		float frequency = 1.5f / (float) WH;
+		float frequency = 5.0f / (float) WH;
 
 		for (int x = 0; x < WH; x++) {
 			for (int y = 0; y < WH; y++) {
 				simplexnoise[x][y] = (float) noise(x * frequency, y * frequency);
-				simplexnoise[x][y] = (simplexnoise[x][y] + 1) / 2;
+				simplexnoise[x][y] = (((simplexnoise[x][y] + 1) / 2) * 10)-2;
+				// simplexnoise[x][y]-=pit[x][y];
+				if (simplexnoise[x][y] < 0) {
+					simplexnoise[x][y] = 0;
+				}
 			}
 		}
 		for (int i = 0; i < WW; i++) {
 			for (int u = 0; u < WH; u++) {
-				System.out.print((int) (simplexnoise[i][u] * 10) + " ");
+				System.out.print((int) (simplexnoise[i][u]) + " ");
 			}
 			System.out.println(" ");
 		}
-		// world generation
 	}
 
 	public void render(double dt, Game game, int xoffset, int yoffset) {
