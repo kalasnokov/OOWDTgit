@@ -25,6 +25,12 @@ public class Player implements Serializable {
 	boolean left;
 	boolean right;
 	boolean jumping = false;
+	boolean Ar = false;
+	boolean Al = false;
+	boolean Light = false;
+	boolean Medium = false;
+	boolean Heavy = false;
+	boolean Special = false;
 	// tester tester;
 	private Sprite sprite;
 	boolean f = true;
@@ -207,6 +213,20 @@ public class Player implements Serializable {
 			yacc = jumpspeed;
 			jumping = true;
 			// tester.jump(jumping);
+		}
+	}
+	
+	public void a1() {
+		//Light attack
+		if (facing && !Ar && !Al) {
+			Ar = true;
+			Light = true;
+			//Ar = Attack right, Light attack
+		}
+		if (!facing && !Ar && !Al) {
+			Al = true;
+			Light = true;
+			//Al = Attack left
 		}
 	}
 

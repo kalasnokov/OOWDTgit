@@ -101,7 +101,7 @@ public class Game extends Head {
 				e1.printStackTrace();
 			}
 		}
-		if (keys.keyReleased(Keyboard.KEY_A) && !t) {
+		if (keys.keyReleased(Keyboard.KEY_A) && !c && !t) {
 			msg = "$:<:R:";
 			try {
 				s.s(msg);
@@ -110,7 +110,7 @@ public class Game extends Head {
 			}
 			c = false;
 		}
-		if (keys.keyReleased(Keyboard.KEY_D) && !t) {
+		if (keys.keyReleased(Keyboard.KEY_D) && !c && !t) {
 			msg = "$:>:R:";
 			try {
 				s.s(msg);
@@ -118,6 +118,14 @@ public class Game extends Head {
 				e1.printStackTrace();
 			}
 			c = false;
+		}
+		if (keys.keyPressed(Keyboard.KEY_LEFT) && !t) {
+			msg = "$:A1:";
+			try {
+				s.s(msg);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
 		keys.setKeys();
 	}

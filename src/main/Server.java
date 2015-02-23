@@ -345,6 +345,11 @@ public class Server extends JFrame implements Serializable {
 						Player.j();
 						msg = "$:" + Player.getName() + ":^:";
 					}
+					if (Spart[1].equals("A1")) {
+						//Projectile
+						Player.a1();
+						msg = "$:" + Player.getName() + ":A1:";
+					}
 				}
 			}
 		}
