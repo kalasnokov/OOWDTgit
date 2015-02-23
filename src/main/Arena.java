@@ -37,7 +37,7 @@ public class Arena implements Serializable {
 		this.WH = WH;
 		Random rand = new Random();
 		for (int i = 0; i < p.length; i++) {
-			p[i] = rand.nextInt(255) + 1;
+			p[i] = rand.nextInt(2) + 1;
 		}
 		worldstring = "£:" + WW + ":" + WH + ":";
 		for (int i = 0; i < p.length; i++) {
@@ -48,7 +48,7 @@ public class Arena implements Serializable {
 
 	public void generate() {
 		simplexnoise = new float[WW][WH];
-		float frequency = 5.0f / (float) WH;
+		float frequency = 10.0f / (float) WH;
 
 		for (int i = 0; i < 512; i++) {
 			perm[i] = p[i & 255];
