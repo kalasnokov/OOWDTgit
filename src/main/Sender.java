@@ -117,8 +117,8 @@ public class Sender {
 								for (int i = 3; i < Spart.length; i++) {
 									p[i - 3] = Integer.parseInt(Spart[i]);
 								}
-								arena = new Arena(Integer.parseInt(Spart[1]),
-										Integer.parseInt(Spart[2]), p);
+								//arena = new Arena(Integer.parseInt(Spart[1]),
+									//	Integer.parseInt(Spart[2]), p);
 							}
 						}
 						if (FL.equals("¤")) {
