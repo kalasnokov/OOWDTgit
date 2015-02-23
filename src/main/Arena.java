@@ -79,14 +79,14 @@ public class Arena implements Serializable {
 		}
 		for (int x = 0; x < WH; x++) {
 			for (int y = 0; y < WH; y++) {
-				int xvar = (int) (sprites[0].width - zoom);
-				int yvar = (int) (sprites[0].height - zoom);
-				if (x * xvar - xoffset < game.width
-						&& x * xvar + xvar - xoffset > 0
-						&& y * yvar - yoffset < game.height
-						&& y * yvar + yvar - yoffset > 0) {
-					sprites[(int) simplexnoise[x][y]].render(
-							x * xvar - xoffset, y * yvar - yoffset, xvar, yvar);
+				if ((x * (32 - zoom)) - xoffset < game.width
+						&& (x * (32 - zoom)) + (32 - zoom) - xoffset > 0
+						&& (y * (32 - zoom)) - yoffset < game.height
+						&& (y * (32 - zoom)) + (32 - zoom) - yoffset > 0) {
+					sprites[(int) simplexnoise[x][y]].render((x * (32 - zoom))
+							- xoffset, (y * (32 - zoom)) - yoffset, 32 - zoom,
+							32 - zoom);
+					;
 				}
 			}
 		}
