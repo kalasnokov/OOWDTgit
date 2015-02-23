@@ -280,4 +280,7 @@ public class Sender {
 		running = false;
 		s("#:");
 	}
+	public boolean getarenacreated(){
+		return arenacreated;
+	}
 }

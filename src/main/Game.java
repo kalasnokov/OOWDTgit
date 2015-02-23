@@ -240,13 +240,15 @@ public class Game extends Head {
 			yoffset = 0;
 			yoffsetacc = 0;
 		}
-		if (xoffset > (s.arena.getWW() * 30) - width) {
-			xoffset = (s.arena.getWW() * 30) - width;
-			xoffsetacc = 0;
-		}
-		if (yoffset > (s.arena.getWH() * 30) - height) {
-			yoffset = (s.arena.getWH() * 30) - height;
-			yoffsetacc = 0;
+		if (s.getarenacreated()) {
+			if (xoffset > (s.arena.getWW() * 30) - width) {
+				xoffset = (s.arena.getWW() * 30) - width;
+				xoffsetacc = 0;
+			}
+			if (yoffset > (s.arena.getWH() * 30) - height) {
+				yoffset = (s.arena.getWH() * 30) - height;
+				yoffsetacc = 0;
+			}
 		}
 	}
 
@@ -307,6 +309,5 @@ public class Game extends Head {
 		}
 		s.chat.toggleVisible();
 		t = false;
-
 	}
 }
