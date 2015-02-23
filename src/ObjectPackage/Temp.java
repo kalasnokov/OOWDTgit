@@ -21,7 +21,6 @@ public class Temp implements Serializable {
 
 	public static void main(String[] args) throws IOException,
 			ClassNotFoundException {
-		// TODO Auto-generated method stub
 
 		new Temp();
 
@@ -58,7 +57,7 @@ public class Temp implements Serializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-				ServerSocket ss = new ServerSocket(25565);
+				ServerSocket ss = new ServerSocket(25566);
 		Socket so= ss.accept();
 		InputStream is = so.getInputStream();
 		ObjectInputStream ois = new ObjectInputStream(is);
@@ -94,7 +93,7 @@ public class Temp implements Serializable {
 			e.printStackTrace();
 		}
 		
-		Socket so = new Socket("localhost", 25565);
+		Socket so = new Socket("localhost", 25566);
 		OutputStream os = so.getOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(os);
 		Positions tos = new Positions(10, 7, "Gaben");

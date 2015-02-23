@@ -19,7 +19,7 @@ public class Sender {
 	boolean left;
 	boolean right;
 	boolean jumping = false;
-	//Tester tester;
+	// Tester tester;
 	String name;
 	String myName;
 	int health;
@@ -39,6 +39,8 @@ public class Sender {
 	int variation;
 	Player thisplayer;
 	Chat chat;
+	boolean arenacreated = false;
+	Arena arena;
 
 	public Sender(Game game, String ip, String name, int var, int race)
 			throws InterruptedException {
@@ -109,10 +111,20 @@ public class Sender {
 								found = true;
 							}
 						}
+						if (FL.equals("£")) {
+							if (!arenacreated) {
+								int[] p = new int[256];
+								for (int i = 3; i < Spart.length; i++) {
+									p[i - 3] = Integer.parseInt(Spart[i]);
+								}
+								arena = new Arena(Integer.parseInt(Spart[1]),
+										Integer.parseInt(Spart[2]), p);
+							}
+						}
 						if (FL.equals("¤")) {
 							rcvd.replace("¤:", "");
 							appendChat(rcvd);
-							rcvd = rcvd.replace("¤:"+name + ": ", "");
+							rcvd = rcvd.replace("¤:" + name + ": ", "");
 							if (name.equals(myName)) {
 								thisplayer.setText(rcvd);
 							} else {

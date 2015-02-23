@@ -198,8 +198,6 @@ public class Connector extends JFrame {
 				lm.addElement(races[i]);
 			}
 		}
-		var = 1;
-		race = 1;
 		for (int u = 1; true; u++) {
 			File f = new File("res/char1/var" + u);
 			if (f.exists()) {
@@ -209,7 +207,7 @@ public class Connector extends JFrame {
 			}
 		}
 		cm.setSelectedItem(1);
-		// pack();
+		list.setSelectedIndex(0);
 		setVisible(true);
 		setSize(261, 245);
 		while (!b) {

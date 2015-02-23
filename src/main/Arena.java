@@ -15,41 +15,49 @@ public class Arena implements Serializable {
 			{ -1, 0, -1 }, { 0, 1, 1 }, { 0, -1, 1 }, { 0, 1, -1 },
 			{ 0, -1, -1 } };
 	private int p[] = new int[256];
-	{
+
+	private String worldstring;
+	private int perm[] = new int[512];
+
+	public Arena(int WW, int WH, int[]p) {
+		//client constructor
+		this.WW = WW;
+		this.WH = WH;
+		this.p=p;
+		generate();
+	}
+	public Arena(int WW, int WH) {
+		//server constructor
+		this.WW = WW;
+		this.WH = WH;
 		Random rand = new Random();
 		for (int i = 0; i < p.length; i++) {
 			p[i] = rand.nextInt(256) + 1;
 		}
+		worldstring = "£:"+WW+":"+WH+":";
+		for (int i = 0; i < p.length; i++) {
+			worldstring += p[i] + ":";
+		}
+		generate();
 	}
-	private int perm[] = new int[512];
-	{
-		for (int i = 0; i < 512; i++)
-			perm[i] = p[i & 255];
-	}
-
-	public Arena(int WW, int WH) {
-		/*
-		 * float[][] pit = new float[WW][WH]; for(int x=0;x<WW;x++){ for(int
-		 * y=0;y<WH;y++){ pit[x][y] = (float) ((Math.sqrt(Math.pow((WW/2)-x,
-		 * 2)+Math.pow((WH/2)-y, 2)))/10); } }
-		 */
-
-		this.WW = WW;
-		this.WH = WH;
-
+	public void generate(){
 		float[][] simplexnoise = new float[WW][WH];
 		float frequency = 5.0f / (float) WH;
 
-		for (int x = 0; x < WH; x++) {
-			for (int y = 0; y < WH; y++) {
-				simplexnoise[x][y] = (float) noise(x * frequency, y * frequency);
-				simplexnoise[x][y] = (((simplexnoise[x][y] + 1) / 2) * 10)-2;
-				// simplexnoise[x][y]-=pit[x][y];
-				if (simplexnoise[x][y] < 0) {
-					simplexnoise[x][y] = 0;
+		for (int i = 0; i < 512; i++){
+			perm[i] = p[i & 255];
+		}
+			for (int x = 0; x < WH; x++) {
+				for (int y = 0; y < WH; y++) {
+					simplexnoise[x][y] = (float) noise(x * frequency, y
+							* frequency);
+					simplexnoise[x][y] = (((simplexnoise[x][y] + 1) / 2) * 10) - 2;
+					if (simplexnoise[x][y] < 0) {
+						simplexnoise[x][y] = 0;
+					}
 				}
 			}
-		}
+		
 		for (int i = 0; i < WW; i++) {
 			for (int u = 0; u < WH; u++) {
 				System.out.print((int) (simplexnoise[i][u]) + " ");
@@ -123,6 +131,9 @@ public class Arena implements Serializable {
 		}
 
 		return 70.0 * (n0 + n1 + n2);
+	}
+	public String getWorldString(){
+		return worldstring;
 	}
 
 	public static void update() {

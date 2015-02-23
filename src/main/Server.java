@@ -43,6 +43,7 @@ public class Server extends JFrame implements Serializable {
 	private String msg;
 	DatagramSocket s;
 	private JTextField input;
+	private Arena arena;
 
 	public Server() throws IOException {
 
@@ -212,7 +213,7 @@ public class Server extends JFrame implements Serializable {
 		}).start();
 
 		// this is the map
-		new Arena(100, 100);
+		arena = new Arena(100, 100);
 		// actual server-stuff starts here, inside the while() loop
 
 		while (true) {
@@ -301,7 +302,9 @@ public class Server extends JFrame implements Serializable {
 							send(ad, p);
 						}
 					}
-
+					msg=arena.getWorldString();
+					send(dgp.getAddress(),dgp.getPort());
+					
 				}
 			}
 			move(FL, Spart, dgp);
