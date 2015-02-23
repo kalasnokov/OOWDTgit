@@ -48,7 +48,7 @@ public class Arena implements Serializable {
 
 	public void generate() {
 		simplexnoise = new float[WW][WH];
-		float frequency = 5.0f / (float) WH;
+		float frequency = 6.0f / (float) WH;
 
 		for (int i = 0; i < 512; i++) {
 			perm[i] = p[i & 255];
