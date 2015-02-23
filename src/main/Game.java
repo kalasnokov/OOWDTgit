@@ -101,7 +101,7 @@ public class Game extends Head {
 				e1.printStackTrace();
 			}
 		}
-		if (keys.keyReleased(Keyboard.KEY_A) && !c && !t) {
+		if (keys.keyReleased(Keyboard.KEY_A) && !t) {
 			msg = "$:<:R:";
 			try {
 				s.s(msg);
@@ -110,7 +110,7 @@ public class Game extends Head {
 			}
 			c = false;
 		}
-		if (keys.keyReleased(Keyboard.KEY_D) && !c && !t) {
+		if (keys.keyReleased(Keyboard.KEY_D) && !t) {
 			msg = "$:>:R:";
 			try {
 				s.s(msg);
