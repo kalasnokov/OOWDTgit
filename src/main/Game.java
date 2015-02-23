@@ -15,14 +15,11 @@ public class Game extends Head {
 	public String text = "";
 	public boolean paused;
 	public State gameState;
-	public State renderState;
 	public State oldState;
 	public boolean buttonClicked;
 	public Arena arena;
 	public int xoffset = 0;
 	public int yoffset = 0;
-	public int xoffsetacc = 0;
-	public int yoffsetacc = 0;
 	public static Sender s;
 	public boolean c = false;
 	public boolean t = false;
@@ -30,13 +27,9 @@ public class Game extends Head {
 	private Sprite back;
 	@SuppressWarnings("unused")
 	private Connector c2;
-	boolean Uc=false;
-	boolean Dc=false;
-	boolean Rc=false;
-	boolean Lc=false;
 
 	public enum State {
-		MENU, PLAYING, STARTING, MAP, WORLD;
+		MENU, PLAYING, STARTING, MAP;
 	}
 
 	public void preGLInit() {
@@ -79,55 +72,6 @@ public class Game extends Head {
 			} else {
 				t = true;
 				s.chat.toggleVisible();
-			}
-		}
-		if (keys.keyPressed(Keyboard.KEY_UP)) {
-			if(renderState == State.MAP){
-				Uc=true;
-			}
-		}
-		if (keys.keyPressed(Keyboard.KEY_DOWN)) {
-			if(renderState == State.MAP){
-				Dc=true;
-			}
-		}
-		if (keys.keyPressed(Keyboard.KEY_LEFT)) {
-			if(renderState == State.MAP){
-				Lc=true;
-			}
-		}
-		if (keys.keyPressed(Keyboard.KEY_RIGHT)) {
-			if(renderState == State.MAP){
-				Rc=true;
-			}
-		}
-		
-		
-		if (keys.keyReleased(Keyboard.KEY_UP)) {
-			if(renderState == State.MAP){
-				Uc=false;
-			}
-		}
-		if (keys.keyReleased(Keyboard.KEY_DOWN)) {
-			if(renderState == State.MAP){
-				Dc=false;
-			}
-		}
-		if (keys.keyReleased(Keyboard.KEY_LEFT)) {
-			if(renderState == State.MAP){
-				Lc=false;
-			}
-		}
-		if (keys.keyReleased(Keyboard.KEY_RIGHT)) {
-			if(renderState == State.MAP){
-				Rc=false;
-			}
-		}
-		if (keys.keyPressed(Keyboard.KEY_M)) {
-			if (renderState != State.MAP) {
-				renderState=State.MAP;
-			}else{
-				renderState=State.WORLD;
 			}
 		}
 		String msg;
@@ -189,48 +133,6 @@ public class Game extends Head {
 		}
 		buttonClicked = false;
 		s.view(this);
-		if(Uc){
-			yoffsetacc-=2;
-		}
-		if(Dc){
-			yoffsetacc+=2;
-		}
-		if(Lc){
-			xoffsetacc-=2;
-		}
-		if(Rc){
-			xoffsetacc+=2;
-		}
-		if(xoffsetacc<0){
-			xoffsetacc++;
-		}
-		if(xoffsetacc>0){
-			xoffsetacc--;
-		}
-		if(yoffsetacc<0){
-			yoffsetacc++;
-		}
-		if(yoffsetacc>0){
-			yoffsetacc--;
-		}
-		xoffset+=xoffsetacc;
-		yoffset+=yoffsetacc;
-		if(xoffset<0){
-			xoffset=0;
-			xoffsetacc=0;
-		}
-		if(yoffset<0){
-			yoffset=0;
-			yoffsetacc=0;
-		}
-		if(xoffset>(s.arena.getWW()*30)-width){
-			xoffset=(s.arena.getWW()*30)-width;
-			xoffsetacc=0;
-		}
-		if(yoffset>(s.arena.getWH()*30)-height){
-			yoffset=(s.arena.getWH()*30)-height;
-			yoffsetacc=0;
-		}
 	}
 
 	public int render(double interpolation) {
@@ -241,13 +143,9 @@ public class Game extends Head {
 			if (gameState != State.PLAYING)
 				interp = 0;
 		}
-		if (renderState == State.MAP) {
-			s.arena.render(interpolation, this, xoffset, yoffset);
-		} else {
-			back.render(0, 0);
-			s.render(interpolation, this);
-			ground.render(0, 540);
-		}
+		back.render(0, 0);
+		s.render(interpolation, this);
+		ground.render(0, 540);
 		return 0;
 	}
 

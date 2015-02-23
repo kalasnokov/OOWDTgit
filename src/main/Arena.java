@@ -18,76 +18,55 @@ public class Arena implements Serializable {
 
 	private String worldstring;
 	private int perm[] = new int[512];
-	float[][] simplexnoise;
-	boolean f = true;
-	Sprite[] sprites = new Sprite[8];
 
-	public Arena(int WW, int WH, int[] p) {
-		// client constructor
+	public Arena(int WW, int WH, int[]p) {
+		//client constructor
 		this.WW = WW;
 		this.WH = WH;
-		this.p = p;
+		this.p=p;
 		generate();
 	}
-
 	public Arena(int WW, int WH) {
-		// server constructor
+		//server constructor
 		this.WW = WW;
 		this.WH = WH;
 		Random rand = new Random();
 		for (int i = 0; i < p.length; i++) {
 			p[i] = rand.nextInt(256) + 1;
 		}
-		worldstring = "£:" + WW + ":" + WH + ":";
+		worldstring = "£:"+WW+":"+WH+":";
 		for (int i = 0; i < p.length; i++) {
 			worldstring += p[i] + ":";
 		}
 		generate();
 	}
-
-	public void generate() {
-		simplexnoise = new float[WW][WH];
+	public void generate(){
+		float[][] simplexnoise = new float[WW][WH];
 		float frequency = 5.0f / (float) WH;
 
-		for (int i = 0; i < 512; i++) {
+		for (int i = 0; i < 512; i++){
 			perm[i] = p[i & 255];
 		}
-		for (int x = 0; x < WH; x++) {
-			for (int y = 0; y < WH; y++) {
-				simplexnoise[x][y] = (float) noise(x * frequency, y * frequency);
-				simplexnoise[x][y] = (((simplexnoise[x][y] + 1) / 2) * 10) - 2;
-				if (simplexnoise[x][y] < 0) {
-					simplexnoise[x][y] = 0;
+			for (int x = 0; x < WH; x++) {
+				for (int y = 0; y < WH; y++) {
+					simplexnoise[x][y] = (float) noise(x * frequency, y
+							* frequency);
+					simplexnoise[x][y] = (((simplexnoise[x][y] + 1) / 2) * 10) - 2;
+					if (simplexnoise[x][y] < 0) {
+						simplexnoise[x][y] = 0;
+					}
 				}
 			}
+		
+		for (int i = 0; i < WW; i++) {
+			for (int u = 0; u < WH; u++) {
+				System.out.print((int) (simplexnoise[i][u]) + " ");
+			}
+			System.out.println(" ");
 		}
-
-		/*
-		 * for (int i = 0; i < WW; i++) { for (int u = 0; u < WH; u++) {
-		 * System.out.print((int) (simplexnoise[i][u]) + " "); }
-		 * System.out.println(" "); }
-		 */
 	}
 
 	public void render(double dt, Game game, int xoffset, int yoffset) {
-		if (f) {
-			for (int i = 0; i < sprites.length; i++) {
-				sprites[i] = new Sprite("res/tiles/" + i + ".png");
-			}
-			f = false;
-		}
-		for (int x = 0; x < WH; x++) {
-			for (int y = 0; y < WH; y++) {
-				if ((x * 32) - xoffset < game.width
-						&& (x * 32) + 32 - xoffset > 0
-						&& (y * 32) - yoffset < game.height
-						&& (y * 32) + 32 - yoffset > 0) {
-					sprites[(int) simplexnoise[x][y]].render(
-							(x * 32) - xoffset, (y * 32) - yoffset);
-					;
-				}
-			}
-		}
 	}
 
 	private int fastfloor(double x) {
@@ -153,17 +132,8 @@ public class Arena implements Serializable {
 
 		return 70.0 * (n0 + n1 + n2);
 	}
-
-	public String getWorldString() {
+	public String getWorldString(){
 		return worldstring;
-	}
-
-	public int getWW() {
-		return WW;
-	}
-
-	public int getWH() {
-		return WH;
 	}
 
 	public static void update() {
