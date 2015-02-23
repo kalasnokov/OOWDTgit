@@ -212,7 +212,6 @@ public class Server extends JFrame implements Serializable {
 		}).start();
 
 		// this is the map
-		new Arena(100, 100);
 		// actual server-stuff starts here, inside the while() loop
 
 		while (true) {

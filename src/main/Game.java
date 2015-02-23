@@ -17,7 +17,6 @@ public class Game extends Head {
 	public State gameState;
 	public State oldState;
 	public boolean buttonClicked;
-	public Arena arena;
 	public int xoffset = 0;
 	public int yoffset = 0;
 	public static Sender s;
