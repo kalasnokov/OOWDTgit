@@ -24,6 +24,7 @@ public class Game extends Head {
 	public boolean t = false;
 	private Sprite ground;
 	private Sprite back;
+	public Server server;
 	@SuppressWarnings("unused")
 	private Connector c2;
 
@@ -82,6 +83,7 @@ public class Game extends Head {
 				e1.printStackTrace();
 			}
 			c = true;
+			s.thisplayer.wl(true);
 		}
 		if (keys.keyPressed(Keyboard.KEY_D) && !c && !t) {
 			msg = "$:>:P:";
@@ -91,6 +93,7 @@ public class Game extends Head {
 				e1.printStackTrace();
 			}
 			c = true;
+			s.thisplayer.wr(true);
 		}
 		if (keys.keyPressed(Keyboard.KEY_SPACE) && !t) {
 			msg = "$:^:";
@@ -99,6 +102,7 @@ public class Game extends Head {
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
+			s.thisplayer.j();
 		}
 		if (keys.keyReleased(Keyboard.KEY_A) && !t) {
 			msg = "$:<:R:";
@@ -108,6 +112,7 @@ public class Game extends Head {
 				e1.printStackTrace();
 			}
 			c = false;
+			s.thisplayer.wl(false);
 		}
 		if (keys.keyReleased(Keyboard.KEY_D) && !t) {
 			msg = "$:>:R:";
@@ -117,6 +122,7 @@ public class Game extends Head {
 				e1.printStackTrace();
 			}
 			c = false;
+			s.thisplayer.wr(false);
 		}
 		keys.setKeys();
 	}
@@ -171,9 +177,8 @@ public class Game extends Head {
 			public void run() {
 				while (running) {
 					try {
-						new Server();
+						server = new Server();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -187,6 +192,6 @@ public class Game extends Head {
 		}
 		s.chat.toggleVisible();
 		t = false;
-
+		s.thisplayer.setText(txt);
 	}
 }

@@ -21,7 +21,8 @@ public class Player implements Serializable {
 	int yacc = 0;
 	InetAddress address;
 	int port;
-	boolean pressing = false;
+	boolean Rpressing = false;
+	boolean Lpressing = false;
 	boolean left;
 	boolean right;
 	boolean jumping = false;
@@ -75,13 +76,13 @@ public class Player implements Serializable {
 	}
 
 	public void update() {
-		if (pressing && left) {
+		if (Lpressing && left) {
 			xacc -= movespeed / 5;
 		}
-		if (pressing && right) {
+		if (Rpressing && right) {
 			xacc += movespeed / 5;
 		}
-		if (!pressing) {
+		if (!Rpressing&&!Lpressing) {
 			xacc = 0;
 		}
 
@@ -125,7 +126,7 @@ public class Player implements Serializable {
 				two = true;
 			}
 		}
-		if (pressing && left && !jumping && cs) {
+		if (Lpressing && left && !jumping && cs) {
 			if (two) {
 				sprite = new Sprite("res/char" + cha + "/var" + var
 						+ "/w1l.png");
@@ -136,7 +137,7 @@ public class Player implements Serializable {
 			fc = true;
 			cs = false;
 		}
-		if (pressing && right && !jumping && cs) {
+		if (Rpressing && right && !jumping && cs) {
 			if (two) {
 				sprite = new Sprite("res/char" + cha + "/var" + var + "/w1.png");
 			} else {
@@ -174,8 +175,12 @@ public class Player implements Serializable {
 				}
 			}
 			fc = true;
+		}boolean p=false;
+		if(!Rpressing||!Rpressing){
+			p=true;
 		}
-		if (!pressing && !jumping && fc) {
+		
+		if (!p && !jumping && fc) {
 			if (facing) {
 				sprite = new Sprite("res/char" + cha + "/var" + var
 						+ "/char.png");
@@ -189,14 +194,14 @@ public class Player implements Serializable {
 
 	public void wl(boolean p) {
 		// walk left
-		pressing = p;
+		Lpressing = p;
 		left = p;
 		facing = false;
 	}
 
 	public void wr(boolean p) {
 		// walk right
-		pressing = p;
+		Rpressing = p;
 		right = p;
 		facing = true;
 	}

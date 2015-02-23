@@ -43,6 +43,8 @@ public class Server extends JFrame implements Serializable {
 	private String msg;
 	DatagramSocket s;
 	private JTextField input;
+	private boolean broken = false;
+	boolean ready=false;
 
 	public Server() throws IOException {
 
@@ -163,7 +165,12 @@ public class Server extends JFrame implements Serializable {
 
 		// datagram socket and port location
 		int port = 25565;// port
-		s = new DatagramSocket(port);// socket
+		try {
+			s = new DatagramSocket(port);// socket
+		} catch (Exception e) {
+			ap("Another server is already running on this adress");
+			broken = true;
+		}
 		// Serverinf.setText(ip + ":" + port);
 		new Thread(new Runnable() {
 			public void run() {
@@ -186,7 +193,7 @@ public class Server extends JFrame implements Serializable {
 			public void run() {
 				while (true) {
 					try {
-						Thread.sleep(500);// Player update speed, sending player
+						Thread.sleep(100);// Player update speed, sending player
 											// location to all clients two times
 											// every second
 					} catch (InterruptedException e) {
@@ -213,8 +220,9 @@ public class Server extends JFrame implements Serializable {
 
 		// this is the map
 		// actual server-stuff starts here, inside the while() loop
-
-		while (true) {
+		ready=true;
+		ap("ready");
+		while (!broken) {
 			msg = "";
 			// receiver
 			byte[] buf = new byte[1024];
@@ -240,75 +248,80 @@ public class Server extends JFrame implements Serializable {
 			String FL = Spart[0];// FL stands for First Letter, used to identify
 									// package type
 
-			if (FL.equals("#")) {// remove package recieved...
-				for (int x = players.size() - 1; x >= 0; x--) {
-
-					if (players.elementAt(x).getAddress()
-							.equals(dgp.getAddress())
-							&& players.elementAt(x).getPort() == dgp.getPort()) {
-
-						ap("Player " + players.elementAt(x).getName()
-								+ " was removed: client shutdown");// append
-																	// server
-																	// log with
-																	// relevant
-																	// information
-
-						msg = "#:" + players.elementAt(x).getName() + ":";// remove
-																			// order
-
-						send(players.elementAt(x).getAddress(), players
-								.elementAt(x).getPort());// send remove order to
-															// all clients
-
-						players.remove(players.elementAt(x));// remove player
-					}
-				}
-			}
+			removeplayer(FL, dgp);
 			if (FL.equals("¤")) {
 				msg = rcvd;
 			}
-			if (!found) {
-				// new client added and new player created
-				if (FL.equals("§")) {
-					// if a datagram starts with § it will be identified as
-					// a
-					// connection request, and the server will attempt to
-					// create
-					// a new client instance
-					String name;
-					name = Spart[1];
-					players.add(new Player(name, dgp.getAddress(), dgp
-							.getPort(), Integer.parseInt(Spart[2]), Integer
-							.parseInt(Spart[3])));
-					ap("New client connected from " + dgp.getAddress() + " "
-							+ dgp.getPort() + " with name " + name
-							+ " and race " + Spart[2]);
+			// new client added and new player created
+			addplayer(FL, Spart, dgp);
 
-					for (Player P : players) {
-						// send new client info to all existing clients as
-						// well
-						// as providing new client with info about all the
-						// other
-						InetAddress ad = P.getAddress();
-						int p = P.getPort();
-						for (Player Player : players) {
-							msg = "§:" + Player.getName() + ":" + Player.getX()
-									+ ":" + Player.getY() + ":"
-									+ Player.getCha() + ":"
-									+ Player.getVariation() + ":";
-							send(ad, p);
-						}
-					}
-
-				}
-			}
 			move(FL, Spart, dgp);
-			sendtoall();
 		}
 	}
 
-	public void move(String FL, String[] Spart, DatagramPacket dgp) {
+	public void removeplayer(String FL, DatagramPacket dgp) throws IOException {
+		if (FL.equals("#")) {// remove package recieved...
+			for (int x = players.size() - 1; x >= 0; x--) {
+
+				if (players.elementAt(x).getAddress().equals(dgp.getAddress())
+						&& players.elementAt(x).getPort() == dgp.getPort()) {
+
+					ap("Player " + players.elementAt(x).getName()
+							+ " was removed: client shutdown");// append
+																// server
+																// log with
+																// relevant
+																// information
+
+					msg = "#:" + players.elementAt(x).getName() + ":";// remove
+																		// order
+
+					send(players.elementAt(x).getAddress(), players
+							.elementAt(x).getPort());// send remove order to
+														// all clients
+
+					players.remove(players.elementAt(x));// remove player
+				}
+			}
+		}
+	}
+
+	public void addplayer(String FL, String[] Spart, DatagramPacket dgp)
+			throws IOException {
+		if (FL.equals("§") && !found) {
+			// if a datagram starts with § it will be identified as
+			// a
+			// connection request, and the server will attempt to
+			// create
+			// a new client instance
+			String name;
+			name = Spart[1];
+			players.add(new Player(name, dgp.getAddress(), dgp.getPort(),
+					Integer.parseInt(Spart[2]), Integer.parseInt(Spart[3])));
+			ap("New client connected from " + dgp.getAddress() + " "
+					+ dgp.getPort() + " with name " + name + " and race "
+					+ Spart[2]);
+
+			for (Player P : players) {
+				// send new client info to all existing clients as
+				// well
+				// as providing new client with info about all the
+				// other
+				InetAddress ad = P.getAddress();
+				int p = P.getPort();
+				for (Player Player : players) {
+					msg = "§:" + Player.getName() + ":" + Player.getX() + ":"
+							+ Player.getY() + ":" + Player.getCha() + ":"
+							+ Player.getVariation() + ":";
+					send(ad, p);
+				}
+			}
+
+		}
+	}
+
+	public void move(String FL, String[] Spart, DatagramPacket dgp)
+			throws IOException {
 		if (FL.equals("$")) {
 			boolean pressing = false;
 			if (Spart[2].equals("P")) {
@@ -347,6 +360,7 @@ public class Server extends JFrame implements Serializable {
 				}
 			}
 		}
+		sendtoall();
 	}
 
 	public Player getPlayer(String name) {
@@ -392,6 +406,9 @@ public class Server extends JFrame implements Serializable {
 	public void s(String s) {
 		// console print shortcut, just call s(string);
 		System.out.println(s);
+	}
+	public boolean getready(){
+		return ready;
 	}
 
 	public void send(InetAddress address, int port) throws IOException {

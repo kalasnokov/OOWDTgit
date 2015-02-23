@@ -19,7 +19,7 @@ public class Sender {
 	boolean left;
 	boolean right;
 	boolean jumping = false;
-	//Tester tester;
+	// Tester tester;
 	String name;
 	String myName;
 	int health;
@@ -109,28 +109,9 @@ public class Sender {
 								found = true;
 							}
 						}
-						if (FL.equals("¤")) {
-							rcvd.replace("¤:", "");
-							appendChat(rcvd);
-							rcvd = rcvd.replace("¤:"+name + ": ", "");
-							if (name.equals(myName)) {
-								thisplayer.setText(rcvd);
-							} else {
-								getPlayer(name).setText(rcvd);
-							}
-						}
+						chatspeak(FL);
 						remover(FL, Spart);
-						if (!found && !myName.equals(name)) {
-
-							if (FL.equals("§")) {
-								// add new player to player list
-								players.add(new Player(name, Integer
-										.parseInt(Spart[2]), Integer
-										.parseInt(Spart[3]), Integer
-										.parseInt(Spart[4]), Integer
-										.parseInt(Spart[5])));
-							}
-						}
+						playeradder(FL, Spart);
 						move(FL, Spart, myName);
 						positionUpdater(FL, Spart, myName);
 					}
@@ -142,6 +123,28 @@ public class Sender {
 	public void appendChat(String txt) {
 		txt = txt.replace("¤:", "");
 		chat.ap(txt);
+	}
+	
+	public void chatspeak(String FL){
+		if (FL.equals("¤") && !name.equals(myName)) {
+			rcvd.replace("¤:", "");
+			appendChat(rcvd);
+			rcvd = rcvd.replace("¤:" + name + ": ", "");
+			getPlayer(name).setText(rcvd);
+		}
+	}
+	
+	public void playeradder(String FL, String[] Spart){
+		if (!found && !myName.equals(name)) {
+
+			if (FL.equals("§")) {
+				players.add(new Player(name, Integer
+						.parseInt(Spart[2]), Integer
+						.parseInt(Spart[3]), Integer
+						.parseInt(Spart[4]), Integer
+						.parseInt(Spart[5])));
+			}
+		}
 	}
 
 	public void positionUpdater(String FL, String[] Spart, String ns) {
@@ -168,7 +171,7 @@ public class Sender {
 	}
 
 	public void move(String FL, String[] Spart, String ns) {
-		if (FL.equals("$")) {
+		if (FL.equals("$") && !Spart[1].equals(ns)) {
 			int siX = 0;
 			int siY = 0;
 			// command datagram
@@ -179,33 +182,18 @@ public class Sender {
 				} else {
 					siX = Integer.parseInt(Spart[4]);
 					siY = Integer.parseInt(Spart[5]);
-					if (!Spart[1].equals(ns)) {
-						setXY(getPlayer(name), siX, siY);
-					} else {
-						setXY(thisplayer, siX, siY);
-					}
+					setXY(getPlayer(name), siX, siY);
 				}
 			}
-			if (Spart[1].equals(ns)) {
-				if (Spart[2].equals("<")) {
-					thisplayer.wl(pressing);
-				}
-				if (Spart[2].equals(">")) {
-					thisplayer.wr(pressing);
-				}
-				if (Spart[2].equals("^")) {
-					thisplayer.j();
-				}
-			} else {
-				if (Spart[2].equals("<")) {
-					getPlayer(name).wl(pressing);
-				}
-				if (Spart[2].equals(">")) {
-					getPlayer(name).wr(pressing);
-				}
-				if (Spart[2].equals("^")) {
-					getPlayer(name).j();
-				}
+			if (Spart[2].equals("<")) {
+				getPlayer(name).wl(pressing);
+			}
+			if (Spart[2].equals(">")) {
+				getPlayer(name).wr(pressing);
+			}
+			if (Spart[2].equals("^")) {
+				getPlayer(name).j();
+
 			}
 		}
 	}

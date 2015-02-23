@@ -209,6 +209,7 @@ public class Connector extends JFrame {
 			}
 		}
 		cm.setSelectedItem(1);
+		list.setSelectedIndex(0);
 		// pack();
 		setVisible(true);
 		setSize(261, 245);
@@ -219,11 +220,17 @@ public class Connector extends JFrame {
 		if (c) {
 			game.Host();
 			sip = "";
-			Thread.sleep(5000);
+			Thread.sleep(1000);
+			while (true) {
+				Thread.sleep(1000);
+				if (game.server.getready()) {
+					break;
+				}
+			}
 		} else {
 			sip = IP.getText();
 		}
-		var=Integer.parseInt(cm.getSelectedItem().toString());
+		var = Integer.parseInt(cm.getSelectedItem().toString());
 		race = list.getSelectedIndex() + 1;
 		game.setSendervalues(sip, Name.getText(), var, race);
 		setVisible(false); // you can't see me!
