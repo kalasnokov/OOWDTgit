@@ -21,6 +21,7 @@ public class Arena implements Serializable {
 	float[][] simplexnoise;
 	boolean f = true;
 	Sprite[] sprites = new Sprite[8];
+	int zoom = 0;
 
 	public Arena(int WW, int WH, int[] p) {
 		// client constructor
@@ -36,7 +37,7 @@ public class Arena implements Serializable {
 		this.WH = WH;
 		Random rand = new Random();
 		for (int i = 0; i < p.length; i++) {
-			p[i] = rand.nextInt(256) + 1;
+			p[i] = rand.nextInt(255) + 1;
 		}
 		worldstring = "£:" + WW + ":" + WH + ":";
 		for (int i = 0; i < p.length; i++) {
@@ -47,7 +48,7 @@ public class Arena implements Serializable {
 
 	public void generate() {
 		simplexnoise = new float[WW][WH];
-		float frequency = 5.0f / (float) WH;
+		float frequency = 6.0f / (float) WH;
 
 		for (int i = 0; i < 512; i++) {
 			perm[i] = p[i & 255];
@@ -78,12 +79,13 @@ public class Arena implements Serializable {
 		}
 		for (int x = 0; x < WH; x++) {
 			for (int y = 0; y < WH; y++) {
-				if ((x * 32) - xoffset < game.width
-						&& (x * 32) + 32 - xoffset > 0
-						&& (y * 32) - yoffset < game.height
-						&& (y * 32) + 32 - yoffset > 0) {
-					sprites[(int) simplexnoise[x][y]].render(
-							(x * 32) - xoffset, (y * 32) - yoffset);
+				if ((x * (32 - zoom)) - xoffset < game.width
+						&& (x * (32 - zoom)) + (32 - zoom) - xoffset > 0
+						&& (y * (32 - zoom)) - yoffset < game.height
+						&& (y * (32 - zoom)) + (32 - zoom) - yoffset > 0) {
+					sprites[(int) simplexnoise[x][y]].render((x * (32 - zoom))
+							- xoffset, (y * (32 - zoom)) - yoffset, 32 - zoom,
+							32 - zoom);
 					;
 				}
 			}
@@ -164,6 +166,10 @@ public class Arena implements Serializable {
 
 	public int getWH() {
 		return WH;
+	}
+
+	public void zoom(int zoom) {
+		this.zoom += zoom;
 	}
 
 	public static void update() {
