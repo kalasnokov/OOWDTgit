@@ -29,7 +29,7 @@ public class Game extends Head {
 	private Connector c2;
 
 	public enum State {
-		MENU, PLAYING, STARTING, MAP;
+		MENU, PLAYING, STARTING;
 	}
 
 	public void preGLInit() {
