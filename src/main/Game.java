@@ -30,10 +30,10 @@ public class Game extends Head {
 	private Sprite back;
 	@SuppressWarnings("unused")
 	private Connector c2;
-	boolean Uc = false;
-	boolean Dc = false;
-	boolean Rc = false;
-	boolean Lc = false;
+	boolean Uc=false;
+	boolean Dc=false;
+	boolean Rc=false;
+	boolean Lc=false;
 
 	public enum State {
 		MENU, PLAYING, STARTING, MAP, WORLD;
@@ -81,68 +81,53 @@ public class Game extends Head {
 				s.chat.toggleVisible();
 			}
 		}
-		if (keys.keyPressed(Keyboard.KEY_R)) {
-			if (renderState == State.MAP) {
-				s.arena.zoom(1);
-			}
-		}
-		if (keys.keyPressed(Keyboard.KEY_F)) {
-			if (renderState == State.MAP) {
-				s.arena.zoom(-1);
-			}
-		}
 		if (keys.keyPressed(Keyboard.KEY_UP)) {
-			if (renderState == State.MAP) {
-				Uc = true;
-			}
-		}
-
-		if (keys.keyPressed(Keyboard.KEY_UP)) {
-			if (renderState == State.MAP) {
-				Uc = true;
+			if(renderState == State.MAP){
+				Uc=true;
 			}
 		}
 		if (keys.keyPressed(Keyboard.KEY_DOWN)) {
-			if (renderState == State.MAP) {
-				Dc = true;
+			if(renderState == State.MAP){
+				Dc=true;
 			}
 		}
 		if (keys.keyPressed(Keyboard.KEY_LEFT)) {
-			if (renderState == State.MAP) {
-				Lc = true;
+			if(renderState == State.MAP){
+				Lc=true;
 			}
 		}
 		if (keys.keyPressed(Keyboard.KEY_RIGHT)) {
-			if (renderState == State.MAP) {
-				Rc = true;
+			if(renderState == State.MAP){
+				Rc=true;
 			}
 		}
-
+		
+		
 		if (keys.keyReleased(Keyboard.KEY_UP)) {
-			if (renderState == State.MAP) {
-				Uc = false;
+			if(renderState == State.MAP){
+				Uc=false;
 			}
 		}
 		if (keys.keyReleased(Keyboard.KEY_DOWN)) {
-			if (renderState == State.MAP) {
-				Dc = false;
+			if(renderState == State.MAP){
+				Dc=false;
 			}
 		}
 		if (keys.keyReleased(Keyboard.KEY_LEFT)) {
-			if (renderState == State.MAP) {
-				Lc = false;
+			if(renderState == State.MAP){
+				Lc=false;
 			}
 		}
 		if (keys.keyReleased(Keyboard.KEY_RIGHT)) {
-			if (renderState == State.MAP) {
-				Rc = false;
+			if(renderState == State.MAP){
+				Rc=false;
 			}
 		}
 		if (keys.keyPressed(Keyboard.KEY_M)) {
 			if (renderState != State.MAP) {
-				renderState = State.MAP;
-			} else {
-				renderState = State.WORLD;
+				renderState=State.MAP;
+			}else{
+				renderState=State.WORLD;
 			}
 		}
 		String msg;
@@ -204,47 +189,47 @@ public class Game extends Head {
 		}
 		buttonClicked = false;
 		s.view(this);
-		if (Uc) {
-			yoffsetacc -= 2;
+		if(Uc){
+			yoffsetacc-=2;
 		}
-		if (Dc) {
-			yoffsetacc += 2;
+		if(Dc){
+			yoffsetacc+=2;
 		}
-		if (Lc) {
-			xoffsetacc -= 2;
+		if(Lc){
+			xoffsetacc-=2;
 		}
-		if (Rc) {
-			xoffsetacc += 2;
+		if(Rc){
+			xoffsetacc+=2;
 		}
-		if (xoffsetacc < 0) {
+		if(xoffsetacc<0){
 			xoffsetacc++;
 		}
-		if (xoffsetacc > 0) {
+		if(xoffsetacc>0){
 			xoffsetacc--;
 		}
-		if (yoffsetacc < 0) {
+		if(yoffsetacc<0){
 			yoffsetacc++;
 		}
-		if (yoffsetacc > 0) {
+		if(yoffsetacc>0){
 			yoffsetacc--;
 		}
-		xoffset += xoffsetacc;
-		yoffset += yoffsetacc;
-		if (xoffset < 0) {
-			xoffset = 0;
-			xoffsetacc = 0;
+		xoffset+=xoffsetacc;
+		yoffset+=yoffsetacc;
+		if(xoffset<0){
+			xoffset=0;
+			xoffsetacc=0;
 		}
-		if (yoffset < 0) {
-			yoffset = 0;
-			yoffsetacc = 0;
+		if(yoffset<0){
+			yoffset=0;
+			yoffsetacc=0;
 		}
-		if (xoffset > (s.arena.getWW() * 30) - width) {
-			xoffset = (s.arena.getWW() * 30) - width;
-			xoffsetacc = 0;
+		if(xoffset>(s.arena.getWW()*30)-width){
+			xoffset=(s.arena.getWW()*30)-width;
+			xoffsetacc=0;
 		}
-		if (yoffset > (s.arena.getWH() * 30) - height) {
-			yoffset = (s.arena.getWH() * 30) - height;
-			yoffsetacc = 0;
+		if(yoffset>(s.arena.getWH()*30)-height){
+			yoffset=(s.arena.getWH()*30)-height;
+			yoffsetacc=0;
 		}
 	}
 
