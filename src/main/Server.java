@@ -213,7 +213,7 @@ public class Server extends JFrame implements Serializable {
 		}).start();
 
 		// this is the map
-		//arena = new Arena(250, 250);
+		arena = new Arena(250, 250);
 		// actual server-stuff starts here, inside the while() loop
 
 		while (true) {
@@ -302,9 +302,9 @@ public class Server extends JFrame implements Serializable {
 							send(ad, p);
 						}
 					}
-					//msg=arena.getWorldString();
+					msg=arena.getWorldString();
 					send(dgp.getAddress(),dgp.getPort());
-					ap("Sending worldstring to new client");
+					
 				}
 			}
 			move(FL, Spart, dgp);

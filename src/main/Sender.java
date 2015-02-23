@@ -118,8 +118,7 @@ public class Sender {
 									p[i - 3] = Integer.parseInt(Spart[i]);
 								}
 								//arena = new Arena(Integer.parseInt(Spart[1]),
-										//Integer.parseInt(Spart[2]), p);
-								arenacreated = true;
+									//	Integer.parseInt(Spart[2]), p);
 							}
 						}
 						if (FL.equals("¤")) {
@@ -281,8 +280,7 @@ public class Sender {
 		running = false;
 		s("#:");
 	}
-
-	public boolean getarenacreated() {
+	public boolean getarenacreated(){
 		return arenacreated;
 	}
 }
