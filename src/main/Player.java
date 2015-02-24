@@ -1,7 +1,10 @@
 package main;
 
 import java.awt.Font;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.Serializable;
 import java.net.InetAddress;
 
@@ -52,13 +55,14 @@ public class Player implements Serializable {
 	public int js = 1;
 	public int is = 1;
 	public int idlestage = 1;
+	public int idletick;
 
 	public enum lookstate {
 		RIGHT, LEFT;
 	}
 
 	public Player(String name, InetAddress address, int port, int race,
-			int variation) {
+			int variation) throws IOException {
 		// serverside constructor
 		this.name = name;
 		this.address = address;
@@ -67,9 +71,11 @@ public class Player implements Serializable {
 		this.var = variation;
 		// tester = new tester(name);
 		LS = lookstate.RIGHT;
+		loadOPT();
 	}
 
-	public Player(Game game, String name, int x, int y, int race, int variation) {
+	public Player(Game game, String name, int x, int y, int race, int variation)
+			throws IOException {
 		// senders constructor for other
 		this.name = name;
 		this.x = x;
@@ -79,9 +85,10 @@ public class Player implements Serializable {
 		// tester = new tester(name);
 		animations(race, variation);
 		LS = lookstate.RIGHT;
+		loadOPT();
 	}
 
-	public Player(String name, int race, int variation) {
+	public Player(String name, int race, int variation) throws IOException {
 		// senders constructor for self
 		this.name = name;
 		this.cha = race;
@@ -89,6 +96,29 @@ public class Player implements Serializable {
 		// tester = new tester(name);
 		animations(race, variation);
 		LS = lookstate.RIGHT;
+		loadOPT();
+	}
+
+	public void loadOPT() throws IOException {
+		File f = new File("res/char" + cha + "/var" + var + "/opt.cvcf");
+		BufferedReader br = new BufferedReader(new FileReader(f));
+		String line = null;
+		int i = 1;
+		while ((line = br.readLine()) != null) {
+			String[] split = line.split(":");
+			System.out.println(line);
+			if (i == 1) {
+				movespeed = Integer.parseInt(split[1]);
+			}
+			if (i == 2) {
+				jumpspeed = Integer.parseInt(split[1]);
+			}
+			if (i == 3) {
+				idletick = Integer.parseInt(split[1]);
+			}
+			i++;
+		}
+		br.close();
 	}
 
 	public void animations(int race, int variation) {
@@ -186,7 +216,7 @@ public class Player implements Serializable {
 					}
 				}
 			} else {
-				if (step >= 25) {
+				if (step >= idletick) {
 					spritestring += "i" + idlestage;
 					idlestage++;
 					step = 0;
@@ -216,7 +246,7 @@ public class Player implements Serializable {
 					}
 				}
 			} else {
-				if (step >= 25) {
+				if (step >= idletick) {
 					spritestring += "i" + idlestage;
 					idlestage++;
 					step = 0;

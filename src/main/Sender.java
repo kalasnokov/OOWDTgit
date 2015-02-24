@@ -54,7 +54,7 @@ public class Sender {
 		}
 	}
 
-	public void init(Game game) throws IOException, InterruptedException {
+	public void init(final Game game) throws IOException, InterruptedException {
 		chat = new Chat(game);
 		s = new DatagramSocket();
 		thisplayer = new Player(myName, race, variation);
@@ -111,7 +111,7 @@ public class Sender {
 						}
 						chatspeak(FL);
 						remover(FL, Spart);
-						playeradder(FL, Spart,game);
+						playeradder(FL, Spart, game);
 						move(FL, Spart, myName);
 						positionUpdater(FL, Spart, myName);
 					}
@@ -124,8 +124,8 @@ public class Sender {
 		txt = txt.replace("¤:", "");
 		chat.ap(txt);
 	}
-	
-	public void chatspeak(String FL){
+
+	public void chatspeak(String FL) {
 		if (FL.equals("¤") && !name.equals(myName)) {
 			rcvd.replace("¤:", "");
 			appendChat(rcvd);
@@ -133,16 +133,21 @@ public class Sender {
 			getPlayer(name).setText(rcvd);
 		}
 	}
-	
-	public void playeradder(String FL, String[] Spart, Game game){
+
+	public void playeradder(String FL, String[] Spart, Game game) {
 		if (!found && !myName.equals(name)) {
 
 			if (FL.equals("§")) {
-				players.add(new Player(game, name, Integer
-						.parseInt(Spart[2]), Integer
-						.parseInt(Spart[3]), Integer
-						.parseInt(Spart[4]), Integer
-						.parseInt(Spart[5])));
+				try {
+					players.add(new Player(game, name, Integer
+							.parseInt(Spart[2]), Integer.parseInt(Spart[3]),
+							Integer.parseInt(Spart[4]), Integer
+									.parseInt(Spart[5])));
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

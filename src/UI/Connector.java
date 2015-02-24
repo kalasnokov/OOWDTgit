@@ -178,15 +178,44 @@ public class Connector extends JFrame {
 						writer = new PrintWriter("res/char" + i + "/opt.ccf",
 								"UTF-8");
 					} catch (FileNotFoundException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} catch (UnsupportedEncodingException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					writer.println("Unknown race");
 					writer.close();
 					races[i] = "Unknown race";
+				}
+				boolean loop = true;
+				for (int u = 1; loop; u++) {
+					f = new File("res/char" + i + "/var" + u);
+					if (f.exists()) {
+						f = new File("res/char" + i + "/var" + u + "/opt.cvcf");
+						if (!f.exists()) {//if you want up udtae ALL .cvcf files to annew format, remove the ! and run once
+							f.getParentFile().mkdirs();
+							try {
+								f.createNewFile();
+							} catch (IOException e1) {
+								e1.printStackTrace();
+							}
+							PrintWriter writer = null;
+							try {
+								writer = new PrintWriter("res/char" + i
+										+ "/var" + u + "/opt.cvcf", "UTF-8");
+							} catch (FileNotFoundException e1) {
+								e1.printStackTrace();
+							} catch (UnsupportedEncodingException e1) {
+								e1.printStackTrace();
+							}
+							writer.println("walkspeed:10:");
+							writer.println("jumpspeed:20:");
+							writer.println("idlespeed:25:");
+							writer.close();
+							System.out.println("New opt.cvcf created for race "+i+"\'s variation "+u);
+						}
+					} else {
+						loop = false;
+					}
 				}
 			} else {
 				break;
