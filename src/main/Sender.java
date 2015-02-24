@@ -111,7 +111,7 @@ public class Sender {
 						}
 						chatspeak(FL);
 						remover(FL, Spart);
-						playeradder(FL, Spart);
+						playeradder(FL, Spart,game);
 						move(FL, Spart, myName);
 						positionUpdater(FL, Spart, myName);
 					}
@@ -134,11 +134,11 @@ public class Sender {
 		}
 	}
 	
-	public void playeradder(String FL, String[] Spart){
+	public void playeradder(String FL, String[] Spart, Game game){
 		if (!found && !myName.equals(name)) {
 
 			if (FL.equals("§")) {
-				players.add(new Player(name, Integer
+				players.add(new Player(game, name, Integer
 						.parseInt(Spart[2]), Integer
 						.parseInt(Spart[3]), Integer
 						.parseInt(Spart[4]), Integer

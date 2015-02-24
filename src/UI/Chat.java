@@ -107,7 +107,7 @@ public class Chat extends JFrame {
 			int key = e.getKeyCode();
 			if (key == KeyEvent.VK_ENTER) {
 				if (input.getText().length() < 1000) {
-					if (!input.getText().equals("")) {
+					if (!input.getText().isEmpty()) {
 						try {
 							game.giveText(input.getText(), false);
 						} catch (IOException e1) {

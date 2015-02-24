@@ -20,7 +20,8 @@ public class Game extends Head {
 	public int xoffset = 0;
 	public int yoffset = 0;
 	public static Sender s;
-	public boolean c = false;
+	public boolean cr = false;
+	public boolean cl = false;
 	public boolean t = false;
 	private Sprite ground;
 	private Sprite back;
@@ -75,54 +76,52 @@ public class Game extends Head {
 			}
 		}
 		String msg;
-		if (keys.keyPressed(Keyboard.KEY_A) && !c && !t) {
-			msg = "$:<:P:";
-			try {
-				s.s(msg);
-			} catch (IOException e1) {
-				e1.printStackTrace();
+		if (!t) {
+			if (keys.keyPressed(Keyboard.KEY_A)) {
+				msg = "$:<:P:";
+				try {
+					s.s(msg);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				s.thisplayer.wl(true);
 			}
-			c = true;
-			s.thisplayer.wl(true);
-		}
-		if (keys.keyPressed(Keyboard.KEY_D) && !c && !t) {
-			msg = "$:>:P:";
-			try {
-				s.s(msg);
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			if (keys.keyPressed(Keyboard.KEY_D)) {
+				msg = "$:>:P:";
+				try {
+					s.s(msg);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				s.thisplayer.wr(true);
 			}
-			c = true;
-			s.thisplayer.wr(true);
-		}
-		if (keys.keyPressed(Keyboard.KEY_SPACE) && !t) {
-			msg = "$:^:";
-			try {
-				s.s(msg);
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			if (keys.keyPressed(Keyboard.KEY_SPACE)) {
+				msg = "$:^:";
+				try {
+					s.s(msg);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				s.thisplayer.j();
 			}
-			s.thisplayer.j();
-		}
-		if (keys.keyReleased(Keyboard.KEY_A) && !t) {
-			msg = "$:<:R:";
-			try {
-				s.s(msg);
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			if (keys.keyReleased(Keyboard.KEY_A)) {
+				msg = "$:<:R:";
+				try {
+					s.s(msg);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				s.thisplayer.wl(false);
 			}
-			c = false;
-			s.thisplayer.wl(false);
-		}
-		if (keys.keyReleased(Keyboard.KEY_D) && !t) {
-			msg = "$:>:R:";
-			try {
-				s.s(msg);
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			if (keys.keyReleased(Keyboard.KEY_D)) {
+				msg = "$:>:R:";
+				try {
+					s.s(msg);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				s.thisplayer.wr(false);
 			}
-			c = false;
-			s.thisplayer.wr(false);
 		}
 		keys.setKeys();
 	}
@@ -173,25 +172,20 @@ public class Game extends Head {
 	}
 
 	public void Host() {
-		new Thread(new Runnable() {
-			public void run() {
-				while (running) {
-					try {
-						server = new Server();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}).start();
+
+		try {
+			server = new Server();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void giveText(String txt, boolean nuthing) throws IOException {
 		if (!nuthing) {
 			s.s("¤:" + s.thisplayer.getName() + ": " + txt);
+			s.thisplayer.setText(txt);
 		}
 		s.chat.toggleVisible();
 		t = false;
-		s.thisplayer.setText(txt);
 	}
 }

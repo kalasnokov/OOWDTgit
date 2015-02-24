@@ -1,8 +1,11 @@
 package main;
 
 import java.awt.Font;
+import java.io.File;
 import java.io.Serializable;
 import java.net.InetAddress;
+
+import main.Game.State;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
@@ -13,38 +16,48 @@ public class Player implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 6508883591128752232L;
-	String name;
-	int health;
-	int x = 0;
-	int y = 0;
-	int xacc = 0;
-	int yacc = 0;
-	InetAddress address;
-	int port;
-	boolean Rpressing = false;
-	boolean Lpressing = false;
-	boolean left;
-	boolean right;
-	boolean jumping = false;
+	public String name;
+	public int health;
+	public int x = 0;
+	public int y = 0;
+	public int xacc = 0;
+	public int yacc = 0;
+	public InetAddress address;
+	public int port;
+	public boolean Rpressing = false;
+	public boolean Lpressing = false;
+	public boolean left;
+	public boolean right;
+	public boolean jumping = false;
 	// tester tester;
 	private Sprite sprite;
-	boolean f = true;
-	int w = 0;
-	boolean two = false;
-	boolean facing = false;
-	int cha;
-	int var;
-	boolean fc = true;
-	boolean cs = false;
-	TrueTypeFont font;
-	int movespeed = 10;
-	int jumpspeed = 20;
-	private String text;
+	public boolean f = true;
+	public int cha;
+	public int var;
+	public TrueTypeFont font;
+	public int movespeed = 10;
+	public int jumpspeed = 20;
+	public String text;
 	boolean newText = false;
-	int textrender;
-	int FPS;
-	TextField t;
-	private Sprite bubble;
+	public int textrender;
+	public Sprite bubble;
+	public int jumpani = 0;
+	public int walkani = 0;
+	public int idleani = 0;
+	public int[] animations = new int[3];
+	public lookstate LS;
+	public String oldsprite;
+	public int step;
+	public int w;
+	public int j;
+	public int i;
+	public int ws = 1;
+	public int js = 1;
+	public int is = 1;
+
+	public enum lookstate {
+		RIGHT, LEFT;
+	}
 
 	public Player(String name, InetAddress address, int port, int race,
 			int variation) {
@@ -55,9 +68,10 @@ public class Player implements Serializable {
 		this.cha = race;
 		this.var = variation;
 		// tester = new tester(name);
+		LS = lookstate.RIGHT;
 	}
 
-	public Player(String name, int x, int y, int race, int variation) {
+	public Player(Game game, String name, int x, int y, int race, int variation) {
 		// senders constructor for other
 		this.name = name;
 		this.x = x;
@@ -65,6 +79,8 @@ public class Player implements Serializable {
 		this.cha = race;
 		this.var = variation;
 		// tester = new tester(name);
+		animations(race, variation);
+		LS = lookstate.RIGHT;
 	}
 
 	public Player(String name, int race, int variation) {
@@ -73,6 +89,34 @@ public class Player implements Serializable {
 		this.cha = race;
 		this.var = variation;
 		// tester = new tester(name);
+		animations(race, variation);
+		LS = lookstate.RIGHT;
+	}
+
+	public void animations(int race, int variation) {
+		int num = 1;
+		int chaint = 0;
+		String[] s = { "w", "j", "i" };
+		while (true) {
+			File f = new File("res/char" + race + "/var" + variation + "/"
+					+ s[chaint] + num + ".png");
+			if (f.exists()) {
+				animations[chaint] = num;
+				num++;
+			} else {
+				if (chaint < 2) {
+					chaint++;
+				} else {
+					break;
+				}
+			}
+		}
+		so("walk animations: " + animations[0]);
+		so("jump animations: " + animations[1]);
+		so("idle animations: " + animations[2]);
+		w = movespeed / animations[0];
+		j = jumpspeed * 2 / animations[1];
+		// i = jumpspeed / animations[2];
 	}
 
 	public void update() {
@@ -82,7 +126,7 @@ public class Player implements Serializable {
 		if (Rpressing && right) {
 			xacc += movespeed / 5;
 		}
-		if (!Rpressing&&!Lpressing) {
+		if (!Rpressing && !Lpressing) {
 			xacc = 0;
 		}
 
@@ -98,7 +142,7 @@ public class Player implements Serializable {
 		if (y > 500) {
 			y = 500;
 			jumping = false;
-
+			yacc = 0;
 		}
 		if (x > 1480) {
 			x = -200;
@@ -107,6 +151,12 @@ public class Player implements Serializable {
 			x = 1480;
 		}
 		textrender++;
+		if (xacc < 0) {
+			LS = lookstate.LEFT;
+		}
+		if (xacc > 0) {
+			LS = lookstate.RIGHT;
+		}
 		// update tester
 		// tester.jump(jumping);
 		// tester.ml(left);
@@ -116,79 +166,41 @@ public class Player implements Serializable {
 	}
 
 	public void view(Game game) {
-		w++;
-		if (w > 6) {
-			w = 0;
-			cs = true;
-			if (two) {
-				two = false;
-			} else {
-				two = true;
-			}
-		}
-		if (Lpressing && left && !jumping && cs) {
-			if (two) {
-				sprite = new Sprite("res/char" + cha + "/var" + var
-						+ "/w1l.png");
-			} else {
-				sprite = new Sprite("res/char" + cha + "/var" + var
-						+ "/w2l.png");
-			}
-			fc = true;
-			cs = false;
-		}
-		if (Rpressing && right && !jumping && cs) {
-			if (two) {
-				sprite = new Sprite("res/char" + cha + "/var" + var + "/w1.png");
-			} else {
-				sprite = new Sprite("res/char" + cha + "/var" + var + "/w2.png");
-			}
-			fc = true;
-			cs = false;
-		}
-		if (jumping) {
-			if (yacc < jumpspeed && yacc > 3 * (jumpspeed / 4)) {
-				if (facing) {
-					sprite = new Sprite("res/char" + cha + "/var" + var
-							+ "/j1.png");
-				} else {
-					sprite = new Sprite("res/char" + cha + "/var" + var
-							+ "/j1l.png");
+		step++;
+		String spritestring = "res/char" + cha + "/var" + var + "/";
+		if (LS.equals(lookstate.LEFT)) {
+			if (jumping) {
+				for (int i = 0; i < animations[1]; i++) {
+					if (yacc <= jumpspeed - (j * i)) {
+						spritestring = "res/char" + cha + "/var" + var + "/j"
+								+ (i + 1);
+					}
 				}
+			} else if (xacc == 0 && !jumping && yacc == 0) {
+				spritestring += "char";
 			}
-			if (yacc == (jumpspeed / 4)) {
-				if (facing) {
-					sprite = new Sprite("res/char" + cha + "/var" + var
-							+ "/j2.png");
-				} else {
-					sprite = new Sprite("res/char" + cha + "/var" + var
-							+ "/j2l.png");
-				}
-			}
-			if (yacc == -(jumpspeed / 4)) {
-				if (facing) {
-					sprite = new Sprite("res/char" + cha + "/var" + var
-							+ "/j3.png");
-				} else {
-					sprite = new Sprite("res/char" + cha + "/var" + var
-							+ "/j3l.png");
-				}
-			}
-			fc = true;
-		}boolean p=false;
-		if(!Rpressing||!Rpressing){
-			p=true;
+			spritestring += "l.png";
 		}
-		
-		if (!p && !jumping && fc) {
-			if (facing) {
-				sprite = new Sprite("res/char" + cha + "/var" + var
-						+ "/char.png");
-			} else {
-				sprite = new Sprite("res/char" + cha + "/var" + var
-						+ "/charl.png");
+		if (LS.equals(lookstate.RIGHT)) {
+			if (jumping) {
+				for (int i = 0; i < animations[1]; i++) {
+					if (yacc <= jumpspeed - (j * i)) {
+						spritestring = "res/char" + cha + "/var" + var + "/j"
+								+ (i + 1);
+					}
+				}
+			} else if (xacc == 0 && !jumping && yacc == 0) {
+				spritestring += "char";
 			}
-			fc = false;
+			spritestring += ".png";
+		}
+		if (!spritestring.equals(oldsprite)
+				&& !spritestring.equals("res/char" + cha + "/var" + var
+						+ "/.png")
+				&& !spritestring.equals("res/char" + cha + "/var" + var
+						+ "/l.png")) {
+			oldsprite = spritestring;
+			sprite = new Sprite(spritestring);
 		}
 	}
 
@@ -196,14 +208,12 @@ public class Player implements Serializable {
 		// walk left
 		Lpressing = p;
 		left = p;
-		facing = false;
 	}
 
 	public void wr(boolean p) {
 		// walk right
 		Rpressing = p;
 		right = p;
-		facing = true;
 	}
 
 	public void j() {
@@ -252,14 +262,15 @@ public class Player implements Serializable {
 					newtext[line] = "";
 				}
 			}
-			bubble.render(x-5 + (150 - longestString) / 2, (y-30) - (line * 20),
-					longestString+5, ((line + 1) * 20));
+			bubble.render(x - 5 + (150 - longestString) / 2, (y - 30)
+					- (line * 20), longestString + 5, ((line + 1) * 20));
 			for (int i = 0; i < line + 1; i++) {
 				font.drawString(x + (150 - font.getWidth(newtext[i])) / 2,
 						(y - 30) - ((line - i) * 20), newtext[i], Color.black);
 			}
-			if(textrender>(line+1)*180 && textrender>180 || textrender>600){
-				newText=false;
+			if (textrender > (line + 1) * 180 && textrender > 180
+					|| textrender > 600) {
+				newText = false;
 			}
 		}
 
@@ -347,10 +358,5 @@ public class Player implements Serializable {
 
 	public void setVariation(int variation) {
 		this.var = variation;
-	}
-
-	public void setFPS(int FPS) {
-		this.FPS = FPS;
-
 	}
 }

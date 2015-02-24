@@ -44,7 +44,7 @@ public class Server extends JFrame implements Serializable {
 	DatagramSocket s;
 	private JTextField input;
 	private boolean broken = false;
-	boolean ready=false;
+	boolean ready = false;
 
 	public Server() throws IOException {
 
@@ -220,43 +220,72 @@ public class Server extends JFrame implements Serializable {
 
 		// this is the map
 		// actual server-stuff starts here, inside the while() loop
-		ready=true;
+		ready = true;
 		ap("ready");
-		while (!broken) {
-			msg = "";
-			// receiver
-			byte[] buf = new byte[1024];
-			DatagramPacket dgp = new DatagramPacket(buf, buf.length);
-			s.receive(dgp);
-			String rcvd = new String(dgp.getData());
-			rcvd.trim();
-			found = false;
+		new Thread(new Runnable() {
+			public void run() {
+				while (true) {
+					while (!broken) {
+						msg = "";
+						// receiver
+						byte[] buf = new byte[1024];
+						DatagramPacket dgp = new DatagramPacket(buf, buf.length);
+						try {
+							s.receive(dgp);
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						String rcvd = new String(dgp.getData());
+						rcvd.trim();
+						found = false;
 
-			// look if the package is a join request
-			for (Player Player : players) {
-				if (Player.getAddress().toString()
-						.equals(dgp.getAddress().toString())) {
-					if (Player.getPort() == dgp.getPort()) {
-						found = true;
+						// look if the package is a join request
+						for (Player Player : players) {
+							if (Player.getAddress().toString()
+									.equals(dgp.getAddress().toString())) {
+								if (Player.getPort() == dgp.getPort()) {
+									found = true;
+								}
+							}
+						}
+
+						String[] Spart = rcvd.split(":");// splitter, divides
+															// the package,
+															// IE splitting
+															// @:hello to @ and
+															// hello
+						String FL = Spart[0];// FL stands for First Letter, used
+												// to identify
+												// package type
+
+						try {
+							removeplayer(FL, dgp);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						if (FL.equals("¤")) {
+							msg = rcvd;
+						}
+						// new client added and new player created
+						try {
+							addplayer(FL, Spart, dgp);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+						try {
+							move(FL, Spart, dgp);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}
 			}
-
-			String[] Spart = rcvd.split(":");// splitter, divides the package,
-												// IE splitting @:hello to @ and
-												// hello
-			String FL = Spart[0];// FL stands for First Letter, used to identify
-									// package type
-
-			removeplayer(FL, dgp);
-			if (FL.equals("¤")) {
-				msg = rcvd;
-			}
-			// new client added and new player created
-			addplayer(FL, Spart, dgp);
-
-			move(FL, Spart, dgp);
-		}
+		}).start();
 	}
 
 	public void removeplayer(String FL, DatagramPacket dgp) throws IOException {
@@ -284,6 +313,7 @@ public class Server extends JFrame implements Serializable {
 				}
 			}
 		}
+
 	}
 
 	public void addplayer(String FL, String[] Spart, DatagramPacket dgp)
@@ -407,7 +437,8 @@ public class Server extends JFrame implements Serializable {
 		// console print shortcut, just call s(string);
 		System.out.println(s);
 	}
-	public boolean getready(){
+
+	public boolean getready() {
 		return ready;
 	}
 
