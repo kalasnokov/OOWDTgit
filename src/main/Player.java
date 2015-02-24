@@ -5,11 +5,8 @@ import java.io.File;
 import java.io.Serializable;
 import java.net.InetAddress;
 
-import main.Game.State;
-
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
-import org.newdawn.slick.gui.TextField;
 
 public class Player implements Serializable {
 	/**
@@ -54,6 +51,7 @@ public class Player implements Serializable {
 	public int ws = 1;
 	public int js = 1;
 	public int is = 1;
+	public int idlestage = 1;
 
 	public enum lookstate {
 		RIGHT, LEFT;
@@ -100,12 +98,14 @@ public class Player implements Serializable {
 		while (true) {
 			File f = new File("res/char" + race + "/var" + variation + "/"
 					+ s[chaint] + num + ".png");
+			so(f.getPath().toString());
 			if (f.exists()) {
 				animations[chaint] = num;
 				num++;
 			} else {
 				if (chaint < 2) {
 					chaint++;
+					num = 1;
 				} else {
 					break;
 				}
@@ -176,11 +176,28 @@ public class Player implements Serializable {
 								+ (i + 1);
 					}
 				}
-			} else if (xacc == 0 && !jumping && yacc == 0) {
-				spritestring += "char";
+			} else if (Lpressing) {
+				spritestring += "/w" + ws;
+				if (step >= 7) {
+					ws++;
+					step = 0;
+					if (ws > animations[0]) {
+						ws = 1;
+					}
+				}
+			} else {
+				if (step >= 25) {
+					spritestring += "i" + idlestage;
+					idlestage++;
+					step = 0;
+					if (idlestage > animations[0]) {
+						idlestage = 1;
+					}
+				}
 			}
 			spritestring += "l.png";
 		}
+
 		if (LS.equals(lookstate.RIGHT)) {
 			if (jumping) {
 				for (int i = 0; i < animations[1]; i++) {
@@ -189,11 +206,28 @@ public class Player implements Serializable {
 								+ (i + 1);
 					}
 				}
-			} else if (xacc == 0 && !jumping && yacc == 0) {
-				spritestring += "char";
+			} else if (Rpressing) {
+				spritestring += "/w" + ws;
+				if (step >= 7) {
+					ws++;
+					step = 0;
+					if (ws > animations[0]) {
+						ws = 1;
+					}
+				}
+			} else {
+				if (step >= 25) {
+					spritestring += "i" + idlestage;
+					idlestage++;
+					step = 0;
+					if (idlestage > animations[0]) {
+						idlestage = 1;
+					}
+				}
 			}
 			spritestring += ".png";
 		}
+
 		if (!spritestring.equals(oldsprite)
 				&& !spritestring.equals("res/char" + cha + "/var" + var
 						+ "/.png")
