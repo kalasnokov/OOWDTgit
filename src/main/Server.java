@@ -345,10 +345,37 @@ public class Server extends JFrame implements Serializable {
 						Player.j();
 						msg = "$:" + Player.getName() + ":^:";
 					}
-					if (Spart[1].equals("A1")) {
-						//Projectile
-						Player.a1();
-						msg = "$:" + Player.getName() + ":A1:";
+				}
+			}
+		}
+	}
+	
+	public void attack(String FL, String[] Spart, DatagramPacket dgp) {
+		if (FL.equals("A")) {
+			boolean ar = false;
+			boolean al = false;
+			for (Player Player : players) {
+				if (Player.getAddress().equals(dgp.getAddress())
+						&& Player.getPort() == dgp.getPort()) {
+					if (Spart[1].equals("1")) {
+						//Attack 1 (Light attack)
+						Player.A();
+						msg = "A:" + Player.getName() + ":1";
+					}
+					if (Spart[1].equals("2")) {
+						//Attack 2 (Medium attack)
+						Player.A();
+						msg = "A:" + Player.getName() + ":2";
+					}
+					if (Spart[1].equals("3")) {
+						//Attack 3 (Heavy attack)
+						Player.A();
+						msg = "A:" + Player.getName() + ":3";
+					}
+					if (Spart[1].equals("s")) {
+						//Attack 4 (Special attack)
+						Player.A();
+						msg = "A:" + Player.getName() + ":s";
 					}
 				}
 			}

@@ -25,12 +25,8 @@ public class Player implements Serializable {
 	boolean left;
 	boolean right;
 	boolean jumping = false;
-	boolean Ar = false;
-	boolean Al = false;
-	boolean Light = false;
-	boolean Medium = false;
-	boolean Heavy = false;
-	boolean Special = false;
+	public static boolean Ar = false;
+	public static boolean Al = false;
 	// tester tester;
 	private Sprite sprite;
 	boolean f = true;
@@ -216,17 +212,17 @@ public class Player implements Serializable {
 		}
 	}
 	
-	public void a1() {
+	public void A() {
 		//Light attack
-		if (facing && !Ar && !Al) {
+		if (!Ar && !Al) {
+			if (facing) {
 			Ar = true;
-			Light = true;
-			//Ar = Attack right, Light attack
+			//Ar = Attack right
 		}
-		if (!facing && !Ar && !Al) {
+			else {
 			Al = true;
-			Light = true;
 			//Al = Attack left
+			}
 		}
 	}
 
@@ -368,4 +364,5 @@ public class Player implements Serializable {
 		this.FPS = FPS;
 
 	}
+
 }

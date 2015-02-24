@@ -36,7 +36,7 @@ public class Game extends Head {
 	}
 
 	public void init() throws InterruptedException {
-
+		
 		UPDATES_PER_SECOND = 60;
 		gameState = State.MENU;
 		// String ip = JOptionPane.showInputDialog("Enter IP to connect to");
@@ -120,7 +120,31 @@ public class Game extends Head {
 			c = false;
 		}
 		if (keys.keyPressed(Keyboard.KEY_LEFT) && !t) {
-			msg = "$:A1:";
+			msg = "A:1";
+			try {
+				s.s(msg);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		if (keys.keyPressed(Keyboard.KEY_UP) && !t) {
+			msg = "A:2";
+			try {
+				s.s(msg);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		if (keys.keyPressed(Keyboard.KEY_RIGHT) && !t) {
+			msg = "A:3";
+			try {
+				s.s(msg);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		if (keys.keyPressed(Keyboard.KEY_DOWN) && !t) {
+			msg = "A:s";
 			try {
 				s.s(msg);
 			} catch (IOException e1) {
