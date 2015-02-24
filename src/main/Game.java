@@ -45,7 +45,6 @@ public class Game extends Head {
 		ground = new Sprite("res/ground.png");
 		back = new Sprite("res/back.png");
 		keys = new Keys();
-		// arena = new Arena(height, width); // change later
 		try {
 			c2 = new Connector(this);
 		} catch (FileNotFoundException e) {

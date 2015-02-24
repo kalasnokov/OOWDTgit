@@ -166,6 +166,7 @@ public class Player implements Serializable {
 		if (xacc < -movespeed) {
 			xacc = -movespeed;
 		}
+
 		yacc--;
 		x += xacc;
 		y -= yacc;
@@ -220,7 +221,7 @@ public class Player implements Serializable {
 					spritestring += "i" + idlestage;
 					idlestage++;
 					step = 0;
-					if (idlestage > animations[0]) {
+					if (idlestage > animations[2]) {
 						idlestage = 1;
 					}
 				}
@@ -250,7 +251,7 @@ public class Player implements Serializable {
 					spritestring += "i" + idlestage;
 					idlestage++;
 					step = 0;
-					if (idlestage > animations[0]) {
+					if (idlestage > animations[2]) {
 						idlestage = 1;
 					}
 				}
@@ -305,7 +306,7 @@ public class Player implements Serializable {
 	public void render(double dt, Game game) {
 		if (f) {
 			setFont("Verdana", 16);
-			sprite = new Sprite("res/char" + cha + "/var" + var + "/char.png");
+			sprite = new Sprite("res/char" + cha + "/var" + var + "/i1.png");
 			bubble = new Sprite("res/Bubble.png");
 			f = false;
 		}
