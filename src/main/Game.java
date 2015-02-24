@@ -48,10 +48,8 @@ public class Game extends Head {
 		try {
 			c2 = new Connector(this);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

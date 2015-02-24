@@ -193,7 +193,7 @@ public class Server extends JFrame implements Serializable {
 			public void run() {
 				while (true) {
 					try {
-						Thread.sleep(100);// Player update speed, sending player
+						Thread.sleep(1000);// Player update speed, sending player
 											// location to all clients two times
 											// every second
 					} catch (InterruptedException e) {
