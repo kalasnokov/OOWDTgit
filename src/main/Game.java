@@ -81,7 +81,6 @@ public class Game extends Head {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-				s.thisplayer.wl(true);
 			}
 			if (keys.keyPressed(Keyboard.KEY_D)) {
 				msg = "$:>:P:";
@@ -90,7 +89,6 @@ public class Game extends Head {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-				s.thisplayer.wr(true);
 			}
 			if (keys.keyPressed(Keyboard.KEY_SPACE)) {
 				msg = "$:^:";
@@ -99,7 +97,6 @@ public class Game extends Head {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-				s.thisplayer.j();
 			}
 			if (keys.keyReleased(Keyboard.KEY_A)) {
 				msg = "$:<:R:";
@@ -108,7 +105,6 @@ public class Game extends Head {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-				s.thisplayer.wl(false);
 			}
 			if (keys.keyReleased(Keyboard.KEY_D)) {
 				msg = "$:>:R:";
@@ -117,7 +113,6 @@ public class Game extends Head {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-				s.thisplayer.wr(false);
 			}
 		}
 		keys.setKeys();
@@ -179,8 +174,7 @@ public class Game extends Head {
 
 	public void giveText(String txt, boolean nuthing) throws IOException {
 		if (!nuthing) {
-			s.s("¤:" + s.thisplayer.getName() + ": " + txt);
-			s.thisplayer.setText(txt);
+			s.s("¤:" + s.myName + ": " + txt);
 		}
 		s.chat.toggleVisible();
 		t = false;

@@ -37,7 +37,6 @@ public class Sender {
 	int port = 25565;
 	int race;
 	int variation;
-	Player thisplayer;
 	Chat chat;
 
 	public Sender(Game game, String ip, String name, int var, int race)
@@ -57,7 +56,6 @@ public class Sender {
 	public void init(final Game game) throws IOException, InterruptedException {
 		chat = new Chat(game);
 		s = new DatagramSocket();
-		thisplayer = new Player(myName, race, variation);
 		try {
 			s("§:" + myName + ":" + race + ":" + variation + ":");
 		} catch (IOException e1) {
@@ -76,7 +74,6 @@ public class Sender {
 					for (Player Player : players) {
 						Player.update();
 					}
-					thisplayer.update();
 				}
 			}
 		}).start();
@@ -97,7 +94,7 @@ public class Sender {
 						rcvd = rcvd.trim();
 						String[] Spart = rcvd.split(":");
 						String FL = Spart[0];
-						// so(rcvd);
+						so(rcvd);
 						try {
 							name = Spart[1];
 						} catch (Exception e) {
@@ -126,7 +123,7 @@ public class Sender {
 	}
 
 	public void chatspeak(String FL) {
-		if (FL.equals("¤") && !name.equals(myName)) {
+		if (FL.equals("¤")) {
 			rcvd.replace("¤:", "");
 			appendChat(rcvd);
 			rcvd = rcvd.replace("¤:" + name + ": ", "");
@@ -135,7 +132,7 @@ public class Sender {
 	}
 
 	public void playeradder(String FL, String[] Spart, Game game) {
-		if (!found && !myName.equals(name)) {
+		if (!found) {
 
 			if (FL.equals("§")) {
 				try {
@@ -156,15 +153,13 @@ public class Sender {
 		if (FL.equals("@")) {
 			int siX = Integer.parseInt(Spart[2]);
 			int siY = Integer.parseInt(Spart[3]);
-			if (Spart[1].equals(ns)) {
-				setXY(thisplayer, siX, siY);
-			} else {
-				for (Player Player : players) {
-					if (Player.getName().equals(Spart[1])) {
-						setXY(Player, siX, siY);
-					}
+
+			for (Player Player : players) {
+				if (Player.getName().equals(Spart[1])) {
+					setXY(Player, siX, siY);
 				}
 			}
+
 		}
 	}
 
@@ -176,7 +171,7 @@ public class Sender {
 	}
 
 	public void move(String FL, String[] Spart, String ns) {
-		if (FL.equals("$") && !Spart[1].equals(ns)) {
+		if (FL.equals("$")) {
 			int siX = 0;
 			int siY = 0;
 			// command datagram
@@ -232,14 +227,12 @@ public class Sender {
 		for (int x = players.size() - 1; x >= 0; x--) {
 			players.elementAt(x).view(game);
 		}
-		thisplayer.view(game);
 	}
 
 	public void render(double dt, Game game) {
 		for (int x = players.size() - 1; x >= 0; x--) {
 			players.elementAt(x).render(dt, game);
 		}
-		thisplayer.render(dt, game);
 	}
 
 	public void so(String o) {

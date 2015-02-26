@@ -238,6 +238,7 @@ public class Server extends JFrame implements Serializable {
 						}
 						String rcvd = new String(dgp.getData());
 						rcvd.trim();
+						s(rcvd);
 						found = false;
 
 						// look if the package is a join request
