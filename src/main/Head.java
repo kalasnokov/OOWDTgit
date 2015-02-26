@@ -3,6 +3,7 @@ package main;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
 import static org.lwjgl.opengl.GL11.glGetString;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.lwjgl.BufferUtils;
@@ -82,7 +83,7 @@ public abstract class Head implements Runnable {
 
 	}
 
-	protected void init() throws InterruptedException {
+	protected void init() throws InterruptedException, FileNotFoundException, IOException {
 	}
 
 	protected void loadAssets() {
@@ -120,8 +121,7 @@ public abstract class Head implements Runnable {
 		glinit(width, height);
 		try {
 			init();
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+		} catch (InterruptedException | IOException e1) {
 			e1.printStackTrace();
 		}
 		loadAssets();

@@ -29,7 +29,7 @@ public class Player implements Serializable {
 	public boolean left;
 	public boolean right;
 	public boolean jumping = false;
-	// tester tester;
+	Tester tester;
 	private Sprite sprite;
 	public boolean f = true;
 	public int cha;
@@ -69,7 +69,7 @@ public class Player implements Serializable {
 		this.port = port;
 		this.cha = race;
 		this.var = variation;
-		// tester = new tester(name);
+		tester = new Tester(name);
 		LS = lookstate.RIGHT;
 		loadOPT();
 	}
@@ -82,7 +82,7 @@ public class Player implements Serializable {
 		this.y = y;
 		this.cha = race;
 		this.var = variation;
-		// tester = new tester(name);
+		tester = new Tester(name);
 		animations(race, variation);
 		LS = lookstate.RIGHT;
 		loadOPT();
@@ -93,7 +93,7 @@ public class Player implements Serializable {
 		this.name = name;
 		this.cha = race;
 		this.var = variation;
-		// tester = new tester(name);
+		tester = new Tester(name);
 		animations(race, variation);
 		LS = lookstate.RIGHT;
 		loadOPT();
@@ -188,12 +188,12 @@ public class Player implements Serializable {
 		if (xacc > 0) {
 			LS = lookstate.RIGHT;
 		}
-		// update tester
-		// tester.jump(jumping);
-		// tester.ml(left);
-		// tester.mr(right);
-		// tester.setx(x);
-		// tester.sety(y);
+		//update tester
+		tester.jump(jumping);
+		tester.ml(left);
+		tester.mr(right);
+		tester.setx(x);
+		tester.sety(y);
 	}
 
 	public void view(Game game) {
@@ -264,8 +264,14 @@ public class Player implements Serializable {
 						+ "/.png")
 				&& !spritestring.equals("res/char" + cha + "/var" + var
 						+ "/l.png")) {
+
+			try {
+				sprite = new Sprite(spritestring);
+			} catch (Exception e) {
+				sprite = new Sprite(oldsprite);
+				so("Sprite error catched");
+			}
 			oldsprite = spritestring;
-			sprite = new Sprite(spritestring);
 		}
 	}
 

@@ -81,7 +81,6 @@ public class Server extends JFrame implements Serializable {
 							try {
 								removePlayer(Sinput);
 							} catch (IOException e1) {
-								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 						}
@@ -89,6 +88,17 @@ public class Server extends JFrame implements Serializable {
 							players.removeAllElements();
 							input.setText("");
 							ap("Flushed server");
+						}
+						if (Sinput.equals("/reload")) {
+							for (Player Player : players) {
+								try {
+									Player.loadOPT();
+								} catch (IOException e1) {
+									e1.printStackTrace();
+								}
+							}
+							ap("Reloaded player OPT files");
+							input.setText("");
 						}
 						if (Sinput.equals("/list")) {
 							for (Player Player : players) {
@@ -193,7 +203,8 @@ public class Server extends JFrame implements Serializable {
 			public void run() {
 				while (true) {
 					try {
-						Thread.sleep(1000);// Player update speed, sending player
+						Thread.sleep(1000);// Player update speed, sending
+											// player
 											// location to all clients two times
 											// every second
 					} catch (InterruptedException e) {
@@ -233,7 +244,6 @@ public class Server extends JFrame implements Serializable {
 						try {
 							s.receive(dgp);
 						} catch (IOException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 						String rcvd = new String(dgp.getData());
@@ -263,7 +273,6 @@ public class Server extends JFrame implements Serializable {
 						try {
 							removeplayer(FL, dgp);
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						if (FL.equals("¤")) {
@@ -273,14 +282,12 @@ public class Server extends JFrame implements Serializable {
 						try {
 							addplayer(FL, Spart, dgp);
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 
 						try {
 							move(FL, Spart, dgp);
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}

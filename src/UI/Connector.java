@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
@@ -20,10 +21,14 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+
 import main.Game;
+
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+
 import java.awt.Button;
+
 import javax.swing.JCheckBox;
 
 @SuppressWarnings("serial")
@@ -191,7 +196,9 @@ public class Connector extends JFrame {
 					f = new File("res/char" + i + "/var" + u);
 					if (f.exists()) {
 						f = new File("res/char" + i + "/var" + u + "/opt.cvcf");
-						if (!f.exists()) {//if you want up udtae ALL .cvcf files to annew format, remove the ! and run once
+						if (!f.exists()) {// if you want up update ALL the .cvcf
+											// files to a new format, remove the
+											// ! and run once
 							f.getParentFile().mkdirs();
 							try {
 								f.createNewFile();
@@ -211,7 +218,8 @@ public class Connector extends JFrame {
 							writer.println("jumpspeed:20:");
 							writer.println("idlespeed:25:");
 							writer.close();
-							System.out.println("New opt.cvcf created for race "+i+"\'s variation "+u);
+							System.out.println("New opt.cvcf created for race "
+									+ i + "\'s variation " + u);
 						}
 					} else {
 						loop = false;
@@ -249,9 +257,7 @@ public class Connector extends JFrame {
 		if (c) {
 			game.Host();
 			sip = "";
-			Thread.sleep(1000);
 			while (true) {
-				Thread.sleep(1000);
 				if (game.server.getready()) {
 					break;
 				}

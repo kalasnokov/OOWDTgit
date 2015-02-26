@@ -159,7 +159,6 @@ public class Sender {
 					setXY(Player, siX, siY);
 				}
 			}
-
 		}
 	}
 
@@ -185,15 +184,18 @@ public class Sender {
 					setXY(getPlayer(name), siX, siY);
 				}
 			}
-			if (Spart[2].equals("<")) {
-				getPlayer(name).wl(pressing);
-			}
-			if (Spart[2].equals(">")) {
-				getPlayer(name).wr(pressing);
-			}
-			if (Spart[2].equals("^")) {
-				getPlayer(name).j();
-
+			try {
+				if (Spart[2].equals("<")) {
+					getPlayer(name).wl(pressing);
+				}
+				if (Spart[2].equals(">")) {
+					getPlayer(name).wr(pressing);
+				}
+				if (Spart[2].equals("^")) {
+					getPlayer(name).j();
+				}
+			} catch (Exception e) {
+				so("Tried to apply illegal operation to a unknown player");
 			}
 		}
 	}

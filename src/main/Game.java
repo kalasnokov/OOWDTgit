@@ -36,22 +36,16 @@ public class Game extends Head {
 	public void preGLInit() {
 	}
 
-	public void init() throws InterruptedException {
+	public void init() throws InterruptedException, FileNotFoundException,
+			IOException {
 
 		UPDATES_PER_SECOND = 60;
 		gameState = State.MENU;
-		// String ip = JOptionPane.showInputDialog("Enter IP to connect to");
 
 		ground = new Sprite("res/ground.png");
 		back = new Sprite("res/back.png");
 		keys = new Keys();
-		try {
-			c2 = new Connector(this);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		c2 = new Connector(this);
 	}
 
 	public void loadAssets() {
