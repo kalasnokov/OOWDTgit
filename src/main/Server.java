@@ -272,21 +272,16 @@ public class Server extends JFrame implements Serializable {
 
 						try {
 							removeplayer(FL, dgp);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						if (FL.equals("¤")) {
-							msg = rcvd;
-						}
-						// new client added and new player created
-						try {
-							addplayer(FL, Spart, dgp);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
 
-						try {
+							if (FL.equals("¤")) {
+								msg = rcvd;
+							}
+
+							addplayer(FL, Spart, dgp);
+
 							move(FL, Spart, dgp);
+
+							sendPlayers(FL, dgp);
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -294,6 +289,22 @@ public class Server extends JFrame implements Serializable {
 				}
 			}
 		}).start();
+	}
+
+	public void sendPlayers(String FL, DatagramPacket dgp) throws IOException {
+		if (FL.equals("!")) {
+			for (Player Player : players) {
+				if (dgp.getAddress().equals(Player.getAddress())
+						&& dgp.getPort() == Player.getPort()) {
+					for (Player Player2 : players) {
+						msg = "§:" + Player2.getName() + ":" + Player2.getX()
+								+ ":" + Player2.getY() + ":" + Player2.getCha()
+								+ ":" + Player2.getVariation() + ":";
+						send(Player.getAddress(), Player.getPort());
+					}
+				}
+			}
+		}
 	}
 
 	public void removeplayer(String FL, DatagramPacket dgp) throws IOException {

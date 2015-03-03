@@ -38,6 +38,7 @@ public class Sender {
 	int race;
 	int variation;
 	Chat chat;
+	boolean f = true;
 
 	public Sender(Game game, String ip, String name, int var, int race)
 			throws InterruptedException {
@@ -90,6 +91,14 @@ public class Sender {
 						r = false;
 					}
 					if (r) {
+						if (f) {
+							f = false;
+							try {
+								s("!:");
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
 						rcvd = new String(dgp.getData());
 						rcvd = rcvd.trim();
 						String[] Spart = rcvd.split(":");
@@ -107,11 +116,11 @@ public class Sender {
 							}
 						}
 						playeradder(FL, Spart, game);
-						if(found){
-						chatspeak(FL);
-						remover(FL, Spart);
-						move(FL, Spart, myName);
-						positionUpdater(FL, Spart, myName);
+						if (found) {
+							chatspeak(FL);
+							remover(FL, Spart);
+							move(FL, Spart, myName);
+							positionUpdater(FL, Spart, myName);
 						}
 					}
 				}
