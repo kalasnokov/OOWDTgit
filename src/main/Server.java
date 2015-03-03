@@ -192,8 +192,8 @@ public class Server extends JFrame implements Serializable {
 						e.printStackTrace();
 					}
 					// loops all server-stored players and updates them
-					for (Player Player : players) {
-						Player.update();// updater
+					for (int x = players.size() - 1; x >= 0; x--) {
+						players.elementAt(x).update();// updater
 					}
 				}
 			}

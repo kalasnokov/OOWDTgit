@@ -106,11 +106,13 @@ public class Sender {
 								found = true;
 							}
 						}
+						playeradder(FL, Spart, game);
+						if(found){
 						chatspeak(FL);
 						remover(FL, Spart);
-						playeradder(FL, Spart, game);
 						move(FL, Spart, myName);
 						positionUpdater(FL, Spart, myName);
+						}
 					}
 				}
 			}
