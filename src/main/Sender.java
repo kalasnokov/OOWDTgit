@@ -19,7 +19,7 @@ public class Sender {
 	boolean left;
 	boolean right;
 	boolean jumping = false;
-	//Tester tester;
+	// Tester tester;
 	String name;
 	String myName;
 	int health;
@@ -109,10 +109,18 @@ public class Sender {
 								found = true;
 							}
 						}
+						if (FL.equals("A")) {
+							if (myName.equals(name)) {
+								//thisplayer.
+								so ("This will create a fireball");
+							} else {
+								// getPlayer(name).
+							}
+						}
 						if (FL.equals("¤")) {
 							rcvd.replace("¤:", "");
 							appendChat(rcvd);
-							rcvd = rcvd.replace("¤:"+name + ": ", "");
+							rcvd = rcvd.replace("¤:" + name + ": ", "");
 							if (name.equals(myName)) {
 								thisplayer.setText(rcvd);
 							} else {

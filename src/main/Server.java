@@ -304,6 +304,27 @@ public class Server extends JFrame implements Serializable {
 
 				}
 			}
+
+			if (FL.equals("A")) {
+				for (Player Player : players) {
+					if (Player.getAddress().equals(dgp.getAddress())
+							&& Player.getPort() == dgp.getPort()) {
+						if (Spart[1].equals("1")) {
+							msg = "A:" + Player.getName() + ":1";
+						}
+						if (Spart[1].equals("2")) {
+							msg = "A:" + Player.getName() + ":2";
+						}
+						if (Spart[1].equals("3")) {
+							msg = "A:" + Player.getName() + ":3";
+						}
+						if (Spart[1].equals("s")) {
+							msg = "A:" + Player.getName() + ":s";
+						}
+					}
+				}
+			}
+
 			move(FL, Spart, dgp);
 			sendtoall();
 		}
@@ -349,7 +370,7 @@ public class Server extends JFrame implements Serializable {
 			}
 		}
 	}
-	
+
 	public void attack(String FL, String[] Spart, DatagramPacket dgp) {
 		if (FL.equals("A")) {
 			boolean ar = false;
@@ -358,22 +379,22 @@ public class Server extends JFrame implements Serializable {
 				if (Player.getAddress().equals(dgp.getAddress())
 						&& Player.getPort() == dgp.getPort()) {
 					if (Spart[1].equals("1")) {
-						//Attack 1 (Light attack)
+						// Attack 1 (Light attack)
 						Player.A();
 						msg = "A:" + Player.getName() + ":1";
 					}
 					if (Spart[1].equals("2")) {
-						//Attack 2 (Medium attack)
+						// Attack 2 (Medium attack)
 						Player.A();
 						msg = "A:" + Player.getName() + ":2";
 					}
 					if (Spart[1].equals("3")) {
-						//Attack 3 (Heavy attack)
+						// Attack 3 (Heavy attack)
 						Player.A();
 						msg = "A:" + Player.getName() + ":3";
 					}
 					if (Spart[1].equals("s")) {
-						//Attack 4 (Special attack)
+						// Attack 4 (Special attack)
 						Player.A();
 						msg = "A:" + Player.getName() + ":s";
 					}
