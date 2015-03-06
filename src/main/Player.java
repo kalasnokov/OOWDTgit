@@ -1,15 +1,25 @@
 package main;
 
 import java.awt.Font;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
+
+import javax.imageio.ImageIO;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
+
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
 public class Player implements Serializable {
 	/**
@@ -24,12 +34,11 @@ public class Player implements Serializable {
 	public int yacc = 0;
 	public InetAddress address;
 	public int port;
-	public boolean Rpressing = false;
-	public boolean Lpressing = false;
+	public boolean pressing = false;
 	public boolean left;
 	public boolean right;
 	public boolean jumping = false;
-	Tester tester;
+	// Tester tester;
 	private Sprite sprite;
 	public boolean f = true;
 	public int cha;
@@ -69,7 +78,7 @@ public class Player implements Serializable {
 		this.port = port;
 		this.cha = race;
 		this.var = variation;
-		tester = new Tester(name);
+		// tester = new Tester(name);
 		LS = lookstate.RIGHT;
 		loadOPT();
 	}
@@ -77,12 +86,13 @@ public class Player implements Serializable {
 	public Player(Game game, String name, int x, int y, int race, int variation)
 			throws IOException {
 		// senders constructor for other
+		readandsend("res/i1.png");
 		this.name = name;
 		this.x = x;
 		this.y = y;
 		this.cha = race;
 		this.var = variation;
-		tester = new Tester(name);
+		// tester = new Tester(name);
 		animations(race, variation);
 		LS = lookstate.RIGHT;
 		loadOPT();
@@ -93,10 +103,34 @@ public class Player implements Serializable {
 		this.name = name;
 		this.cha = race;
 		this.var = variation;
-		tester = new Tester(name);
+		// tester = new Tester(name);
 		animations(race, variation);
 		LS = lookstate.RIGHT;
 		loadOPT();
+	}
+
+	public void readandsend(String s) throws FileNotFoundException, IOException {
+		File f = new File(s);
+		if (f.exists() && !f.isDirectory()) {
+
+			BufferedImage image = ImageIO.read(new File("res/i1.png"));
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ImageIO.write(image, "png", baos);
+			String encodedImage = Base64.encode(baos.toByteArray());
+
+			f = new File("res/i2.png");
+			f.createNewFile();
+
+			FileOutputStream osf = new FileOutputStream(f);
+			byte[] btDataFile = new sun.misc.BASE64Decoder()
+					.decodeBuffer(encodedImage);
+			osf.write(btDataFile);
+			osf.flush();
+			osf.close();
+
+		} else {
+			// error
+		}
 	}
 
 	public void loadOPT() throws IOException {
@@ -150,13 +184,13 @@ public class Player implements Serializable {
 	}
 
 	public void update() {
-		if (Lpressing && left) {
+		if (left) {
 			xacc -= movespeed / 5;
 		}
-		if (Rpressing && right) {
+		if (right) {
 			xacc += movespeed / 5;
 		}
-		if (!Rpressing && !Lpressing) {
+		if (!pressing) {
 			xacc = 0;
 		}
 
@@ -188,76 +222,45 @@ public class Player implements Serializable {
 		if (xacc > 0) {
 			LS = lookstate.RIGHT;
 		}
-		//update tester
-		tester.jump(jumping);
-		tester.ml(left);
-		tester.mr(right);
-		tester.setx(x);
-		tester.sety(y);
+		// update tester
+		// tester.jump(jumping);
+		// tester.ml(left);
+		// tester.mr(right);
+		// tester.setx(x);
+		// tester.sety(y);
 	}
 
 	public void view(Game game) {
 		step++;
 		String spritestring = "res/char" + cha + "/var" + var + "/";
-		if (LS.equals(lookstate.LEFT)) {
-			if (jumping) {
-				for (int i = 0; i < animations[1]; i++) {
-					if (yacc <= jumpspeed - (j * i)) {
-						spritestring = "res/char" + cha + "/var" + var + "/j"
-								+ (i + 1);
-					}
-				}
-			} else if (Lpressing) {
-				spritestring += "/w" + ws;
-				if (step >= 7) {
-					ws++;
-					step = 0;
-					if (ws > animations[0]) {
-						ws = 1;
-					}
-				}
-			} else {
-				if (step >= idletick) {
-					spritestring += "i" + idlestage;
-					idlestage++;
-					step = 0;
-					if (idlestage > animations[2]) {
-						idlestage = 1;
-					}
-				}
-			}
-			spritestring += "l.png";
-		}
 
-		if (LS.equals(lookstate.RIGHT)) {
-			if (jumping) {
-				for (int i = 0; i < animations[1]; i++) {
-					if (yacc <= jumpspeed - (j * i)) {
-						spritestring = "res/char" + cha + "/var" + var + "/j"
-								+ (i + 1);
-					}
-				}
-			} else if (Rpressing) {
-				spritestring += "/w" + ws;
-				if (step >= 7) {
-					ws++;
-					step = 0;
-					if (ws > animations[0]) {
-						ws = 1;
-					}
-				}
-			} else {
-				if (step >= idletick) {
-					spritestring += "i" + idlestage;
-					idlestage++;
-					step = 0;
-					if (idlestage > animations[2]) {
-						idlestage = 1;
-					}
+		if (jumping) {
+			for (int i = 0; i < animations[1]; i++) {
+				if (yacc <= jumpspeed - (j * i)) {
+					spritestring = "res/char" + cha + "/var" + var + "/j"
+							+ (i + 1);
 				}
 			}
-			spritestring += ".png";
+		} else if (pressing) {
+			spritestring += "/w" + ws;
+			if (step >= 7) {
+				ws++;
+				step = 0;
+				if (ws > animations[0]) {
+					ws = 1;
+				}
+			}
+		} else {
+			if (step >= idletick) {
+				spritestring += "i" + idlestage;
+				idlestage++;
+				step = 0;
+				if (idlestage > animations[2]) {
+					idlestage = 1;
+				}
+			}
 		}
+		spritestring += ".png";
 
 		if (!spritestring.equals(oldsprite)
 				&& !spritestring.equals("res/char" + cha + "/var" + var
@@ -277,13 +280,13 @@ public class Player implements Serializable {
 
 	public void wl(boolean p) {
 		// walk left
-		Lpressing = p;
+		pressing = p;
 		left = p;
 	}
 
 	public void wr(boolean p) {
 		// walk right
-		Rpressing = p;
+		pressing = p;
 		right = p;
 	}
 
@@ -344,8 +347,13 @@ public class Player implements Serializable {
 				newText = false;
 			}
 		}
-
-		sprite.render(x, y);
+		boolean l;
+		if (LS.equals(lookstate.RIGHT)) {
+			l = false;
+		} else {
+			l = true;
+		}
+		sprite.render(x, y, l);
 	}
 
 	public void setText(String text) {

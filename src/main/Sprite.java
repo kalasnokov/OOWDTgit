@@ -33,8 +33,40 @@ public class Sprite implements Serializable {
 
 	}
 
-	public void render(double xpos, double ypos) {
+	public void render(double xpos, double ypos, boolean inverted) {
+		width = 128;
+		height = 128;
+		int n;
+		int nt;
+		if (inverted) {
+			n = -1;
+			nt = 1;
+		} else {
+			n = 1;
+			nt = 0;
+		}
+		Color.white.bind();
+		texture.bind(); // or GL11.glBind(texture.getTextureID());
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER,
+				GL11.GL_NEAREST);
+		GL11.glBegin(GL11.GL_QUADS);
+		{
+			GL11.glTexCoord2d(0, 0);
+			GL11.glVertex2d(xpos + (width * nt), ypos);
 
+			GL11.glTexCoord2d(x, 0);
+			GL11.glVertex2d(xpos + (n * width) + (width * nt), ypos);
+
+			GL11.glTexCoord2d(x, y);
+			GL11.glVertex2d(xpos + (n * width) + (width * nt), ypos + height);
+
+			GL11.glTexCoord2d(0, y);
+			GL11.glVertex2d(xpos + (width * nt), ypos + height);
+		}
+		GL11.glEnd();
+	}
+
+	public void render(double xpos, double ypos) {
 		Color.white.bind();
 		texture.bind(); // or GL11.glBind(texture.getTextureID());
 		GL11.glBegin(GL11.GL_QUADS);
