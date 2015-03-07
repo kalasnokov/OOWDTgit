@@ -30,6 +30,8 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 
+import Map.Map;
+
 @SuppressWarnings("unused")
 public class Server extends JFrame implements Serializable {
 	/**
@@ -45,6 +47,7 @@ public class Server extends JFrame implements Serializable {
 	private JTextField input;
 	private boolean broken = false;
 	boolean ready = false;
+	Map map;
 
 	public Server() throws IOException {
 
@@ -161,7 +164,9 @@ public class Server extends JFrame implements Serializable {
 		setVisible(true);
 
 		// non-UI code begins here
-
+		
+		map = new Map(128, 128);
+		
 		try {
 			URL whatismyip = new URL("http://checkip.amazonaws.com");
 			BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -248,7 +253,7 @@ public class Server extends JFrame implements Serializable {
 						}
 						String rcvd = new String(dgp.getData());
 						rcvd.trim();
-						s(rcvd);
+						//s(rcvd);
 						found = false;
 
 						// look if the package is a join request
@@ -302,6 +307,8 @@ public class Server extends JFrame implements Serializable {
 								+ ":" + Player2.getVariation() + ":";
 						send(Player.getAddress(), Player.getPort());
 					}
+					msg=map.getWorldString();
+					send(Player.getAddress(), Player.getPort());
 				}
 			}
 		}

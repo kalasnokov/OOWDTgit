@@ -28,9 +28,14 @@ public class Game extends Head {
 	public Server server;
 	@SuppressWarnings("unused")
 	private Connector c2;
+	public ViewState VS=ViewState.SIDE;
 
 	public enum State {
 		MENU, PLAYING, STARTING;
+	}
+
+	public enum ViewState {
+		SIDE, MAP;
 	}
 
 	public void preGLInit() {
@@ -68,6 +73,13 @@ public class Game extends Head {
 		}
 		String msg;
 		if (!t) {
+			if (keys.keyPressed(Keyboard.KEY_M)) {
+				if (VS == ViewState.SIDE) {
+					VS = ViewState.MAP;
+				} else {
+					VS = ViewState.SIDE;
+				}
+			}
 			if (keys.keyPressed(Keyboard.KEY_A)) {
 				msg = "$:<:P:";
 				try {
@@ -75,6 +87,7 @@ public class Game extends Head {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
+
 			}
 			if (keys.keyPressed(Keyboard.KEY_D)) {
 				msg = "$:>:P:";
@@ -133,9 +146,18 @@ public class Game extends Head {
 			if (gameState != State.PLAYING)
 				interp = 0;
 		}
-		back.render(0, 0);
-		s.render(interpolation, this);
-		ground.render(0, 540);
+		if (VS == ViewState.SIDE) {
+			back.render(0, 0);
+			s.render(interpolation, this);
+			ground.render(0, 540);
+		}
+		if (VS == ViewState.MAP) {
+			try {
+				s.map.render(interpolation, null, xoffset, xoffset);
+			} catch (Exception e) {
+				so("Could not render map!");
+			}
+		}
 		return 0;
 	}
 

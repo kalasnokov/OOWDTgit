@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Vector;
 
+import Map.Map;
 import UI.Chat;
 
 public class Sender {
@@ -39,6 +40,7 @@ public class Sender {
 	int variation;
 	Chat chat;
 	boolean f = true;
+	Map map;
 
 	public Sender(Game game, String ip, String name, int var, int race)
 			throws InterruptedException {
@@ -103,7 +105,8 @@ public class Sender {
 						rcvd = rcvd.trim();
 						String[] Spart = rcvd.split(":");
 						String FL = Spart[0];
-						so(rcvd);
+						// so(rcvd);
+						generateMap(FL, Spart);
 						try {
 							name = Spart[1];
 						} catch (Exception e) {
@@ -121,11 +124,23 @@ public class Sender {
 							remover(FL, Spart);
 							move(FL, Spart, myName);
 							positionUpdater(FL, Spart, myName);
+
 						}
 					}
 				}
 			}
 		}).start();
+	}
+
+	public void generateMap(String FL, String[] Spart) {
+		if (FL.equals("£")) {
+			int[] parts = new int[Spart.length - 3];
+			for (int i = 0; i < Spart.length-3; i++) {
+				parts[i] = Integer.parseInt(Spart[3 + i]);
+			}
+			map = new Map(Integer.parseInt(Spart[1]),
+					Integer.parseInt(Spart[2]), parts);
+		}
 	}
 
 	public void appendChat(String txt) {

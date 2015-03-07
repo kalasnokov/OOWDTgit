@@ -17,8 +17,8 @@ import org.lwjgl.opengl.GL11;
 
 public abstract class Head implements Runnable {
 
-	protected int width;
-	protected int height;
+	public int width;
+	public int height;
 	int frames;
 
 	public int getWidth() {
