@@ -152,11 +152,11 @@ public class Game extends Head {
 			ground.render(0, 540);
 		}
 		if (VS == ViewState.MAP) {
-			try {
-				s.map.render(interpolation, null, xoffset, xoffset);
-			} catch (Exception e) {
-				so("Could not render map!");
-			}
+			//try {
+				s.map.render(interpolation, this, xoffset, xoffset);
+			//} catch (Exception e) {
+			//	so("Could not render map!");
+			//}
 		}
 		return 0;
 	}

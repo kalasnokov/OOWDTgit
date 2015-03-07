@@ -74,8 +74,8 @@ public class Sender {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					for (Player Player : players) {
-						Player.update();
+					for (int x = players.size() - 1; x >= 0; x--) {
+						players.elementAt(x).update();
 					}
 				}
 			}
