@@ -28,10 +28,15 @@ public class Game extends Head {
 	public Server server;
 	@SuppressWarnings("unused")
 	private Connector c2;
-	public ViewState VS=ViewState.SIDE;
+	public ViewState VS = ViewState.SIDE;
+	private State renderState;
+	private boolean Uc;
+	private boolean Dc;
+	private boolean Rc;
+	private boolean Lc;
 
 	public enum State {
-		MENU, PLAYING, STARTING;
+		MENU, PLAYING, STARTING, MAP, WORLD
 	}
 
 	public enum ViewState {
@@ -69,6 +74,81 @@ public class Game extends Head {
 			} else {
 				t = true;
 				s.chat.toggleVisible();
+			}
+		}
+		if (keys.keyPressed(Keyboard.KEY_RETURN) && renderState != State.MAP) {
+			if (t) {
+				t = false;
+				giveText(s.chat.getChatText(), false);
+			} else {
+				t = true;
+				s.chat.toggleVisible();
+			}
+		}
+		if (!t) {
+			if (keys.keyPressed(Keyboard.KEY_R)) {
+				if (renderState == State.MAP) {
+					s.map.zoom(-1);
+				}
+			}
+			if (keys.keyPressed(Keyboard.KEY_F)) {
+				if (renderState == State.MAP) {
+					s.map.zoom(1);
+				}
+			}
+			if (keys.keyPressed(Keyboard.KEY_UP)) {
+				if (renderState == State.MAP) {
+					Uc = true;
+				}
+			}
+
+			if (keys.keyPressed(Keyboard.KEY_UP)) {
+				if (renderState == State.MAP) {
+					Uc = true;
+				}
+			}
+			if (keys.keyPressed(Keyboard.KEY_DOWN)) {
+				if (renderState == State.MAP) {
+					Dc = true;
+				}
+			}
+			if (keys.keyPressed(Keyboard.KEY_LEFT)) {
+				if (renderState == State.MAP) {
+					Lc = true;
+				}
+			}
+			if (keys.keyPressed(Keyboard.KEY_RIGHT)) {
+				if (renderState == State.MAP) {
+					Rc = true;
+				}
+			}
+
+			if (keys.keyReleased(Keyboard.KEY_UP)) {
+				if (renderState == State.MAP) {
+					Uc = false;
+				}
+			}
+			if (keys.keyReleased(Keyboard.KEY_DOWN)) {
+				if (renderState == State.MAP) {
+					Dc = false;
+				}
+			}
+			if (keys.keyReleased(Keyboard.KEY_LEFT)) {
+				if (renderState == State.MAP) {
+					Lc = false;
+				}
+			}
+			if (keys.keyReleased(Keyboard.KEY_RIGHT)) {
+				if (renderState == State.MAP) {
+					Rc = false;
+				}
+			}
+			if (keys.keyPressed(Keyboard.KEY_M)) {
+				if (renderState != State.MAP) {
+					renderState = State.MAP;
+				} else {
+					renderState = State.WORLD;
+				}
 			}
 		}
 		String msg;
@@ -152,11 +232,11 @@ public class Game extends Head {
 			ground.render(0, 540);
 		}
 		if (VS == ViewState.MAP) {
-			//try {
-				s.map.render(interpolation, this, xoffset, xoffset);
-			//} catch (Exception e) {
-			//	so("Could not render map!");
-			//}
+			// try {
+			s.map.render(interpolation, this, xoffset, xoffset);
+			// } catch (Exception e) {
+			// so("Could not render map!");
+			// }
 		}
 		return 0;
 	}
