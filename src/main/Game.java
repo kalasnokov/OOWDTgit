@@ -28,11 +28,13 @@ public class Game extends Head {
 	public Server server;
 	@SuppressWarnings("unused")
 	private Connector c2;
-	private State renderState=State.WORLD;
+	private State renderState = State.WORLD;
 	private boolean Uc;
 	private boolean Dc;
 	private boolean Rc;
 	private boolean Lc;
+	private int yoffsetacc;
+	private int xoffsetacc;
 
 	public enum State {
 		MENU, PLAYING, STARTING, MAP, WORLD
@@ -89,11 +91,11 @@ public class Game extends Head {
 			if (keys.keyPressed(Keyboard.KEY_F)) {
 				if (renderState == State.MAP) {
 					s.map.zoom(1);
-				}
-			}
-			if (keys.keyPressed(Keyboard.KEY_UP)) {
-				if (renderState == State.MAP) {
-					Uc = true;
+					if (s.map.gettilewidth() * s.map.getWW() < super.getWidth()
+							|| s.map.gettilewidth() * s.map.getWH() < super
+									.getHeight()) {
+						s.map.zoom(-1);
+					}
 				}
 			}
 
@@ -204,6 +206,54 @@ public class Game extends Head {
 		}
 		buttonClicked = false;
 		s.view(this);
+		if (Uc) {
+			yoffsetacc -= 2;
+		}
+		if (Dc) {
+			yoffsetacc += 2;
+		}
+		if (Lc) {
+			xoffsetacc -= 2;
+
+		}
+		if (Rc) {
+			xoffsetacc += 2;
+		}
+		if (xoffsetacc < 0) {
+			xoffsetacc++;
+		}
+		if (xoffsetacc > 0) {
+			xoffsetacc--;
+		}
+		if (yoffsetacc < 0) {
+			yoffsetacc++;
+		}
+		if (yoffsetacc > 0) {
+			yoffsetacc--;
+		}
+		xoffset += xoffsetacc;
+		yoffset += yoffsetacc;
+		if (xoffset < 0) {
+			xoffset = 0;
+			xoffsetacc = 0;
+		}
+		if (yoffset < 0) {
+			yoffset = 0;
+			yoffsetacc = 0;
+		}
+
+		if (s.getMapcreated()) {
+			int size = s.map.gettilewidth();
+
+			if (xoffset > (s.map.getWW() * size) - width) {
+				xoffset = (s.map.getWW() * size) - width;
+				xoffsetacc = 0;
+			}
+			if (yoffset > (s.map.getWH() * size) - height) {
+				yoffset = (s.map.getWH() * size) - height;
+				yoffsetacc = 0;
+			}
+		}
 	}
 
 	public int render(double interpolation) {
@@ -220,11 +270,7 @@ public class Game extends Head {
 			ground.render(0, 540);
 		}
 		if (renderState == State.MAP) {
-			// try {
-			s.map.render(interpolation, this, xoffset, xoffset);
-			// } catch (Exception e) {
-			// so("Could not render map!");
-			// }
+			s.map.render(interpolation, this, xoffset, yoffset);
 		}
 		return 0;
 	}

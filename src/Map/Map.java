@@ -25,6 +25,7 @@ public class Map implements Serializable {
 	boolean f = true;
 	Sprite[] sprites = new Sprite[8];
 	int zoom = 0;
+	boolean done=false;;
 
 	public Map(int WW, int WH, int[] p) {
 		// client constructor
@@ -49,6 +50,7 @@ public class Map implements Serializable {
 		}
 		generate();
 		so(worldstring);
+		System.out.println(worldstring.length());
 	}
 
 	public void generate() {
@@ -81,6 +83,7 @@ public class Map implements Serializable {
 				sprites[i] = new Sprite("res/tiles/" + i + ".png");
 			}
 			f = false;
+			done=true;
 		}
 		for (int x = 0; x < WH; x++) {
 			for (int y = 0; y < WH; y++) {
@@ -179,6 +182,13 @@ public class Map implements Serializable {
 
 	public static void update() {
 
+	}
+	public int gettilewidth(){
+		if(done){
+		return (int) sprites[0].height-zoom;
+		}else{
+			return 32;
+		}
 	}
 	public void so(String s) {
 		// console print shortcut, just call s(string);

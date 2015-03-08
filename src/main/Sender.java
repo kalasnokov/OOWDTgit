@@ -41,6 +41,7 @@ public class Sender {
 	Chat chat;
 	boolean f = true;
 	Map map;
+	Boolean mapcreated=false;
 
 	public Sender(Game game, String ip, String name, int var, int race)
 			throws InterruptedException {
@@ -140,6 +141,7 @@ public class Sender {
 			}
 			map = new Map(Integer.parseInt(Spart[1]),
 					Integer.parseInt(Spart[2]), parts);
+			mapcreated=true;
 		}
 	}
 
@@ -281,5 +283,9 @@ public class Sender {
 	public void stop() throws IOException {
 		running = false;
 		s("#:");
+	}
+
+	public boolean getMapcreated() {
+		return mapcreated;
 	}
 }
