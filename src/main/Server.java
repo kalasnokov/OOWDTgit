@@ -165,7 +165,7 @@ public class Server extends JFrame implements Serializable {
 
 		// non-UI code begins here
 		
-		map = new Map(128, 128);
+		map = new Map(512, 512);
 		
 		try {
 			URL whatismyip = new URL("http://checkip.amazonaws.com");
