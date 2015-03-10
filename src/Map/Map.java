@@ -26,6 +26,7 @@ public class Map implements Serializable {
 	int zoom = 0;
 	boolean done = false;;
 	private int perm[] = new int[512];
+	int xvar, yvar;
 
 	private static double dot(int g[], double x, double y) {
 		return g[0] * x + g[1] * y;
@@ -85,6 +86,7 @@ public class Map implements Serializable {
 		 */
 	}
 
+	@SuppressWarnings("static-access")
 	public void render(double dt, Game game, int xoffset, int yoffset) {
 		if (f) {
 			for (int i = 0; i < sprites.length; i++) {
@@ -93,8 +95,8 @@ public class Map implements Serializable {
 			f = false;
 			done = true;
 		}
-		int xvar = (int) (sprites[0].width - zoom);
-		int yvar = (int) (sprites[0].height - zoom);
+		xvar = (int) (sprites[0].width - zoom);
+		yvar = (int) (sprites[0].height - zoom);
 		for (int x = 0; x < WH; x++) {
 			for (int y = 0; y < WH; y++) {
 				if (x * xvar - xoffset < game.width
@@ -112,7 +114,7 @@ public class Map implements Serializable {
 				}
 			}
 		}
-		Game.s.renderonMap(dt, game, xoffset, yoffset, xvar, yvar);
+		game.s.renderonMap(dt, game, xoffset, yoffset);
 	}
 
 	public double noise(double xin, double yin) {
@@ -203,5 +205,12 @@ public class Map implements Serializable {
 	public void so(String s) {
 		// console print shortcut, just call s(string);
 		System.out.println(s);
+	}
+
+	public int getXvar() {
+		return xvar;
+	}
+	public int getYvar() {
+		return yvar;
 	}
 }

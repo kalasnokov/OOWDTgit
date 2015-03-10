@@ -222,7 +222,9 @@ public class Server extends JFrame implements Serializable {
 						int p = P.getPort();
 						for (Player Player : players) {
 							msg = "@:" + Player.getName() + ":" + Player.getX()
-									+ ":" + Player.getY() + ":";
+									+ ":" + Player.getY() + ":"
+									+ Player.getMx() + ":" + Player.getMy()
+									+ ":";
 							try {
 								send(a, p);
 							} catch (IOException e) {
@@ -253,7 +255,9 @@ public class Server extends JFrame implements Serializable {
 						}
 						String rcvd = new String(dgp.getData());
 						rcvd.trim();
+
 						// s(rcvd);
+
 						found = false;
 
 						// look if the package is a join request
@@ -285,7 +289,7 @@ public class Server extends JFrame implements Serializable {
 							addplayer(FL, Spart, dgp);
 
 							move(FL, Spart, dgp);
-
+							mapmovement(FL, Spart, dgp, rcvd);
 							sendPlayers(FL, dgp);
 						} catch (IOException e) {
 							e.printStackTrace();
@@ -373,6 +377,34 @@ public class Server extends JFrame implements Serializable {
 				}
 			}
 
+		}
+	}
+
+	public void mapmovement(String FL, String[] Spart, DatagramPacket dgp,
+			String rcvd) throws IOException {
+		if (FL.equals("MM")) {
+			for (Player player : players) {
+				if (player.getAddress().equals(dgp.getAddress())
+						&& player.getPort() == dgp.getPort()) {
+					if (Spart[1].equals("^")) {
+						player.MM(0, -1, map.getWW(), map.getWH());
+						msg = "MM:" + player.getName() + ":^:";
+					}
+					if (Spart[1].equals("<")) {
+						player.MM(-1, 0, map.getWW(), map.getWH());
+						msg = "MM:" + player.getName() + ":<:";
+					}
+					if (Spart[1].equals("v")) {
+						player.MM(0, 1, map.getWW(), map.getWH());
+						msg = "MM:" + player.getName() + ":v:";
+					}
+					if (Spart[1].equals(">")) {
+						player.MM(1, 0, map.getWW(), map.getWH());
+						msg = "MM:" + player.getName() + ":>:";
+					}
+				}
+				sendtoall();
+			}
 		}
 	}
 
@@ -470,9 +502,11 @@ public class Server extends JFrame implements Serializable {
 
 	public void send(InetAddress address, int port) throws IOException {
 		// sender function
+		if(!msg.isEmpty()){
 		byte[] buf = new byte[1024];
 		buf = msg.getBytes();
 		DatagramPacket out = new DatagramPacket(buf, buf.length, address, port);
 		s.send(out);
+		}
 	}
 }

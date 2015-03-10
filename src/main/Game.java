@@ -72,74 +72,9 @@ public class Game extends Head {
 				s.chat.toggleVisible();
 			}
 		}
-		if (!t) {
-			if (keys.keyPressed(Keyboard.KEY_R)) {
-				if (renderState == State.MAP) {
-					s.map.zoom(-1);
-				}
-			}
-			if (keys.keyPressed(Keyboard.KEY_F)) {
-				if (renderState == State.MAP) {
-					s.map.zoom(1);
-					if (s.map.gettilewidth() * s.map.getWW() < super.getWidth()
-							|| s.map.gettilewidth() * s.map.getWH() < super
-									.getHeight()) {
-						s.map.zoom(-1);
-					}
-				}
-			}
-
-			if (keys.keyPressed(Keyboard.KEY_UP)) {
-				if (renderState == State.MAP) {
-					Uc = true;
-				}
-			}
-			if (keys.keyPressed(Keyboard.KEY_DOWN)) {
-				if (renderState == State.MAP) {
-					Dc = true;
-				}
-			}
-			if (keys.keyPressed(Keyboard.KEY_LEFT)) {
-				if (renderState == State.MAP) {
-					Lc = true;
-				}
-			}
-			if (keys.keyPressed(Keyboard.KEY_RIGHT)) {
-				if (renderState == State.MAP) {
-					Rc = true;
-				}
-			}
-
-			if (keys.keyReleased(Keyboard.KEY_UP)) {
-				if (renderState == State.MAP) {
-					Uc = false;
-				}
-			}
-			if (keys.keyReleased(Keyboard.KEY_DOWN)) {
-				if (renderState == State.MAP) {
-					Dc = false;
-				}
-			}
-			if (keys.keyReleased(Keyboard.KEY_LEFT)) {
-				if (renderState == State.MAP) {
-					Lc = false;
-				}
-			}
-			if (keys.keyReleased(Keyboard.KEY_RIGHT)) {
-				if (renderState == State.MAP) {
-					Rc = false;
-				}
-			}
-			if (keys.keyPressed(Keyboard.KEY_M)) {
-				if (renderState != State.MAP) {
-					renderState = State.MAP;
-				} else {
-					renderState = State.WORLD;
-				}
-			}
-		}
 		String msg;
-		if (!t) {
+		mapkeys();
+		if (!t && renderState != State.MAP) {
 			if (keys.keyPressed(Keyboard.KEY_A)) {
 				msg = "$:<:P:";
 				try {
@@ -183,6 +118,94 @@ public class Game extends Head {
 			}
 		}
 		keys.setKeys();
+	}
+
+	public void mapkeys() throws IOException {
+		String msg;
+		if (!t) {
+			if (keys.keyPressed(Keyboard.KEY_R)) {
+				if (renderState == State.MAP) {
+					s.map.zoom(-1);
+				}
+			}
+			if (keys.keyPressed(Keyboard.KEY_F)) {
+				if (renderState == State.MAP) {
+					s.map.zoom(1);
+					if (s.map.gettilewidth() * s.map.getWW() < super.getWidth()
+							|| s.map.gettilewidth() * s.map.getWH() < super
+									.getHeight()) {
+						s.map.zoom(-1);
+					}
+				}
+			}
+			if (keys.keyPressed(Keyboard.KEY_M)) {
+				if (renderState != State.MAP) {
+					renderState = State.MAP;
+				} else {
+					renderState = State.WORLD;
+				}
+			}
+			if (renderState == State.MAP) {
+				if (keys.keyPressed(Keyboard.KEY_UP)) {
+					if (renderState == State.MAP) {
+						Uc = true;
+					}
+				}
+				if (keys.keyPressed(Keyboard.KEY_DOWN)) {
+					if (renderState == State.MAP) {
+						Dc = true;
+					}
+				}
+				if (keys.keyPressed(Keyboard.KEY_LEFT)) {
+					if (renderState == State.MAP) {
+						Lc = true;
+					}
+				}
+				if (keys.keyPressed(Keyboard.KEY_RIGHT)) {
+					if (renderState == State.MAP) {
+						Rc = true;
+					}
+				}
+
+				if (keys.keyReleased(Keyboard.KEY_UP)) {
+					if (renderState == State.MAP) {
+						Uc = false;
+					}
+				}
+				if (keys.keyReleased(Keyboard.KEY_DOWN)) {
+					if (renderState == State.MAP) {
+						Dc = false;
+					}
+				}
+				if (keys.keyReleased(Keyboard.KEY_LEFT)) {
+					if (renderState == State.MAP) {
+						Lc = false;
+					}
+				}
+				if (keys.keyReleased(Keyboard.KEY_RIGHT)) {
+					if (renderState == State.MAP) {
+						Rc = false;
+					}
+				}
+
+				if (keys.keyPressed(Keyboard.KEY_W)) {
+					msg = "MM:^:";
+					s.s(msg);
+				}
+				if (keys.keyPressed(Keyboard.KEY_A)) {
+					msg = "MM:<:";
+					s.s(msg);
+				}
+				if (keys.keyPressed(Keyboard.KEY_S)) {
+					msg = "MM:v:";
+					s.s(msg);
+				}
+				if (keys.keyPressed(Keyboard.KEY_D)) {
+					msg = "MM:>:";
+					s.s(msg);
+				}
+			}
+		}
 	}
 
 	public void quit() {

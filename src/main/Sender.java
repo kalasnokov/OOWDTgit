@@ -41,7 +41,7 @@ public class Sender {
 	Chat chat;
 	boolean f = true;
 	Map map;
-	Boolean mapcreated=false;
+	Boolean mapcreated = false;
 
 	public Sender(Game game, String ip, String name, int var, int race)
 			throws InterruptedException {
@@ -106,12 +106,14 @@ public class Sender {
 						rcvd = rcvd.trim();
 						String[] Spart = rcvd.split(":");
 						String FL = Spart[0];
+
 						// so(rcvd);
+
 						generateMap(FL, Spart);
 						try {
 							name = Spart[1];
 						} catch (Exception e) {
-							so(rcvd);
+							so("Catched "+rcvd);
 						}
 						found = false;
 						for (Player Player : players) {
@@ -120,12 +122,13 @@ public class Sender {
 							}
 						}
 						playeradder(FL, Spart, game);
+
 						if (found) {
+							mapmovement(FL, Spart);
 							chatspeak(FL);
 							remover(FL, Spart);
 							move(FL, Spart, myName);
 							positionUpdater(FL, Spart, myName);
-
 						}
 					}
 				}
@@ -136,12 +139,12 @@ public class Sender {
 	public void generateMap(String FL, String[] Spart) {
 		if (FL.equals("£")) {
 			int[] parts = new int[Spart.length - 3];
-			for (int i = 0; i < Spart.length-3; i++) {
+			for (int i = 0; i < Spart.length - 3; i++) {
 				parts[i] = Integer.parseInt(Spart[3 + i]);
 			}
 			map = new Map(Integer.parseInt(Spart[1]),
 					Integer.parseInt(Spart[2]), parts);
-			mapcreated=true;
+			mapcreated = true;
 		}
 	}
 
@@ -181,10 +184,11 @@ public class Sender {
 		if (FL.equals("@")) {
 			int siX = Integer.parseInt(Spart[2]);
 			int siY = Integer.parseInt(Spart[3]);
-
 			for (Player Player : players) {
 				if (Player.getName().equals(Spart[1])) {
 					setXY(Player, siX, siY);
+					setMXMY(Player, Integer.parseInt(Spart[4]),
+							Integer.parseInt(Spart[5]));
 				}
 			}
 		}
@@ -194,6 +198,27 @@ public class Sender {
 		if (FL.equals("#")) {
 			so("attempting to remove");
 			players.remove(SafegetPlayer(name));
+		}
+	}
+
+	public void mapmovement(String FL, String[] Spart) {
+		if (FL.equals("MM")) {
+			for (Player player : players) {
+				if (player.getName().equals(name)) {
+					if (Spart[2].equals("^")) {
+						player.MM(0, -1, map.getWW(), map.getWH());
+					}
+					if (Spart[2].equals("<")) {
+						player.MM(-1, 0, map.getWW(), map.getWH());
+					}
+					if (Spart[2].equals("v")) {
+						player.MM(0, 1, map.getWW(), map.getWH());
+					}
+					if (Spart[2].equals(">")) {
+						player.MM(1, 0, map.getWW(), map.getWH());
+					}
+				}
+			}
 		}
 	}
 
@@ -233,6 +258,11 @@ public class Sender {
 		p.setY(y);
 	}
 
+	public void setMXMY(Player p, int mx, int my) {
+		p.setMx(mx);
+		p.setMy(my);
+	}
+
 	public Player getPlayer(String name) {
 		Object o = null;
 		for (Player Player : players) {
@@ -258,9 +288,11 @@ public class Sender {
 			players.elementAt(x).view(game);
 		}
 	}
-	public void renderonMap(double dt, Game game, int xoffset, int yoffset, int xvar, int yvar){
+
+	public void renderonMap(double dt, Game game, int xoffset, int yoffset) {
 		for (int x = players.size() - 1; x >= 0; x--) {
-			players.elementAt(x).render(dt, game, xoffset, yoffset, xvar, yvar);
+			players.elementAt(x).render(dt, game, xoffset, yoffset,
+					map.getWW(), map.getWH(), map.getXvar(), map.getYvar());
 		}
 	}
 

@@ -317,7 +317,7 @@ public class Player implements Serializable {
 		if (f) {
 			setFont("Verdana", 16);
 			sprite = new Sprite("res/char" + cha + "/var" + var + "/i1.png");
-			mapsprite=sprite;
+			mapsprite = sprite;
 			bubble = new Sprite("res/Bubble.png");
 			f = false;
 		}
@@ -441,7 +441,46 @@ public class Player implements Serializable {
 		this.var = variation;
 	}
 
-	public void render(double dt, Game game, int xoffset, int yoffset, int xvar, int yvar) {
-		mapsprite.render(Mx*xvar-xoffset, My*yvar-yoffset, xvar, yvar);
+	public void render(double dt, Game game, int xoffset, int yoffset, int WW,
+			int WH, int xvar, int yvar) {
+		try {
+			mapsprite.render((Mx * xvar) - xoffset, (My * yvar) - yoffset,
+					xvar, yvar);
+		} catch (Exception e) {
+
+		}
+	}
+
+	public void MM(int x, int y, int WW, int WH) {
+		Mx += x;
+		My += y;
+		if (Mx < 0) {
+			Mx = 0;
+		}
+		if (Mx > WW) {
+			Mx = WW;
+		}
+		if (My < 0) {
+			My = 0;
+		}
+		if (My > WH) {
+			My = WH;
+		}
+	}
+
+	public int getMx() {
+		return Mx;
+	}
+
+	public void setMx(int mx) {
+		Mx = mx;
+	}
+
+	public int getMy() {
+		return My;
+	}
+
+	public void setMy(int my) {
+		My = my;
 	}
 }
