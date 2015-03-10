@@ -49,7 +49,7 @@ public class Sender {
 		this.myName = name;
 		this.variation = var;
 		this.race = race;
-		sprite = new Sprite("res/char1/var1/char.png");
+		sprite = new Sprite("res/char1/var1/i1.png");
 		try {
 			init(game);
 		} catch (IOException e) {
@@ -256,6 +256,11 @@ public class Sender {
 	public void view(Game game) {
 		for (int x = players.size() - 1; x >= 0; x--) {
 			players.elementAt(x).view(game);
+		}
+	}
+	public void renderonMap(double dt, Game game, int xoffset, int yoffset, int xvar, int yvar){
+		for (int x = players.size() - 1; x >= 0; x--) {
+			players.elementAt(x).render(dt, game, xoffset, yoffset, xvar, yvar);
 		}
 	}
 

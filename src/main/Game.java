@@ -63,16 +63,6 @@ public class Game extends Head {
 			if (gameState != State.MENU)
 				paused = !paused;
 		}
-
-		if (keys.keyPressed(Keyboard.KEY_RETURN)) {
-			if (t) {
-				t = false;
-				giveText(s.chat.getChatText(), false);
-			} else {
-				t = true;
-				s.chat.toggleVisible();
-			}
-		}
 		if (keys.keyPressed(Keyboard.KEY_RETURN) && renderState != State.MAP) {
 			if (t) {
 				t = false;

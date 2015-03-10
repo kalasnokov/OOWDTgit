@@ -38,6 +38,7 @@ public class Player implements Serializable {
 	public boolean jumping = false;
 	// Tester tester;
 	private Sprite sprite;
+	private Sprite mapsprite;
 	public boolean f = true;
 	public int cha;
 	public int var;
@@ -316,6 +317,7 @@ public class Player implements Serializable {
 		if (f) {
 			setFont("Verdana", 16);
 			sprite = new Sprite("res/char" + cha + "/var" + var + "/i1.png");
+			mapsprite=sprite;
 			bubble = new Sprite("res/Bubble.png");
 			f = false;
 		}
@@ -437,5 +439,9 @@ public class Player implements Serializable {
 
 	public void setVariation(int variation) {
 		this.var = variation;
+	}
+
+	public void render(double dt, Game game, int xoffset, int yoffset, int xvar, int yvar) {
+		mapsprite.render(Mx*xvar-xoffset, My*yvar-yoffset, xvar, yvar);
 	}
 }
