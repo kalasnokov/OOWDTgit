@@ -164,9 +164,9 @@ public class Server extends JFrame implements Serializable {
 		setVisible(true);
 
 		// non-UI code begins here
-		
+
 		map = new Map(512, 512);
-		
+
 		try {
 			URL whatismyip = new URL("http://checkip.amazonaws.com");
 			BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -253,7 +253,7 @@ public class Server extends JFrame implements Serializable {
 						}
 						String rcvd = new String(dgp.getData());
 						rcvd.trim();
-						//s(rcvd);
+						// s(rcvd);
 						found = false;
 
 						// look if the package is a join request
@@ -307,7 +307,7 @@ public class Server extends JFrame implements Serializable {
 								+ ":" + Player2.getVariation() + ":";
 						send(Player.getAddress(), Player.getPort());
 					}
-					msg=map.getWorldString();
+					msg = map.getWorldString();
 					send(Player.getAddress(), Player.getPort());
 				}
 			}

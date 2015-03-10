@@ -63,6 +63,8 @@ public class Player implements Serializable {
 	public int is = 1;
 	public int idlestage = 1;
 	public int idletick;
+	public int Mx;
+	public int My;
 
 	public enum lookstate {
 		RIGHT, LEFT;
