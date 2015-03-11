@@ -66,6 +66,7 @@ public class Player implements Serializable {
 	public int idletick;
 	public int Mx;
 	public int My;
+	boolean Mf =true;
 
 	public enum lookstate {
 		RIGHT, LEFT;
@@ -317,7 +318,6 @@ public class Player implements Serializable {
 		if (f) {
 			setFont("Verdana", 16);
 			sprite = new Sprite("res/char" + cha + "/var" + var + "/i1.png");
-			mapsprite = sprite;
 			bubble = new Sprite("res/Bubble.png");
 			f = false;
 		}
@@ -443,6 +443,10 @@ public class Player implements Serializable {
 
 	public void render(double dt, Game game, int xoffset, int yoffset, int WW,
 			int WH, int xvar, int yvar) {
+		if(Mf){
+			mapsprite= new Sprite("res/char" + cha + "/var" + var + "/i1.png");
+			Mf=false;
+		}
 		try {
 			mapsprite.render((Mx * xvar) - xoffset, (My * yvar) - yoffset,
 					xvar, yvar);

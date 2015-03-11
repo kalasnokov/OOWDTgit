@@ -48,6 +48,7 @@ public class Server extends JFrame implements Serializable {
 	private boolean broken = false;
 	boolean ready = false;
 	Map map;
+	DatagramPacket dgp;
 
 	public Server() throws IOException {
 
@@ -247,7 +248,7 @@ public class Server extends JFrame implements Serializable {
 						msg = "";
 						// receiver
 						byte[] buf = new byte[1024];
-						DatagramPacket dgp = new DatagramPacket(buf, buf.length);
+						dgp = new DatagramPacket(buf, buf.length);
 						try {
 							s.receive(dgp);
 						} catch (IOException e1) {
@@ -402,8 +403,14 @@ public class Server extends JFrame implements Serializable {
 						player.MM(1, 0, map.getWW(), map.getWH());
 						msg = "MM:" + player.getName() + ":>:";
 					}
+					player.setX(0);
+					player.setY(0);
+					player.j();
+					for (int x = players.size() - 1; x >= 0; x--) {
+						send(players.elementAt(x).getAddress(), players
+								.elementAt(x).getPort());
+					}
 				}
-				sendtoall();
 			}
 		}
 	}
@@ -461,6 +468,17 @@ public class Server extends JFrame implements Serializable {
 		return (Player) o;
 	}
 
+	public Player getPlayer(DatagramPacket dgp) {
+		Object o = null;
+		for (Player Player : players) {
+			if (Player.getAddress().equals(dgp.getAddress())
+					&& Player.getPort() == dgp.getPort()) {
+				o = Player;
+			}
+		}
+		return (Player) o;
+	}
+
 	public static void main(String[] args) throws IOException {
 		new Server();
 	}
@@ -479,9 +497,16 @@ public class Server extends JFrame implements Serializable {
 	}
 
 	public void sendtoall() throws IOException {
-		for (Player Player : players) {
-			// send info about action to all clients using string msg
-			send(Player.getAddress(), Player.getPort());
+		Player outplayer = getPlayer(dgp);
+		try {
+			for (Player Player : players) {
+				// send info about action to all clients using string msg
+				if (Player.getMx() == outplayer.getMx()
+						&& Player.getMx() == outplayer.getMx())
+					send(Player.getAddress(), Player.getPort());
+			}
+		} catch (Exception e) {
+
 		}
 	}
 
@@ -502,11 +527,12 @@ public class Server extends JFrame implements Serializable {
 
 	public void send(InetAddress address, int port) throws IOException {
 		// sender function
-		if(!msg.isEmpty()){
-		byte[] buf = new byte[1024];
-		buf = msg.getBytes();
-		DatagramPacket out = new DatagramPacket(buf, buf.length, address, port);
-		s.send(out);
+		if (!msg.isEmpty()) {
+			byte[] buf = new byte[1024];
+			buf = msg.getBytes();
+			DatagramPacket out = new DatagramPacket(buf, buf.length, address,
+					port);
+			s.send(out);
 		}
 	}
 }

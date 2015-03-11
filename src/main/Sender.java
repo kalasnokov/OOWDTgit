@@ -113,7 +113,7 @@ public class Sender {
 						try {
 							name = Spart[1];
 						} catch (Exception e) {
-							so("Catched "+rcvd);
+							so("Catched " + rcvd);
 						}
 						found = false;
 						for (Player Player : players) {
@@ -297,8 +297,17 @@ public class Sender {
 	}
 
 	public void render(double dt, Game game) {
-		for (int x = players.size() - 1; x >= 0; x--) {
-			players.elementAt(x).render(dt, game);
+		try {
+			for (int x = players.size() - 1; x >= 0; x--) {
+				if (SafegetPlayer(myName).getMx() == players.elementAt(x)
+						.getMx()
+						&& SafegetPlayer(myName).getMy() == players
+								.elementAt(x).getMy()) {
+					players.elementAt(x).render(dt, game);
+				}
+			}
+		} catch (Exception e) {
+
 		}
 	}
 
