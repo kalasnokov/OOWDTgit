@@ -228,10 +228,11 @@ public class Server extends JFrame implements Serializable {
 										+ Player.getX() + ":" + Player.getY()
 										+ ":" + Player.getMx() + ":"
 										+ Player.getMy() + ":";
-								
-							}else{
-								msg = "MP:" + Player.getName() + ":"+ Player.getMx() + ":"
-										+ Player.getMy() + ":";
+
+							} else {
+								msg = "MP:" + Player.getName() + ":"
+										+ Player.getMx() + ":" + Player.getMy()
+										+ ":";
 							}
 							try {
 								send(a, p);
@@ -250,60 +251,59 @@ public class Server extends JFrame implements Serializable {
 		ap("ready");
 		new Thread(new Runnable() {
 			public void run() {
-				while (true) {
-					while (!broken) {
-						msg = "";
-						// receiver
-						byte[] buf = new byte[1024];
-						dgp = new DatagramPacket(buf, buf.length);
-						try {
-							s.receive(dgp);
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-						String rcvd = new String(dgp.getData());
-						rcvd.trim();
+				while (!broken) {
+					msg = "";
+					// receiver
+					byte[] buf = new byte[1024];
+					dgp = new DatagramPacket(buf, buf.length);
+					try {
+						s.receive(dgp);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					String rcvd = new String(dgp.getData());
+					rcvd.trim();
 
-						// s(rcvd);
+					// s(rcvd);
 
-						found = false;
+					found = false;
 
-						// look if the package is a join request
-						for (Player Player : players) {
-							if (Player.getAddress().toString()
-									.equals(dgp.getAddress().toString())) {
-								if (Player.getPort() == dgp.getPort()) {
-									found = true;
-								}
+					// look if the package is a join request
+					for (Player Player : players) {
+						if (Player.getAddress().toString()
+								.equals(dgp.getAddress().toString())) {
+							if (Player.getPort() == dgp.getPort()) {
+								found = true;
 							}
-						}
-
-						String[] Spart = rcvd.split(":");// splitter, divides
-															// the package,
-															// IE splitting
-															// @:hello to @ and
-															// hello
-						String FL = Spart[0];// FL stands for First Letter, used
-												// to identify
-												// package type
-
-						try {
-							removeplayer(FL, dgp);
-
-							if (FL.equals("¤")) {
-								msg = rcvd;
-							}
-
-							addplayer(FL, Spart, dgp);
-
-							move(FL, Spart, dgp);
-							mapmovement(FL, Spart, dgp, rcvd);
-							sendPlayers(FL, dgp);
-						} catch (IOException e) {
-							e.printStackTrace();
 						}
 					}
+
+					String[] Spart = rcvd.split(":");// splitter, divides
+														// the package,
+														// IE splitting
+														// @:hello to @ and
+														// hello
+					String FL = Spart[0];// FL stands for First Letter, used
+											// to identify
+											// package type
+
+					try {
+						removeplayer(FL, dgp);
+
+						if (FL.equals("¤")) {
+							msg = rcvd;
+						}
+
+						addplayer(FL, Spart, dgp);
+
+						move(FL, Spart, dgp);
+						mapmovement(FL, Spart, dgp, rcvd);
+						sendPlayers(FL, dgp);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
+
 			}
 		}).start();
 	}
