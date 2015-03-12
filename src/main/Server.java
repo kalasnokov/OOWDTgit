@@ -222,10 +222,17 @@ public class Server extends JFrame implements Serializable {
 						InetAddress a = P.getAddress();
 						int p = P.getPort();
 						for (Player Player : players) {
-							msg = "@:" + Player.getName() + ":" + Player.getX()
-									+ ":" + Player.getY() + ":"
-									+ Player.getMx() + ":" + Player.getMy()
-									+ ":";
+							if (P.getMx() == Player.getMx()
+									&& P.getMy() == Player.getMy()) {
+								msg = "@:" + Player.getName() + ":"
+										+ Player.getX() + ":" + Player.getY()
+										+ ":" + Player.getMx() + ":"
+										+ Player.getMy() + ":";
+								
+							}else{
+								msg = "MP:" + Player.getName() + ":"+ Player.getMx() + ":"
+										+ Player.getMy() + ":";
+							}
 							try {
 								send(a, p);
 							} catch (IOException e) {
@@ -407,12 +414,22 @@ public class Server extends JFrame implements Serializable {
 					player.setY(0);
 					player.j();
 					for (int x = players.size() - 1; x >= 0; x--) {
-						send(players.elementAt(x).getAddress(), players
-								.elementAt(x).getPort());
+						if (getDistance(player.getMx(), player.getMy(), players
+								.elementAt(x).getMx(), players.elementAt(x)
+								.getMy()) < 25) {
+							send(players.elementAt(x).getAddress(), players
+									.elementAt(x).getPort());
+						}
 					}
 				}
 			}
 		}
+	}
+
+	public double getDistance(int p1x, int p1y, int p2x, int p2y) {
+		double xalt = p1x - p2x;
+		double yalt = p1y - p2y;
+		return Math.sqrt(Math.pow(xalt, 2) + Math.pow(yalt, 2));
 	}
 
 	public void move(String FL, String[] Spart, DatagramPacket dgp)

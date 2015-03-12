@@ -188,6 +188,9 @@ public class Map implements Serializable {
 
 	public void zoom(int zoom) {
 		this.zoom += zoom;
+		if(this.zoom>=20){
+			this.zoom=20;
+		}
 	}
 
 	public static void update() {
@@ -203,7 +206,7 @@ public class Map implements Serializable {
 	}
 
 	public void so(String s) {
-		// console print shortcut, just call s(string);
+		// console print shortcut, just call so(string);
 		System.out.println(s);
 	}
 

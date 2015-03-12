@@ -129,6 +129,7 @@ public class Sender {
 							remover(FL, Spart);
 							move(FL, Spart, myName);
 							positionUpdater(FL, Spart, myName);
+							MapPosition(FL, Spart);
 						}
 					}
 				}
@@ -175,6 +176,17 @@ public class Sender {
 					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public void MapPosition(String FL, String[] Spart) {
+		if (FL.equals("MP")) {
+			for (Player player : players) {
+				if (name.equals(player.getName())) {
+					player.setMx(Integer.parseInt(Spart[2]));
+					player.setMy(Integer.parseInt(Spart[3]));
 				}
 			}
 		}

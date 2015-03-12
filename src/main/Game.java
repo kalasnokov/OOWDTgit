@@ -191,21 +191,31 @@ public class Game extends Head {
 				if (keys.keyPressed(Keyboard.KEY_W)) {
 					msg = "MM:^:";
 					s.s(msg);
+					resetplayer(s.getPlayer(s.myName));
 				}
 				if (keys.keyPressed(Keyboard.KEY_A)) {
 					msg = "MM:<:";
 					s.s(msg);
+					resetplayer(s.getPlayer(s.myName));
 				}
 				if (keys.keyPressed(Keyboard.KEY_S)) {
 					msg = "MM:v:";
 					s.s(msg);
+					resetplayer(s.getPlayer(s.myName));
 				}
 				if (keys.keyPressed(Keyboard.KEY_D)) {
 					msg = "MM:>:";
 					s.s(msg);
+					resetplayer(s.getPlayer(s.myName));
 				}
 			}
 		}
+	}
+
+	public void resetplayer(Player player) {
+		player.setX(0);
+		player.setY(0);
+		player.j();
 	}
 
 	public void quit() {
