@@ -131,7 +131,6 @@ public abstract class Head implements Runnable {
 					BufferUtils.createIntBuffer(1), null);
 			Mouse.setNativeCursor(emptyCursor);
 		} catch (LWJGLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -145,10 +144,11 @@ public abstract class Head implements Runnable {
 		double updateDelta = getUpdateDelta();
 		double renderDelta = getRenderDelta();
 		while (running) {
+			
 			if (Display.isCloseRequested()) {
 				running = false;
 			}
-
+			
 			long now = System.nanoTime();
 			delta += (now - lastTime) / ns;
 			lastTime = now;
@@ -157,7 +157,6 @@ public abstract class Head implements Runnable {
 				try {
 					update(updateDelta);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -179,11 +178,12 @@ public abstract class Head implements Runnable {
 							+ objects + " Rendered");
 				} else {
 					Display.setTitle(title
-							+ " | " + updates + " TICKS, " + frames + " FPS");
+							+ " | " + updates + " TICKS, " + frames + " FPS, " + delta +" Delta");
 				}
 
 				updates = 0;
 				frames = 0;
+				delta=0;
 			}
 		}
 		try {
