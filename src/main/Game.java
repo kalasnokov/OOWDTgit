@@ -215,7 +215,6 @@ public class Game extends Head {
 	public void resetplayer(Player player) {
 		player.setX(0);
 		player.setY(0);
-		player.j();
 	}
 
 	public void quit() {

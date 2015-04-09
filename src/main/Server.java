@@ -412,7 +412,6 @@ public class Server extends JFrame implements Serializable {
 					}
 					player.setX(0);
 					player.setY(0);
-					player.j();
 					for (int x = players.size() - 1; x >= 0; x--) {
 						if (getDistance(player.getMx(), player.getMy(), players
 								.elementAt(x).getMx(), players.elementAt(x)
