@@ -69,6 +69,7 @@ public class Player implements Serializable {
 	boolean Mf = true;
 	boolean ActionUp = false;
 	boolean moving = false;
+	int lastmove=0;//can also be used to determine if a player is afk
 
 	public enum lookstate {
 		RIGHT, LEFT;
@@ -190,8 +191,10 @@ public class Player implements Serializable {
 	public void update() {
 		if (left || right || jumping) {
 			moving = true;
+			lastmove=360;
 		} else {
 			moving = false;
+			lastmove--;
 		}
 		if (left) {
 			xacc -= movespeed / 5;
@@ -506,5 +509,8 @@ public class Player implements Serializable {
 
 	public boolean getmoving() {
 		return moving;
+	}
+	public int getlastmove(){
+		return lastmove;
 	}
 }

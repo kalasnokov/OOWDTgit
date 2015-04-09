@@ -250,20 +250,23 @@ public class Server extends JFrame implements Serializable {
 						for (Player Player : players) {
 							if (P.getMx() == Player.getMx()
 									&& P.getMy() == Player.getMy()) {
-								if (Player.getmoving()) {
-									msg = "@:" + Player.getName() + ":"
-											+ Player.getX() + ":"
-											+ Player.getY() + ":"
-											+ Player.getMx() + ":"
-											+ Player.getMy() + ":";
-								}
+								msg = "@:" + Player.getName() + ":"
+										+ Player.getX() + ":" + Player.getY()
+										+ ":" + Player.getMx() + ":"
+										+ Player.getMy() + ":";
+
 							} else {
 								msg = "MP:" + Player.getName() + ":"
 										+ Player.getMx() + ":" + Player.getMy()
 										+ ":";
 							}
 							try {
-								send(a, p);
+								if (Player.getmoving()
+										|| Player.getlastmove() >= 0
+										|| P.getMx() != Player.getMx()
+										&& P.getMy() != Player.getMy()) {
+									send(a, p);
+								}
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
@@ -394,8 +397,7 @@ public class Server extends JFrame implements Serializable {
 					msg = "#:" + players.elementAt(x).getName() + ":";// remove
 																		// order
 
-					send(players.elementAt(x).getAddress(), players
-							.elementAt(x).getPort());// send remove order to
+					sendtoall();// send remove order to
 														// all clients
 
 					players.remove(players.elementAt(x));// remove player
