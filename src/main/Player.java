@@ -66,7 +66,9 @@ public class Player implements Serializable {
 	public int idletick;
 	public int Mx;
 	public int My;
-	boolean Mf =true;
+	boolean Mf = true;
+	boolean ActionUp = false;
+	boolean moving = false;
 
 	public enum lookstate {
 		RIGHT, LEFT;
@@ -186,6 +188,11 @@ public class Player implements Serializable {
 	}
 
 	public void update() {
+		if (left || right || jumping) {
+			moving = true;
+		} else {
+			moving = false;
+		}
 		if (left) {
 			xacc -= movespeed / 5;
 		}
@@ -233,6 +240,12 @@ public class Player implements Serializable {
 	}
 
 	public void view(Game game) {
+		// view() also takes care of client-side specific actions, which mostly
+		// means changing sprites as doing so in the update() function crash the
+		// server
+		if (ActionUp) {
+			// do something
+		}
 		step++;
 		String spritestring = "res/char" + cha + "/var" + var + "/";
 
@@ -269,7 +282,6 @@ public class Player implements Serializable {
 						+ "/.png")
 				&& !spritestring.equals("res/char" + cha + "/var" + var
 						+ "/l.png")) {
-
 			try {
 				sprite = new Sprite(spritestring);
 			} catch (Exception e) {
@@ -443,9 +455,9 @@ public class Player implements Serializable {
 
 	public void render(double dt, Game game, int xoffset, int yoffset, int WW,
 			int WH, int xvar, int yvar) {
-		if(Mf){
-			mapsprite= new Sprite("res/char" + cha + "/var" + var + "/i1.png");
-			Mf=false;
+		if (Mf) {
+			mapsprite = new Sprite("res/char" + cha + "/var" + var + "/i1.png");
+			Mf = false;
 		}
 		try {
 			mapsprite.render((Mx * xvar) - xoffset, (My * yvar) - yoffset,
@@ -486,5 +498,13 @@ public class Player implements Serializable {
 
 	public void setMy(int my) {
 		My = my;
+	}
+
+	public void AU(boolean b) {
+		ActionUp = b;
+	}
+
+	public boolean getmoving() {
+		return moving;
 	}
 }

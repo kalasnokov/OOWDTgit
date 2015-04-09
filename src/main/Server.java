@@ -48,7 +48,9 @@ public class Server extends JFrame implements Serializable {
 	private boolean broken = false;
 	boolean ready = false;
 	Map map;
+	String build = "Development version";
 	DatagramPacket dgp;
+	String[] commands = { "/flush", "/remove", "/list", "/reload", "/help" };
 
 	public Server() throws IOException {
 
@@ -77,8 +79,11 @@ public class Server extends JFrame implements Serializable {
 					String Sinput = input.getText().toLowerCase();
 					String fl = Sinput.substring(0, 1);
 					if (fl.equals("/")) {
+						boolean c = false;
 						ap(Sinput);
-						if (Sinput.contains("/remove ")) {
+						if (Sinput.contains(commands[1])) {
+							c = true;
+							// remove
 							Sinput = Sinput.replace("/remove ", "");
 							input.setText("");
 							ap("Removed player " + Sinput);
@@ -88,12 +93,24 @@ public class Server extends JFrame implements Serializable {
 								e1.printStackTrace();
 							}
 						}
-						if (Sinput.equals("/flush")) {
+						if (Sinput.equals(commands[4])) {
+							c = true;
+							// help
+							ap("OOWDT server: " + build + " \n" + "Commands: "
+									+ commands.length);
+							for (int i = 0; i < commands.length; i++) {
+								apn(commands[i]);
+							}
+						}
+						if (Sinput.equals(commands[0])) {
+							// flush
 							players.removeAllElements();
 							input.setText("");
 							ap("Flushed server");
 						}
-						if (Sinput.equals("/reload")) {
+						if (Sinput.equals(commands[3])) {
+							c = true;
+							// reload
 							for (Player Player : players) {
 								try {
 									Player.loadOPT();
@@ -104,16 +121,25 @@ public class Server extends JFrame implements Serializable {
 							ap("Reloaded player OPT files");
 							input.setText("");
 						}
-						if (Sinput.equals("/list")) {
-							for (Player Player : players) {
-								ap(Player.getAddress() + ":" + Player.getPort()
-										+ " With name " + Player.getName());
+						if (Sinput.equals(commands[2])) {
+							c = true;
+							// list
+							if (!players.isEmpty()) {
+								for (Player Player : players) {
+									ap(Player.getAddress() + ":"
+											+ Player.getPort() + " With name "
+											+ Player.getName());
+								}
+							} else {
+								apn("The server is empty");
 							}
 							input.setText("");
 						}
-
+						if (!c) {
+							apn("unknown command");
+						}
 					} else {
-						ap("unknown command");
+						apn("unknown command");
 					}
 				}
 			}
@@ -184,7 +210,7 @@ public class Server extends JFrame implements Serializable {
 		try {
 			s = new DatagramSocket(port);// socket
 		} catch (Exception e) {
-			ap("Another server is already running on this adress");
+			ap("CRITICAL ERROR: Another server is already running on this adress!");
 			broken = true;
 		}
 		// Serverinf.setText(ip + ":" + port);
@@ -224,11 +250,13 @@ public class Server extends JFrame implements Serializable {
 						for (Player Player : players) {
 							if (P.getMx() == Player.getMx()
 									&& P.getMy() == Player.getMy()) {
-								msg = "@:" + Player.getName() + ":"
-										+ Player.getX() + ":" + Player.getY()
-										+ ":" + Player.getMx() + ":"
-										+ Player.getMy() + ":";
-
+								if (Player.getmoving()) {
+									msg = "@:" + Player.getName() + ":"
+											+ Player.getX() + ":"
+											+ Player.getY() + ":"
+											+ Player.getMx() + ":"
+											+ Player.getMy() + ":";
+								}
 							} else {
 								msg = "MP:" + Player.getName() + ":"
 										+ Player.getMx() + ":" + Player.getMy()
@@ -248,7 +276,11 @@ public class Server extends JFrame implements Serializable {
 		// this is the map
 		// actual server-stuff starts here, inside the while() loop
 		ready = true;
-		ap("ready");
+		if (!broken) {
+			ap("Server ready");
+		} else {
+			ap("Server non-functional, se log for more details");
+		}
 		new Thread(new Runnable() {
 			public void run() {
 				while (!broken) {
@@ -295,7 +327,7 @@ public class Server extends JFrame implements Serializable {
 						}
 
 						addplayer(FL, Spart, dgp);
-
+						action(FL, Spart);
 						move(FL, Spart, dgp);
 						mapmovement(FL, Spart, dgp, rcvd);
 						sendPlayers(FL, dgp);
@@ -306,6 +338,25 @@ public class Server extends JFrame implements Serializable {
 
 			}
 		}).start();
+	}
+
+	public void action(String FL, String[] Spart) throws IOException {
+		if (FL.equals("A")) {
+			String n = null;
+			for (Player Player : players) {
+				if (Player.getAddress().equals(dgp.getAddress())
+						&& Player.getPort() == dgp.getPort()) {
+					n = Player.getName();
+				}
+			}
+			if (Spart[2].equals("P")) {
+				getPlayer(n).AU(true);
+				msg = "A:" + n + ":^:P:";
+			} else {
+				getPlayer(n).AU(false);
+				msg = "A:" + n + ":^:R:";
+			}
+		}
 	}
 
 	public void sendPlayers(String FL, DatagramPacket dgp) throws IOException {
@@ -351,7 +402,6 @@ public class Server extends JFrame implements Serializable {
 				}
 			}
 		}
-
 	}
 
 	public void addplayer(String FL, String[] Spart, DatagramPacket dgp)
@@ -527,6 +577,13 @@ public class Server extends JFrame implements Serializable {
 	}
 
 	public void ap(String s) {
+		// log append shortcut, just call ap(string);
+		Log.append(s + "\n");
+		Log.append("\n");
+		Log.setCaretPosition(Log.getDocument().getLength());
+	}
+
+	public void apn(String s) {
 		// log append shortcut, just call ap(string);
 		Log.append(s + "\n");
 		Log.setCaretPosition(Log.getDocument().getLength());

@@ -75,6 +75,15 @@ public class Game extends Head {
 		String msg;
 		mapkeys();
 		if (!t && renderState != State.MAP) {
+			if (keys.keyPressed(Keyboard.KEY_UP)) {
+				msg = "A:^:P:";
+				try {
+					s.s(msg);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
+			}
 			if (keys.keyPressed(Keyboard.KEY_A)) {
 				msg = "$:<:P:";
 				try {
@@ -99,6 +108,15 @@ public class Game extends Head {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
+			}
+			if (keys.keyReleased(Keyboard.KEY_UP)) {
+				msg = "A:^:R:";
+				try {
+					s.s(msg);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
 			}
 			if (keys.keyReleased(Keyboard.KEY_A)) {
 				msg = "$:<:R:";

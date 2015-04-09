@@ -107,7 +107,7 @@ public class Sender {
 						String[] Spart = rcvd.split(":");
 						String FL = Spart[0];
 
-						// so(rcvd);
+						so(rcvd);
 
 						generateMap(FL, Spart);
 						try {
@@ -124,6 +124,7 @@ public class Sender {
 						playeradder(FL, Spart, game);
 
 						if (found) {
+							action(FL, Spart);
 							mapmovement(FL, Spart);
 							chatspeak(FL);
 							remover(FL, Spart);
@@ -135,6 +136,18 @@ public class Sender {
 				}
 			}
 		}).start();
+	}
+
+	public void action(String FL, String[] Spart) {
+		if (FL.equals("A")) {
+			if(Spart[2].equals("^")){
+				if(Spart[3].equals("P")){
+				getPlayer(name).AU(true);
+				}else{
+					getPlayer(name).AU(false);
+				}
+			}
+		}
 	}
 
 	public void generateMap(String FL, String[] Spart) {
