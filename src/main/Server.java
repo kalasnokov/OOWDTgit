@@ -31,6 +31,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 
 import Map.Map;
+import Objects.Ball;
+import Objects.OOWDTObject;
 
 @SuppressWarnings("unused")
 public class Server extends JFrame implements Serializable {
@@ -42,6 +44,7 @@ public class Server extends JFrame implements Serializable {
 	private static final JTextPane Serverinf = new JTextPane();
 	private boolean found;
 	public Vector<Player> players = new Vector<Player>();
+	public Vector<OOWDTObject> objects = new Vector<OOWDTObject>();
 	private String msg;
 	DatagramSocket s;
 	private JTextField input;
@@ -227,6 +230,9 @@ public class Server extends JFrame implements Serializable {
 					for (int x = players.size() - 1; x >= 0; x--) {
 						players.elementAt(x).update();// updater
 					}
+					for (int x = objects.size() - 1; x >= 0; x--) {
+						objects.elementAt(x).update();// updater
+					}
 				}
 			}
 		}).start();
@@ -284,6 +290,9 @@ public class Server extends JFrame implements Serializable {
 		} else {
 			ap("Server non-functional, se log for more details");
 		}
+
+		objects.add(new Ball(0, 0, true));
+
 		new Thread(new Runnable() {
 			public void run() {
 				while (!broken) {
@@ -398,7 +407,7 @@ public class Server extends JFrame implements Serializable {
 																		// order
 
 					sendtoall();// send remove order to
-														// all clients
+								// all clients
 
 					players.remove(players.elementAt(x));// remove player
 				}
